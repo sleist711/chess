@@ -8,7 +8,15 @@ package chess;
  */
 public class ChessPosition {
 
-    public ChessPosition(int row, int col) {
+    int row;
+    int column;
+
+    //using this as a setter?
+    public ChessPosition(int row, int col)
+    {
+        this.row = row;
+        this.column = col;
+
     }
 
     /**
@@ -16,7 +24,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        throw new RuntimeException("Not implemented");
+        return this.row;
     }
 
     /**
@@ -24,6 +32,6 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() {
-        throw new RuntimeException("Not implemented");
+        return this.column;
     }
 }

@@ -8,8 +8,17 @@ package chess;
  */
 public class ChessBoard {
 
+    //declaring it here so that everything can see it
+    ChessPiece[][] myChessBoard;
     public ChessBoard() {
-        
+        //initializing a chessboard of 8x8 chess pieces
+
+        //this should set them all to null at first
+        myChessBoard = new ChessPiece[8][8];
+
+
+
+
     }
 
     /**
@@ -19,7 +28,9 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        //adds the piece to the chessboard array at the specified column and row
+        myChessBoard[position.getColumn()][position.getRow()] = piece;
     }
 
     /**
@@ -30,7 +41,13 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        //create a thing to throw an exception if it's trying to get one out of bounds
+
+        //returns the piece or null
+        if (myChessBoard[position.getColumn()][position.getRow()] == null)
+            return null;
+        else
+            return myChessBoard[position.getColumn()][position.getRow()];
     }
 
     /**
