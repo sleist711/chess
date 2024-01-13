@@ -82,7 +82,7 @@ public class ChessPiece {
         }
         else if(PIECE_TYPE == PieceType.QUEEN)
         {
-
+            possibleMoves = queenMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
         }
         else if(PIECE_TYPE == PieceType.BISHOP)
         {
@@ -95,6 +95,15 @@ public class ChessPiece {
         return possibleMoves;
     }
 
+
+    public HashSet<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
+    {
+        HashSet<ChessMove> possibleMoves = rookMoves(board, myPosition, currentRow, currentColumn);
+
+        //Queen's moves are a combination of the rook and bishop moves
+        possibleMoves.addAll(bishopMoves(board, myPosition, currentRow, currentColumn));
+        return possibleMoves;
+    }
     public HashSet<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
     {
         int twoSquares = 2;
