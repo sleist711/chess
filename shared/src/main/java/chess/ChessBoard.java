@@ -8,16 +8,15 @@ package chess;
  */
 public class ChessBoard {
 
+
     //declaring it here so that everything can see it
     ChessPiece[][] myChessBoard;
     public ChessBoard() {
         //initializing a chessboard of 8x8 chess pieces
 
         //this should set them all to null at first
-        myChessBoard = new ChessPiece[8][8];
-
-
-
+        //setting it to 9x9 so that I can have spaces 1-8..... think this is right?
+        myChessBoard = new ChessPiece[9][9];
 
     }
 
@@ -56,5 +55,11 @@ public class ChessBoard {
      */
     public void resetBoard() {
         throw new RuntimeException("Not implemented");
+    }
+
+    //making my own function to remove a piece
+    public void removePiece(ChessPosition position)
+    {
+        myChessBoard[position.getColumn()][position.getRow()] = null;
     }
 }
