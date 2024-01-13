@@ -77,6 +77,7 @@ public class ChessPiece {
         }
         else if (PIECE_TYPE == PieceType.KNIGHT)
         {
+            possibleMoves = knightMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
 
         }
         else if(PIECE_TYPE == PieceType.QUEEN)
@@ -93,6 +94,190 @@ public class ChessPiece {
         //going to return a hashset (?)
         return possibleMoves;
     }
+
+    public HashSet<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
+    {
+        int twoSquares = 2;
+        int oneSquare = 1;
+        HashSet<ChessMove> possibleMoves = new HashSet<>();
+
+        //right two, up one
+        if((currentColumn + twoSquares <= 8) && (currentRow + oneSquare <= 8))
+        {
+            if(board.myChessBoard[currentColumn + twoSquares][currentRow + oneSquare] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + twoSquares);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn + twoSquares][currentRow + oneSquare].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + twoSquares);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //left two, up one
+        if((currentColumn - twoSquares >= 1) && (currentRow + oneSquare <= 8))
+        {
+            if(board.myChessBoard[currentColumn - twoSquares][currentRow + oneSquare] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - twoSquares);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+            else
+            {
+                if(board.myChessBoard[currentColumn - twoSquares][currentRow + oneSquare].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - twoSquares);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //right two, down one
+        if((currentColumn + twoSquares <= 8) && (currentRow - oneSquare >= 1))
+        {
+            if(board.myChessBoard[currentColumn + twoSquares][currentRow - oneSquare] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + twoSquares);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn + twoSquares][currentRow - oneSquare].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + twoSquares);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //left two, down one
+        if((currentColumn - twoSquares >= 1) && (currentRow - oneSquare >= 1))
+        {
+            if(board.myChessBoard[currentColumn - twoSquares][currentRow - oneSquare] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - twoSquares);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn - twoSquares][currentRow - oneSquare].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - twoSquares);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //right one, up two
+        if((currentColumn + oneSquare <= 8) && (currentRow + twoSquares <= 8))
+        {
+            if(board.myChessBoard[currentColumn + oneSquare][currentRow + twoSquares] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn + oneSquare);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn + oneSquare][currentRow + twoSquares].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn + oneSquare);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //left one, up two
+        if((currentColumn - oneSquare >= 1) && (currentRow + twoSquares <= 8))
+        {
+            if(board.myChessBoard[currentColumn - oneSquare][currentRow + twoSquares] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn - oneSquare);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+            else
+            {
+                if(board.myChessBoard[currentColumn - oneSquare][currentRow + twoSquares].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn - oneSquare);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //right one, down two
+        if((currentColumn + oneSquare <= 8) && (currentRow - twoSquares >= 1))
+        {
+            if(board.myChessBoard[currentColumn + oneSquare][currentRow - twoSquares] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn + oneSquare);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn + oneSquare][currentRow - twoSquares].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn + oneSquare);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        //left one, down two
+        if((currentColumn - oneSquare >= 1) && (currentRow - twoSquares >= 1))
+        {
+            if(board.myChessBoard[currentColumn - oneSquare][currentRow - twoSquares] == null)
+            {
+                ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn - oneSquare);
+                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+
+            else
+            {
+                if(board.myChessBoard[currentColumn - oneSquare][currentRow - twoSquares].getTeamColor() != TEAM_COLOR)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn - oneSquare);
+                    //capture the enemy
+                    board.removePiece(endPosition);
+                    //add the move
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+            }
+        }
+
+        return possibleMoves;
+    }
+
 
     public HashSet<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
     {
