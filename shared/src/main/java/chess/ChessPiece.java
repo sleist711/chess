@@ -58,34 +58,14 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
 
+        //get rid of these ints
         int currentRow = myPosition.getRow();
         int currentColumn = myPosition.getColumn();
         HashSet<ChessMove> possibleMoves = new HashSet<>();
 
         if (PIECE_TYPE == PieceType.ROOK)
         {
-            //maybe create a function for each piece to evaluate how it can move and have it return a possible move
-
-            //Going to need to find a way to change this to be 8 i think
-            for(int i = 0; i <= 7; i++)
-            {
-                if (board.myChessBoard[i][currentRow] == null)
-                {
-                    //this part is going to get repetitive, can make it a function
-                    ChessPosition endPosition = new ChessPosition(currentRow, i);
-                    ChessMove newMove = new ChessMove(myPosition, endPosition, null);
-                    possibleMoves.add(newMove);
-                }
-
-                if(board.myChessBoard[currentColumn][i] == null)
-                {
-                    ChessPosition endPosition = new ChessPosition(i, currentColumn);
-                    ChessMove newMove = new ChessMove(myPosition, endPosition, null);
-                    possibleMoves.add(newMove);
-                }
-            }
-
-            //HERE STILL NEED TO IMPLEMENT CAPTURING ENEMY
+            possibleMoves = rookMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
         }
         else if (PIECE_TYPE == PieceType.KING)
         {
@@ -208,6 +188,108 @@ public class ChessPiece {
 
         //going to return a hashset (?)
         return possibleMoves;
+    }
+
+    public HashSet<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
+    {
+        HashSet<ChessMove> possibleMoves = new HashSet<>();
+        boolean rightBlock = false;
+        boolean leftBlock = false;
+        boolean upBlock = false;
+        boolean downBlock = false;
+
+        for(int i = 1; i <=7; i++)
+        {
+            //if rook is going right
+            if((currentColumn + i <= 8) && (rightBlock == false))
+            {
+                if (board.myChessBoard[currentColumn + i][currentRow] == null)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow, currentColumn + i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+                else
+                {
+                    if(board.myChessBoard[currentColumn + i][currentRow].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow, currentColumn + i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    rightBlock = true;
+                }
+            }
+
+            //if rook is moving down
+            if((currentRow - i >=1) && (downBlock == false))
+            {
+                if(board.myChessBoard[currentColumn][currentRow - i] == null) {
+
+                    ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+                else
+                {
+                    if(board.myChessBoard[currentColumn][currentRow - i].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    downBlock = true;
+                }
+            }
+
+            //if rook goes left
+            if((currentColumn - i >= 1) && (leftBlock == false))
+            {
+                if(board.myChessBoard[currentColumn - i][currentRow] == null) {
+
+                    ChessPosition endPosition = new ChessPosition(currentRow, currentColumn - i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));                    }
+                else
+                {
+                    if(board.myChessBoard[currentColumn - i][currentRow].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow, currentColumn - i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                    }
+                    leftBlock = true;
+                }
+            }
+
+            //if rook is moving up
+            if((currentRow + i <= 8) && (upBlock == false))
+            {
+                if(board.myChessBoard[currentColumn][currentRow + i] == null) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+                else
+                {
+                    if(board.myChessBoard[currentColumn][currentRow + i].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    upBlock = true;
+                }
+            }
+        }
+
+        return possibleMoves;
+
     }
 
 }
