@@ -85,108 +85,115 @@ public class ChessPiece {
         }
         else if(PIECE_TYPE == PieceType.BISHOP)
         {
-            boolean rightDownBlock = false;
-            boolean rightUpBlock = false;
-            boolean leftDownBlock = false;
-            boolean leftUpBlock = false;
+            possibleMoves = bishopMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
 
-            //these numbers should be right??
-            for (int i = 1; i <=7; i++)
-            {
-                //if bishop is going up and to the right
-                if((currentRow + i <= 8) && (currentColumn + i <= 8) && (rightUpBlock == false))
-                {
-                    if (board.myChessBoard[currentColumn + i][currentRow + i] == null)
-                    {
-                        ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn + i);
-                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                    }
-
-                    else
-                    {
-                        if(board.myChessBoard[currentColumn + i][currentRow + i].getTeamColor() != TEAM_COLOR)
-                        {
-                            ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn + i);
-                            //capture the enemy
-                            board.removePiece(endPosition);
-                            //add the move
-                            possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                        }
-                        rightUpBlock = true;
-                    }
-                }
-
-                //if bishop is moving down and to the right
-                if((currentRow - i >=1) && (currentColumn + i <=8) && (rightDownBlock == false))
-                {
-                    if(board.myChessBoard[currentColumn + i][currentRow - i] == null) {
-
-                        ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn + i);
-                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-
-                    }
-                    else
-                    {
-                        if(board.myChessBoard[currentColumn + i][currentRow - i].getTeamColor() != TEAM_COLOR)
-                        {
-
-                            ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn + i);
-                            //capture the enemy
-                            board.removePiece(endPosition);
-                            //add the move
-                            possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                        }
-                        rightDownBlock = true;
-                    }
-                }
-
-                //if bishop is moving down and to the left
-                if((currentRow - i >= 1) && (currentColumn - i >= 1) && (leftDownBlock == false))
-                {
-                    if(board.myChessBoard[currentColumn - i][currentRow - i] == null) {
-
-                        ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn - i);
-                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));                    }
-                    else
-                    {
-                        if(board.myChessBoard[currentColumn - i][currentRow - i].getTeamColor() != TEAM_COLOR)
-                        {
-                            ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn - i);
-                            //capture the enemy
-                            board.removePiece(endPosition);
-                            //add the move
-                            possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-
-                        }
-                        leftDownBlock = true;
-                    }
-                }
-
-                //if bishop is moving up and to the left
-                if((currentRow + i <= 8) && (currentColumn - i >= 1) && (leftUpBlock == false))
-                {
-                    if(board.myChessBoard[currentColumn - i][currentRow + i] == null) {
-                        ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
-                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                    }
-                    else
-                    {
-                        if(board.myChessBoard[currentColumn - i][currentRow + i].getTeamColor() != TEAM_COLOR)
-                        {
-                            ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
-                            //capture the enemy
-                            board.removePiece(endPosition);
-                            //add the move
-                            possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                        }
-                        leftUpBlock = true;
-                    }
-                }
-            }
         }
 
 
         //going to return a hashset (?)
+        return possibleMoves;
+    }
+
+    public HashSet<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
+    {
+        HashSet<ChessMove> possibleMoves = new HashSet<>();
+        boolean rightDownBlock = false;
+        boolean rightUpBlock = false;
+        boolean leftDownBlock = false;
+        boolean leftUpBlock = false;
+
+        for (int i = 1; i <=7; i++)
+        {
+            //if bishop is going up and to the right
+            if((currentRow + i <= 8) && (currentColumn + i <= 8) && (rightUpBlock == false))
+            {
+                if (board.myChessBoard[currentColumn + i][currentRow + i] == null)
+                {
+                    ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn + i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+
+                else
+                {
+                    if(board.myChessBoard[currentColumn + i][currentRow + i].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn + i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    rightUpBlock = true;
+                }
+            }
+
+            //if bishop is moving down and to the right
+            if((currentRow - i >=1) && (currentColumn + i <=8) && (rightDownBlock == false))
+            {
+                if(board.myChessBoard[currentColumn + i][currentRow - i] == null) {
+
+                    ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn + i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                }
+                else
+                {
+                    if(board.myChessBoard[currentColumn + i][currentRow - i].getTeamColor() != TEAM_COLOR)
+                    {
+
+                        ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn + i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    rightDownBlock = true;
+                }
+            }
+
+            //if bishop is moving down and to the left
+            if((currentRow - i >= 1) && (currentColumn - i >= 1) && (leftDownBlock == false))
+            {
+                if(board.myChessBoard[currentColumn - i][currentRow - i] == null) {
+
+                    ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn - i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));                    }
+                else
+                {
+                    if(board.myChessBoard[currentColumn - i][currentRow - i].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn - i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                    }
+                    leftDownBlock = true;
+                }
+            }
+
+            //if bishop is moving up and to the left
+            if((currentRow + i <= 8) && (currentColumn - i >= 1) && (leftUpBlock == false))
+            {
+                if(board.myChessBoard[currentColumn - i][currentRow + i] == null) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                }
+                else
+                {
+                    if(board.myChessBoard[currentColumn - i][currentRow + i].getTeamColor() != TEAM_COLOR)
+                    {
+                        ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
+                        //capture the enemy
+                        board.removePiece(endPosition);
+                        //add the move
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                    leftUpBlock = true;
+                }
+            }
+        }
         return possibleMoves;
     }
 
@@ -287,7 +294,6 @@ public class ChessPiece {
                 }
             }
         }
-
         return possibleMoves;
 
     }
