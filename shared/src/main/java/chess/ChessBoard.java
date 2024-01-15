@@ -13,9 +13,7 @@ public class ChessBoard {
     ChessPiece[][] myChessBoard;
     public ChessBoard() {
         //initializing a chessboard of 8x8 chess pieces
-
-        //this should set them all to null at first
-        //setting it to 9x9 so that I can have spaces 1-8..... think this is right?
+        //setting it to 9x9 so that I can have spaces 1-8
         myChessBoard = new ChessPiece[9][9];
 
     }
@@ -27,7 +25,6 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        //throw new RuntimeException("Not implemented");
         //adds the piece to the chessboard array at the specified column and row
         myChessBoard[position.getColumn()][position.getRow()] = piece;
     }

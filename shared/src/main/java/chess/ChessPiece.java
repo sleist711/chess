@@ -14,11 +14,15 @@ public class ChessPiece {
     //hopefully this is just setting the color and type for this specific object, not the entire class
     final ChessGame.TeamColor TEAM_COLOR;
     final ChessPiece.PieceType PIECE_TYPE;
+    //boolean used to track if it's the pawn's first move
+    //boolean firstMove = true;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type)
     {
         TEAM_COLOR = pieceColor;
         PIECE_TYPE = type;
+
+
 
     }
 
@@ -68,7 +72,7 @@ public class ChessPiece {
         }
         else if (PIECE_TYPE == PieceType.PAWN)
         {
-
+            return pawnMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
         }
         else if (PIECE_TYPE == PieceType.KNIGHT)
         {
@@ -86,6 +90,184 @@ public class ChessPiece {
         return null;
     }
 
+    //calculates the pawn's moves
+    public HashSet<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn) {
+        int oneSquare = 1;
+        int twoSquares = 2;
+        HashSet<ChessMove> possibleMoves = new HashSet<>();
+
+        //if it's a white pawn
+        if (board.myChessBoard[currentColumn][currentRow].TEAM_COLOR == ChessGame.TeamColor.WHITE) {
+
+            if(currentRow + oneSquare != 8) {
+                //if the first square is clear
+                if ((board.myChessBoard[currentColumn][currentRow + oneSquare] == null) && (currentRow + oneSquare <= 8)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                    //if it's the first move and the second square is also clear
+                    if ((currentRow == 2) && (board.myChessBoard[currentColumn][currentRow + twoSquares] == null)) {
+                        //this may cause a problem with endposition
+                        endPosition = new ChessPosition(currentRow + twoSquares, currentColumn);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+
+                //if enemy at diagonal right
+                if ((currentColumn + oneSquare <= 8) && (currentRow + oneSquare <= 8)) {
+                    if ((board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                        ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
+                        board.removePiece(endPosition);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+
+                //if enemy at diagonal left
+                if ((currentColumn - oneSquare >= 1) && (currentRow + oneSquare <= 8)) {
+                    if ((board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                        ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
+                        board.removePiece(endPosition);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+            }
+
+            //if it's going to reach the last row, need to calculate its move based on what type of piece it could turn into
+            else
+            {
+                //if pawn moves straight
+                if (board.myChessBoard[currentColumn][currentRow + oneSquare] == null) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+                //if there's an enemy diagonal right
+                if ((board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
+                    board.removePiece(endPosition);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+                //if enemy at diagonal left
+                if ((board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
+                    board.removePiece(endPosition);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+
+
+            }
+        }
+        //if it's a black pawn
+        else {
+            //if it's not at the last row
+            if(currentRow - oneSquare != 1)
+            {
+                //if the first square is clear
+                if ((board.myChessBoard[currentColumn][currentRow - oneSquare] == null) && (currentRow - oneSquare >= 1)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn);
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                    //if it's the first move and the second square is also clear
+                    if ((currentRow == 7) && (board.myChessBoard[currentColumn][currentRow - twoSquares] == null)) {
+                        //this may cause a problem with endposition
+                        endPosition = new ChessPosition(currentRow - twoSquares, currentColumn);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+
+                    }
+                }
+
+                //if enemy at diagonal right
+                if ((currentColumn + oneSquare <= 8) && (currentRow - oneSquare >= 1)) {
+                    if ((board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                        ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
+                        board.removePiece(endPosition);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+
+                //if enemy at diagonal left
+                if ((currentColumn - oneSquare >= 1) && (currentRow - oneSquare >= 1)) {
+                    if ((board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare] != null) && (board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                        ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
+                        board.removePiece(endPosition);
+                        possibleMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+            }
+
+            //if it's going to reach the last row, need to calculate its move based on what type of piece it could turn into
+            else {
+                //if pawn moves straight
+                if (board.myChessBoard[currentColumn][currentRow - oneSquare] == null) {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+                //if there's an enemy diagonal right
+                if ((board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
+                    board.removePiece(endPosition);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+                //if enemy at diagonal left
+                if ((board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare] != null) && (board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
+                    board.removePiece(endPosition);
+                    //if pawn is promoted to rook
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                    //if pawn promoted to bishop
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                    //if pawn promoted to knight
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    //if pawn promoted to queen
+                    possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                }
+
+            }
+
+
+        }
+        return possibleMoves;
+
+    }
 
     //calculates the king's moves (does not account for moves that are illegal due to leaving the king in danger)
     public HashSet<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)

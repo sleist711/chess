@@ -13,7 +13,7 @@ public class ChessPosition {
     int row;
     int column;
 
-    //using this as a setter?
+    //using this as a setter
     public ChessPosition(int row, int col)
     {
         this.row = row;
