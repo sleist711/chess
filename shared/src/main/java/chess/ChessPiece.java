@@ -828,4 +828,17 @@ public class ChessPiece {
         }
         return possibleMoves;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return TEAM_COLOR == that.TEAM_COLOR && PIECE_TYPE == that.PIECE_TYPE;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(TEAM_COLOR, PIECE_TYPE);
+    }
 }
