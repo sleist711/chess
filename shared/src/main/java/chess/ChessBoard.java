@@ -11,18 +11,15 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
-
-    //declaring it here so that everything can see it
     ChessPiece[][] myChessBoard;
     ArrayList<ChessPosition> initialPositions;
 
 
     public ChessBoard() {
+
         //initializing a chessboard of 8x8 chess pieces
         //setting it to 9x9 so that I can have spaces 1-8
         myChessBoard = new ChessPiece[9][9];
-
     }
 
     /**
@@ -44,8 +41,6 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        //create a thing to throw an exception if it's trying to get one out of bounds
-
         //returns the piece or null
         if (myChessBoard[position.getColumn()][position.getRow()] == null)
             return null;
@@ -59,7 +54,6 @@ public class ChessBoard {
      */
     public void resetBoard() {
         //sets up all the pieces
-
         //setting up pawns
         for(int col = 1; col <= 8; col++)
         {
@@ -119,10 +113,6 @@ public class ChessBoard {
         ChessPosition blackKingPosition = new ChessPosition(8, 5);
         ChessPiece newBlackKing = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
         addPiece(blackKingPosition, newBlackKing);
-
-
-
-
     }
 
     //making my own function to remove a piece

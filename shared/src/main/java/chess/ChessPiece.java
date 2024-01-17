@@ -10,12 +10,8 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    //not sure if these are right?
-    //hopefully this is just setting the color and type for this specific object, not the entire class
     final ChessGame.TeamColor TEAM_COLOR;
     final ChessPiece.PieceType PIECE_TYPE;
-    //boolean used to track if it's the pawn's first move
-    //boolean firstMove = true;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type)
     {
@@ -59,9 +55,6 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
-        //HashSet<ChessMove> possibleMoves = new HashSet<>();
-
-        //turn these into switch statements
         if (PIECE_TYPE == PieceType.ROOK)
         {
             return rookMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
@@ -107,7 +100,6 @@ public class ChessPiece {
 
                     //if it's the first move and the second square is also clear
                     if ((currentRow == 2) && (board.myChessBoard[currentColumn][currentRow + twoSquares] == null)) {
-                        //this may cause a problem with endposition
                         endPosition = new ChessPosition(currentRow + twoSquares, currentColumn);
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -175,11 +167,9 @@ public class ChessPiece {
                     //if pawn promoted to queen
                     possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
                 }
-
-
-
             }
         }
+
         //if it's a black pawn
         else {
             //if it's not at the last row
@@ -260,13 +250,9 @@ public class ChessPiece {
                     //if pawn promoted to queen
                     possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
                 }
-
             }
-
-
         }
         return possibleMoves;
-
     }
 
     //calculates the king's moves (does not account for moves that are illegal due to leaving the king in danger)
@@ -619,7 +605,6 @@ public class ChessPiece {
                 }
             }
         }
-
         return possibleMoves;
     }
 
@@ -636,7 +621,7 @@ public class ChessPiece {
         for (int i = 1; i <=7; i++)
         {
             //if bishop is going up and to the right
-            if((currentRow + i <= 8) && (currentColumn + i <= 8) && (rightUpBlock == false))
+            if((currentRow + i <= 8) && (currentColumn + i <= 8) && (!rightUpBlock))
             {
                 if (board.myChessBoard[currentColumn + i][currentRow + i] == null)
                 {
@@ -659,7 +644,7 @@ public class ChessPiece {
             }
 
             //if bishop is moving down and to the right
-            if((currentRow - i >=1) && (currentColumn + i <=8) && (rightDownBlock == false))
+            if((currentRow - i >=1) && (currentColumn + i <=8) && (!rightDownBlock))
             {
                 if(board.myChessBoard[currentColumn + i][currentRow - i] == null) {
 
@@ -683,7 +668,7 @@ public class ChessPiece {
             }
 
             //if bishop is moving down and to the left
-            if((currentRow - i >= 1) && (currentColumn - i >= 1) && (leftDownBlock == false))
+            if((currentRow - i >= 1) && (currentColumn - i >= 1) && (!leftDownBlock))
             {
                 if(board.myChessBoard[currentColumn - i][currentRow - i] == null) {
 
@@ -705,7 +690,7 @@ public class ChessPiece {
             }
 
             //if bishop is moving up and to the left
-            if((currentRow + i <= 8) && (currentColumn - i >= 1) && (leftUpBlock == false))
+            if((currentRow + i <= 8) && (currentColumn - i >= 1) && (!leftUpBlock))
             {
                 if(board.myChessBoard[currentColumn - i][currentRow + i] == null) {
                     ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
@@ -740,7 +725,7 @@ public class ChessPiece {
         for(int i = 1; i <=7; i++)
         {
             //if rook is going right
-            if((currentColumn + i <= 8) && (rightBlock == false))
+            if((currentColumn + i <= 8) && (!rightBlock))
             {
                 if (board.myChessBoard[currentColumn + i][currentRow] == null)
                 {
@@ -762,7 +747,7 @@ public class ChessPiece {
             }
 
             //if rook is moving down
-            if((currentRow - i >=1) && (downBlock == false))
+            if((currentRow - i >=1) && (!downBlock))
             {
                 if(board.myChessBoard[currentColumn][currentRow - i] == null) {
 
@@ -784,7 +769,7 @@ public class ChessPiece {
             }
 
             //if rook goes left
-            if((currentColumn - i >= 1) && (leftBlock == false))
+            if((currentColumn - i >= 1) && (!leftBlock))
             {
                 if(board.myChessBoard[currentColumn - i][currentRow] == null) {
 
@@ -799,14 +784,13 @@ public class ChessPiece {
                         board.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-
                     }
                     leftBlock = true;
                 }
             }
 
             //if rook is moving up
-            if((currentRow + i <= 8) && (upBlock == false))
+            if((currentRow + i <= 8) && (!upBlock))
             {
                 if(board.myChessBoard[currentColumn][currentRow + i] == null) {
                     ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn);

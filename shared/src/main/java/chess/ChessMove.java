@@ -16,7 +16,6 @@ public class ChessMove {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
-
     }
 
     /**
@@ -44,7 +43,8 @@ public class ChessMove {
         {
             return null;
         }
-        else {
+        else
+        {
             return this.promotionPiece;
         }
     }
