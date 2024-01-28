@@ -61,7 +61,8 @@ public class ChessPiece {
         }
         else if (PIECE_TYPE == PieceType.KING)
         {
-            return kingMoves(board, myPosition, myPosition.getRow(), myPosition.getColumn());
+            KingMovesCalculator kingCalculator = new KingMovesCalculator(board, myPosition);
+            return kingCalculator.kingsMoves();
         }
         else if (PIECE_TYPE == PieceType.PAWN)
         {
@@ -224,7 +225,7 @@ public class ChessPiece {
                 }
 
                 //if there's an enemy diagonal right
-                if ((board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
+                if ((board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare] != null) && (board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != this.TEAM_COLOR)) {
                     ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
                     board.removePiece(endPosition);
                     //if pawn is promoted to rook
@@ -250,166 +251,6 @@ public class ChessPiece {
                     //if pawn promoted to queen
                     possibleMoves.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
                 }
-            }
-        }
-        return possibleMoves;
-    }
-
-    //calculates the king's moves (does not account for moves that are illegal due to leaving the king in danger)
-    public HashSet<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, int currentRow, int currentColumn)
-    {
-        HashSet<ChessMove> possibleMoves = new HashSet<>();
-        int oneSquare = 1;
-
-        //if king going right
-        if((currentColumn + oneSquare <= 8))
-        {
-            if (board.myChessBoard[currentColumn + oneSquare][currentRow] == null)
-            {
-                ChessPosition endPosition = new ChessPosition(currentRow, currentColumn + oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else
-            {
-                if(board.myChessBoard[currentColumn + oneSquare][currentRow].getTeamColor() != TEAM_COLOR)
-                {
-                    ChessPosition endPosition = new ChessPosition(currentRow, currentColumn + oneSquare);
-                    //capture the enemy
-                    board.removePiece(endPosition);
-                    //add the move
-                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                }
-            }
-        }
-
-        //if king is moving down
-        if(currentRow - oneSquare >=1)
-        {
-            if(board.myChessBoard[currentColumn][currentRow - oneSquare] == null) {
-
-                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else
-            {
-                if(board.myChessBoard[currentColumn][currentRow - oneSquare].getTeamColor() != TEAM_COLOR)
-                {
-                    ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn);
-                    //capture the enemy
-                    board.removePiece(endPosition);
-                    //add the move
-                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                }
-            }
-        }
-
-        //if king goes left
-        if(currentColumn - oneSquare >= 1)
-        {
-            if(board.myChessBoard[currentColumn - oneSquare][currentRow] == null) {
-
-                ChessPosition endPosition = new ChessPosition(currentRow, currentColumn - oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));                    }
-            else
-            {
-                if(board.myChessBoard[currentColumn - oneSquare][currentRow].getTeamColor() != TEAM_COLOR)
-                {
-                    ChessPosition endPosition = new ChessPosition(currentRow, currentColumn - oneSquare);
-                    //capture the enemy
-                    board.removePiece(endPosition);
-                    //add the move
-                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-
-                }
-            }
-        }
-
-        //if king is moving up
-        if(currentRow + oneSquare <= 8)
-        {
-            if(board.myChessBoard[currentColumn][currentRow + oneSquare] == null) {
-                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else if(board.myChessBoard[currentColumn][currentRow + oneSquare].getTeamColor() != TEAM_COLOR)
-                {
-                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn);
-                    //capture the enemy
-                    board.removePiece(endPosition);
-                    //add the move
-                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                }
-            }
-
-        //king moving up and to the right
-        if((currentRow + oneSquare <= 8) && (currentColumn + oneSquare <= 8))
-        {
-            if (board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] == null)
-            {
-                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else if(board.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare].getTeamColor() != TEAM_COLOR)
-                {
-                    ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
-                    //capture the enemy
-                    board.removePiece(endPosition);
-                    //add the move
-                    possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-                }
-
-            }
-
-        //if king is moving down and to the right
-        if((currentRow - oneSquare >=1) && (currentColumn + oneSquare <=8))
-        {
-            if(board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare] == null) {
-
-                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-
-            }
-            else if(board.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].getTeamColor() != TEAM_COLOR) {
-
-                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
-                //capture the enemy
-                board.removePiece(endPosition);
-                //add the move
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-        }
-
-        //if king is moving down and to the left
-        if((currentRow - oneSquare >= 1) && (currentColumn - oneSquare >= 1)) {
-            if (board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare] == null) {
-
-                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else if (board.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare].getTeamColor() != TEAM_COLOR)
-            {
-                ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
-                //capture the enemy
-                board.removePiece(endPosition);
-                //add the move
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-        }
-
-        //if king is moving up and to the left
-        if((currentRow + oneSquare <= 8) && (currentColumn - oneSquare >= 1))
-        {
-            if(board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare] == null) {
-                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
-            }
-            else if(board.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare].getTeamColor() != TEAM_COLOR)
-            {
-                ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
-                //capture the enemy
-                board.removePiece(endPosition);
-                //add the move
-                possibleMoves.add(new ChessMove(myPosition, endPosition, null));
             }
         }
         return possibleMoves;
