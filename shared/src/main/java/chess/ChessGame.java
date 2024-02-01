@@ -78,15 +78,9 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-
-        //current problem - making a copy of the board isn't working
-
-
         //creates a copy of the board at tempBoard
         copyBoard(myBoard);
         ChessPosition kingPosition = new ChessPosition(0,0);
-        //if any of the moves of the opposite team can get my king but the king can get out of check, return true
-        //otherwise, call isincheckmate??
         boolean isInCheck = false;
         HashSet<ChessMove> possibleMoves = new HashSet<>();
         int numRows = 9;
@@ -111,23 +105,17 @@ public class ChessGame {
                     {
                         //to the possible moves set, add the piecemoves from the piece at this spot on the board. Running it off of the og chessboard
                         possibleMoves.addAll(tempBoard[j][i].pieceMoves(myBoard, new ChessPosition(i,j)));
-
-                        //check if the set of chessmoves contains the same end position as the king's position
-
                     }
                 }
-
             }
-
         }
+        //check if any of the moves match the king's position
         for (ChessMove move : possibleMoves) {
             if (move.getEndPosition().equals(kingPosition))
             {
                 isInCheck = true;
-                //can terminate the loop i think
             }
         }
-
         return isInCheck;
     }
 
@@ -144,7 +132,48 @@ public class ChessGame {
     //goes through the board and checks to see if any of the pieces with the opposite team color can move to the position of the king
     //
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean isInCheckmate = false;
+        int numRows = 9;
+        int numCols = 9;
+        ChessPiece myKing = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+        ChessPosition kingPosition = new ChessPosition(0,0);
+        //first check to see if it's in check. If not, return false
+        if(!isInCheck(teamColor))
+        {
+            return isInCheckmate;
+        }
+
+        //make a copy of the board to iterate and use to do moves on
+        copyBoard(myBoard);
+
+        //iterating through rows
+        for(int i = 0; i < numRows; i++) {
+            //iterating through the columns
+            for (int j = 0; j < numCols; j++) {
+                if (tempBoard[j][i] != null) {
+                    if(tempBoard[j][i].equals(myKing))
+                    {
+                        //found my king!
+                        kingPosition = new ChessPosition(i, j);
+                    }
+                }
+            }
+        }
+
+        //otherwise, make a list of moves that the king can make
+        Collection<ChessMove> kingMoves = validMoves(kingPosition);
+        if (kingMoves.isEmpty())
+        {
+            isInCheckmate = true;
+        }
+
+        return isInCheckmate;
+
+        //might not need any of this
+        //save the king's initial position
+        //make the king's move, check again for in check
+        //repeat until we're sure there are no moves he can make to get out of check
+        //return true
     }
 
     /**
