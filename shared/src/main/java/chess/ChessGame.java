@@ -15,7 +15,7 @@ public class ChessGame {
     ChessBoard myBoard;
     ChessPiece[][] tempBoard;
     public ChessGame() {
-        //making a new board here for the new game. Not sure if that's right
+        //making a new board here for the new game.
         myBoard = new ChessBoard();
     }
 
@@ -55,7 +55,8 @@ public class ChessGame {
         Collection<ChessMove> validMoves;
         Collection<ChessMove> movesToRemove = new HashSet<>();
         Collection<ChessMove> movesToReturn = new HashSet<>();
-
+        //initializing this as a default pawn
+        ChessPiece tempPieceToHold = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         ChessPiece currentPiece;
         //copyBoard(myBoard);
 
@@ -77,7 +78,9 @@ public class ChessGame {
             //move the piece on the board
             ChessPosition endPosition = move.getEndPosition();
             myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
+            tempPieceToHold = myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()];
             myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = currentPiece;
+
 
             //check to see if the king is now in check
             if(isInCheck(currentPiece.getTeamColor()))
@@ -87,24 +90,21 @@ public class ChessGame {
             }
 
             //move the piece back to the og spot and run it again
-            myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = null;
+            myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = tempPieceToHold;
             myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = currentPiece;
 
         }
-        //get rid of this line
-        //if it's in valid moves but not in moves to remove, add it to the new list and return that
-        //validMoves.removeAll(movesToRemove);
 
-        for(ChessMove move :validMoves)
+        //in the king trapped test - it's saying that the king can capture the pawn, which is only true if it's actually
+        //the king's turn. How do I check that it's the king's turn? Does that matter?
+        for(ChessMove move : validMoves)
         {
             if (!movesToRemove.contains(move))
             {
                 movesToReturn.add(move);
             }
         }
-
         return movesToReturn;
-//so the problem was that I was removing pieces in calculating my moves. find out what the new problem is lol
     }
 
     /**
@@ -114,7 +114,44 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece pieceToMove = myBoard.myChessBoard[move.startPosition.getColumn()][move.startPosition.getRow()];
+        TeamColor currentTeam;
+
+        //if it's not that team's turn
+        if (pieceToMove.getTeamColor() != this.getTeamTurn())
+        {
+            throw new InvalidMoveException();
+        }
+
+        //if that move will leave the king in danger, or they can't actually move there
+        if(validMoves(move.startPosition).isEmpty())
+        {
+            throw new InvalidMoveException();
+        }
+
+        else
+        {
+            //checking if it's ready to be promoted
+            if(move.getPromotionPiece() != null)
+            {
+                currentTeam = pieceToMove.getTeamColor();
+                pieceToMove = new ChessPiece(currentTeam, move.getPromotionPiece());
+            }
+
+            myBoard.myChessBoard[move.startPosition.getColumn()][move.startPosition.getRow()] = null;
+            myBoard.myChessBoard[move.endPosition.getColumn()][move.endPosition.getRow()] = pieceToMove;
+
+            //set the next turn
+            if(pieceToMove.getTeamColor() == TeamColor.BLACK)
+            {
+                setTeamTurn(TeamColor.WHITE);
+            }
+            else
+            {
+                setTeamTurn(TeamColor.BLACK);
+            }
+        }
+
     }
 
     /**
@@ -181,45 +218,39 @@ public class ChessGame {
         boolean isInCheckmate = false;
         int numRows = 9;
         int numCols = 9;
-        ChessPiece myKing = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-        ChessPosition kingPosition = new ChessPosition(0,0);
+        int numPiecesWithMoves = 0;
+
+        copyBoard(myBoard);
+
         //first check to see if it's in check. If not, return false
         if(!isInCheck(teamColor))
         {
             return isInCheckmate;
         }
 
-        //make a copy of the board to iterate and use to do moves on
-        copyBoard(myBoard);
-
-        //iterating through rows
-        for(int i = 0; i < numRows; i++) {
-            //iterating through the columns
-            for (int j = 0; j < numCols; j++) {
-                if (tempBoard[j][i] != null) {
-                    if(tempBoard[j][i].equals(myKing))
+        //if none of the pieces have valid moves, then he's in checkmate
+        //valid moves takes in a start position - maybe iterate through the temp board, give the start position of every one of the pieces of a certain color
+        for(int i = 0; i < numCols; i++)
+        {
+            for(int j = 0; j < numRows; j++)
+            {
+                if (tempBoard[i][j] != null && tempBoard[i][j].getTeamColor() == teamColor)
+                {
+                    ChessPosition currentPosition = new ChessPosition(j,i);
+                    //if the valid moves aren't empty for that piece
+                    if(!validMoves(currentPosition).isEmpty())
                     {
-                        //found my king!
-                        kingPosition = new ChessPosition(i, j);
+                        numPiecesWithMoves++;
                     }
                 }
             }
         }
 
-        //otherwise, make a list of moves that the king can make
-        Collection<ChessMove> kingMoves = validMoves(kingPosition);
-        if (kingMoves.isEmpty())
+        if(numPiecesWithMoves == 0)
         {
             isInCheckmate = true;
         }
-
         return isInCheckmate;
-
-        //might not need any of this
-        //save the king's initial position
-        //make the king's move, check again for in check
-        //repeat until we're sure there are no moves he can make to get out of check
-        //return true
     }
 
     /**
