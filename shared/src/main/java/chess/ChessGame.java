@@ -52,9 +52,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
-        Collection<ChessMove> validMoves;
-        Collection<ChessMove> movesToRemove = new HashSet<>();
-        Collection<ChessMove> movesToReturn = new HashSet<>();
+        HashSet<ChessMove> validMoves;
+        HashSet<ChessMove> movesToRemove = new HashSet<>();
+        HashSet<ChessMove> movesToReturn = new HashSet<>();
         //initializing this as a default pawn
         ChessPiece tempPieceToHold = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         ChessPiece currentPiece;
@@ -70,7 +70,7 @@ public class ChessGame {
         currentPiece = myBoard.getPiece(startPosition);
 
         //first, add all possible moves
-        validMoves = currentPiece.pieceMoves(myBoard, startPosition);
+        validMoves = (HashSet<ChessMove>) currentPiece.pieceMoves(myBoard, startPosition);
 
         //remove moves that will leave the king in check
         for (ChessMove move : validMoves)
@@ -116,6 +116,7 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceToMove = myBoard.myChessBoard[move.startPosition.getColumn()][move.startPosition.getRow()];
         TeamColor currentTeam;
+        HashSet<ChessMove> validMoves = (HashSet<ChessMove>) validMoves(move.startPosition);
 
         //if it's not that team's turn
         if (pieceToMove.getTeamColor() != this.getTeamTurn())
@@ -124,7 +125,13 @@ public class ChessGame {
         }
 
         //if that move will leave the king in danger, or they can't actually move there
-        if(validMoves(move.startPosition).isEmpty())
+        if(validMoves.isEmpty())
+        {
+            throw new InvalidMoveException();
+        }
+
+        //make sure that the move is actually in the valid moves
+        if(!validMoves.contains(move))
         {
             throw new InvalidMoveException();
         }
