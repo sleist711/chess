@@ -43,8 +43,6 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn + i][currentRow].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow, currentColumn + i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -65,8 +63,6 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn][currentRow - i].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -86,8 +82,6 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn - i][currentRow].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow, currentColumn - i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -107,8 +101,6 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn][currentRow + i].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -116,6 +108,7 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                 }
             }
         }
-        return possibleMoves;
+        HashSet<ChessMove> movesToReturn = new HashSet<>(possibleMoves);
+        return movesToReturn;
     }
 }

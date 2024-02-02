@@ -47,8 +47,6 @@ public class BishopMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn + i][currentRow + i].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn + i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -71,8 +69,6 @@ public class BishopMovesCalculator implements PieceMovesCalculator{
                     {
 
                         ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn + i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -92,8 +88,6 @@ public class BishopMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn - i][currentRow - i].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow - i, currentColumn - i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
 
@@ -114,8 +108,6 @@ public class BishopMovesCalculator implements PieceMovesCalculator{
                     if(myBoard.myChessBoard[currentColumn - i][currentRow + i].getTeamColor() != myTeamColor)
                     {
                         ChessPosition endPosition = new ChessPosition(currentRow + i, currentColumn - i);
-                        //capture the enemy
-                        myBoard.removePiece(endPosition);
                         //add the move
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
@@ -123,7 +115,8 @@ public class BishopMovesCalculator implements PieceMovesCalculator{
                 }
             }
         }
-        return possibleMoves;
+        HashSet<ChessMove> movesToReturn = new HashSet<>(possibleMoves);
+        return movesToReturn;
     }
 
 }

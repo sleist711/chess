@@ -51,14 +51,60 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
+        Collection<ChessMove> validMoves;
+        Collection<ChessMove> movesToRemove = new HashSet<>();
+        Collection<ChessMove> movesToReturn = new HashSet<>();
+
+        ChessPiece currentPiece;
+        //copyBoard(myBoard);
+
         //if there's no piece at startPosition
         if (myBoard.getPiece(startPosition) == null)
         {
             return null;
         }
-        //calls isInCheck
-        throw new RuntimeException("Not implemented");
 
+
+        currentPiece = myBoard.getPiece(startPosition);
+
+        //first, add all possible moves
+        validMoves = currentPiece.pieceMoves(myBoard, startPosition);
+
+        //remove moves that will leave the king in check
+        for (ChessMove move : validMoves)
+        {
+            //move the piece on the board
+            ChessPosition endPosition = move.getEndPosition();
+            myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
+            myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = currentPiece;
+
+            //check to see if the king is now in check
+            if(isInCheck(currentPiece.getTeamColor()))
+            {
+                //if he's in check, remove that move from the set
+                movesToRemove.add(new ChessMove(startPosition, endPosition, null));
+            }
+
+            //move the piece back to the og spot and run it again
+            myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = null;
+            myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = currentPiece;
+
+        }
+        //get rid of this line
+        //if it's in valid moves but not in moves to remove, add it to the new list and return that
+        //validMoves.removeAll(movesToRemove);
+
+        for(ChessMove move :validMoves)
+        {
+            if (!movesToRemove.contains(move))
+            {
+                movesToReturn.add(move);
+            }
+        }
+
+        return movesToReturn;
+//so the problem was that I was removing pieces in calculating my moves. find out what the new problem is lol
     }
 
     /**

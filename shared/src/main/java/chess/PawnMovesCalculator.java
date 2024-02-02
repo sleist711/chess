@@ -47,7 +47,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if ((currentColumn + oneSquare <= 8) && (currentRow + oneSquare <= 8)) {
                     if ((myBoard.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (myBoard.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare].TEAM_COLOR != myTeamColor)) {
                         ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
-                        myBoard.removePiece(endPosition);
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
                 }
@@ -56,7 +55,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if ((currentColumn - oneSquare >= 1) && (currentRow + oneSquare <= 8)) {
                     if ((myBoard.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare] != null) && (myBoard.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare].TEAM_COLOR != myTeamColor)) {
                         ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
-                        myBoard.removePiece(endPosition);
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
                 }
@@ -81,7 +79,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 //if there's an enemy diagonal right
                 if ((myBoard.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare] != null) && (myBoard.myChessBoard[currentColumn + oneSquare][currentRow + oneSquare].TEAM_COLOR != myTeamColor)) {
                     ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + oneSquare);
-                    myBoard.removePiece(endPosition);
                     //if pawn is promoted to rook
                     possibleMoves.add(new ChessMove(myPosition, endPosition, ChessPiece.PieceType.ROOK));
                     //if pawn promoted to bishop
@@ -95,7 +92,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 //if enemy at diagonal left
                 if ((myBoard.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare] != null) && (myBoard.myChessBoard[currentColumn - oneSquare][currentRow + oneSquare].TEAM_COLOR != myTeamColor)) {
                     ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - oneSquare);
-                    myBoard.removePiece(endPosition);
                     //if pawn is promoted to rook
                     possibleMoves.add(new ChessMove(myPosition, endPosition, ChessPiece.PieceType.ROOK));
                     //if pawn promoted to bishop
@@ -130,7 +126,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if ((currentColumn + oneSquare <= 8) && (currentRow - oneSquare >= 1)) {
                     if ((myBoard.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare] != null) && (myBoard.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != myTeamColor)) {
                         ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
-                        myBoard.removePiece(endPosition);
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
                 }
@@ -139,7 +134,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if ((currentColumn - oneSquare >= 1) && (currentRow - oneSquare >= 1)) {
                     if ((myBoard.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare] != null) && (myBoard.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare].TEAM_COLOR != myTeamColor)) {
                         ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
-                        myBoard.removePiece(endPosition);
                         possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                     }
                 }
@@ -163,7 +157,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 //if there's an enemy diagonal right
                 if ((myBoard.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare] != null) && (myBoard.myChessBoard[currentColumn + oneSquare][currentRow - oneSquare].TEAM_COLOR != myTeamColor)) {
                     ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + oneSquare);
-                    myBoard.removePiece(endPosition);
                     //if pawn is promoted to rook
                     possibleMoves.add(new ChessMove(myPosition, endPosition, ChessPiece.PieceType.ROOK));
                     //if pawn promoted to bishop
@@ -177,7 +170,6 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 //if enemy at diagonal left
                 if ((myBoard.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare] != null) && (myBoard.myChessBoard[currentColumn - oneSquare][currentRow - oneSquare].TEAM_COLOR != myTeamColor)) {
                     ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - oneSquare);
-                    myBoard.removePiece(endPosition);
                     //if pawn is promoted to rook
                     possibleMoves.add(new ChessMove(myPosition, endPosition, ChessPiece.PieceType.ROOK));
                     //if pawn promoted to bishop
@@ -189,6 +181,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 }
             }
         }
-        return possibleMoves;
+        //return possibleMoves;
+        HashSet<ChessMove> movesToReturn = new HashSet<>(possibleMoves);
+        return movesToReturn;
     }
 }

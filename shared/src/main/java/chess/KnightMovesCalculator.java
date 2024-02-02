@@ -43,8 +43,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn + twoSquares][currentRow + oneSquare].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn + twoSquares);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -64,8 +62,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn - twoSquares][currentRow + oneSquare].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow + oneSquare, currentColumn - twoSquares);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -86,8 +82,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn + twoSquares][currentRow - oneSquare].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn + twoSquares);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -108,8 +102,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn - twoSquares][currentRow - oneSquare].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow - oneSquare, currentColumn - twoSquares);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -130,8 +122,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn + oneSquare][currentRow + twoSquares].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn + oneSquare);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -151,8 +141,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn - oneSquare][currentRow + twoSquares].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow + twoSquares, currentColumn - oneSquare);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -173,8 +161,6 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn + oneSquare][currentRow - twoSquares].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn + oneSquare);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
@@ -195,14 +181,13 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 if(myBoard.myChessBoard[currentColumn - oneSquare][currentRow - twoSquares].getTeamColor() != myTeamColor)
                 {
                     ChessPosition endPosition = new ChessPosition(currentRow - twoSquares, currentColumn - oneSquare);
-                    //capture the enemy
-                    myBoard.removePiece(endPosition);
                     //add the move
                     possibleMoves.add(new ChessMove(myPosition, endPosition, null));
                 }
             }
         }
-        return possibleMoves;
+        HashSet<ChessMove> movesToReturn = new HashSet<>(possibleMoves);
+        return movesToReturn;
     }
 }
 
