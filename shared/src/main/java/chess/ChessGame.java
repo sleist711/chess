@@ -166,8 +166,6 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         //creates a copy of the board at tempBoard
-
-        //OK SO I THINK it's creating a copy of the board where the piece has been moved.... but then not making another copy to use in other functions when it's moved back???
         tempBoard = copyBoard(myBoard);
         ChessPosition kingPosition = new ChessPosition(0,0);
         boolean isInCheck = false;
@@ -239,9 +237,7 @@ public class ChessGame {
                     ChessPosition currentPosition = new ChessPosition(j,i);
 
                     //if the valid moves aren't empty for that piece
-                    //QUEEN DISAPPEARS RIGHT AFTER HER VALID MOVES ITERATION... WHY?
                     if(validMoves(currentPosition) == null)
-                    //if(!validMoves(currentPosition).isEmpty())
                     {
                         numPiecesWithMoves++;
                     }
@@ -264,7 +260,35 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean isInStalemate = false;
+        int numWithoutMoves = 0;
+        int numPieces = 0;
+        ChessPiece[][] stalemateTempBoard = copyBoard(myBoard);
+        int numRows = 9;
+        int numCols = 9;
+        if(!isInCheck(teamColor))
+        {
+            for(int i = 1; i < numCols; i++)
+            {
+                for(int j = 1; j < numRows; j++)
+                {
+                    if(stalemateTempBoard[i][j] != null && stalemateTempBoard[i][j].getTeamColor() == teamColor)
+                    {
+                        numPieces++;
+
+                        if(validMoves(new ChessPosition(j,i)).isEmpty())
+                        {
+                            numWithoutMoves++;
+                        }
+                    }
+                }
+            }
+        }
+        if(numPieces == numWithoutMoves)
+        {
+            isInStalemate = true;
+        }
+        return isInStalemate;
     }
 
     /**
