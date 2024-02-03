@@ -82,12 +82,16 @@ public class ChessGame {
             myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
             myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = currentPiece;
 
-
             //check to see if the king is now in check
             if(isInCheck(currentPiece.getTeamColor()))
             {
-                //if he's in check, remove that move from the set
-                movesToRemove.add(new ChessMove(startPosition, endPosition, null));
+                //if he's in check remove that move from the set
+                //maybe instead.... if he's in check and it's
+
+                //I think that this is the line that's wrong... promotion piece can't be null in the case of a pawn promoting
+               //testing this
+                movesToRemove.add(move);
+                // movesToRemove.add(new ChessMove(startPosition, endPosition, null));
             }
 
             //move the piece back to the og spot and run it again
