@@ -15,8 +15,6 @@ public class ChessGame {
     ChessBoard myBoard;
     ChessPiece[][] tempBoard;
     public ChessGame() {
-        //making a new board here for the new game
-        //myBoard = new ChessBoard();
     }
 
     /**
@@ -58,7 +56,6 @@ public class ChessGame {
         //initializing this as a default pawn
         ChessPiece tempPieceToHold = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         ChessPiece currentPiece;
-        //copyBoard(myBoard);
 
         //if there's no piece at startPosition
         if (myBoard.getPiece(startPosition) == null)
@@ -75,8 +72,6 @@ public class ChessGame {
         for (ChessMove move : validMoves)
         {
             //move the piece on the board
-
-            //testing here
             ChessPosition endPosition = move.getEndPosition();
             tempPieceToHold = myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()];
             myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
@@ -86,12 +81,7 @@ public class ChessGame {
             if(isInCheck(currentPiece.getTeamColor()))
             {
                 //if he's in check remove that move from the set
-                //maybe instead.... if he's in check and it's
-
-                //I think that this is the line that's wrong... promotion piece can't be null in the case of a pawn promoting
-               //testing this
                 movesToRemove.add(move);
-                // movesToRemove.add(new ChessMove(startPosition, endPosition, null));
             }
 
             //move the piece back to the og spot and run it again
@@ -100,8 +90,7 @@ public class ChessGame {
 
         }
 
-        //in the king trapped test - it's saying that the king can capture the pawn, which is only true if it's actually
-        //the king's turn. How do I check that it's the king's turn? Does that matter?
+        //move all of the invalid moves from the validMoves set
         for(ChessMove move : validMoves)
         {
             if (!movesToRemove.contains(move))
@@ -205,6 +194,7 @@ public class ChessGame {
             if (move.getEndPosition().equals(kingPosition))
             {
                 isInCheck = true;
+                return isInCheck;
             }
         }
         return isInCheck;
