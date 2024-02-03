@@ -15,8 +15,8 @@ public class ChessGame {
     ChessBoard myBoard;
     ChessPiece[][] tempBoard;
     public ChessGame() {
-        //making a new board here for the new game.
-        myBoard = new ChessBoard();
+        //making a new board here for the new game
+        //myBoard = new ChessBoard();
     }
 
     /**
@@ -66,7 +66,6 @@ public class ChessGame {
             return null;
         }
 
-
         currentPiece = myBoard.getPiece(startPosition);
 
         //first, add all possible moves
@@ -76,9 +75,11 @@ public class ChessGame {
         for (ChessMove move : validMoves)
         {
             //move the piece on the board
+
+            //testing here
             ChessPosition endPosition = move.getEndPosition();
-            myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
             tempPieceToHold = myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()];
+            myBoard.myChessBoard[startPosition.getColumn()][startPosition.getRow()] = null;
             myBoard.myChessBoard[endPosition.getColumn()][endPosition.getRow()] = currentPiece;
 
 
@@ -123,19 +124,16 @@ public class ChessGame {
         {
             throw new InvalidMoveException();
         }
-
         //if that move will leave the king in danger, or they can't actually move there
         if(validMoves.isEmpty())
         {
             throw new InvalidMoveException();
         }
-
         //make sure that the move is actually in the valid moves
         if(!validMoves.contains(move))
         {
             throw new InvalidMoveException();
         }
-
         else
         {
             //checking if it's ready to be promoted
@@ -158,7 +156,6 @@ public class ChessGame {
                 setTeamTurn(TeamColor.BLACK);
             }
         }
-
     }
 
     /**
@@ -169,7 +166,9 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         //creates a copy of the board at tempBoard
-        copyBoard(myBoard);
+
+        //OK SO I THINK it's creating a copy of the board where the piece has been moved.... but then not making another copy to use in other functions when it's moved back???
+        tempBoard = copyBoard(myBoard);
         ChessPosition kingPosition = new ChessPosition(0,0);
         boolean isInCheck = false;
         HashSet<ChessMove> possibleMoves = new HashSet<>();
@@ -216,18 +215,13 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      *
      */
-    //gets team color
-    //gets king position
-    //may need to use the valid move function - pieces can only move their valid moves?
-    //goes through the board and checks to see if any of the pieces with the opposite team color can move to the position of the king
-    //
     public boolean isInCheckmate(TeamColor teamColor) {
         boolean isInCheckmate = false;
         int numRows = 9;
         int numCols = 9;
         int numPiecesWithMoves = 0;
 
-        copyBoard(myBoard);
+        ChessPiece[][] checkmateTempBoard = copyBoard(myBoard);
 
         //first check to see if it's in check. If not, return false
         if(!isInCheck(teamColor))
@@ -236,16 +230,18 @@ public class ChessGame {
         }
 
         //if none of the pieces have valid moves, then he's in checkmate
-        //valid moves takes in a start position - maybe iterate through the temp board, give the start position of every one of the pieces of a certain color
         for(int i = 0; i < numCols; i++)
         {
             for(int j = 0; j < numRows; j++)
             {
-                if (tempBoard[i][j] != null && tempBoard[i][j].getTeamColor() == teamColor)
+                if (checkmateTempBoard[i][j] != null && checkmateTempBoard[i][j].getTeamColor() == teamColor)
                 {
                     ChessPosition currentPosition = new ChessPosition(j,i);
+
                     //if the valid moves aren't empty for that piece
-                    if(!validMoves(currentPosition).isEmpty())
+                    //QUEEN DISAPPEARS RIGHT AFTER HER VALID MOVES ITERATION... WHY?
+                    if(validMoves(currentPosition) == null)
+                    //if(!validMoves(currentPosition).isEmpty())
                     {
                         numPiecesWithMoves++;
                     }
@@ -290,14 +286,15 @@ public class ChessGame {
     }
 
     //Helper function to deep copy a board
-    private void copyBoard(ChessBoard board) {
+    private ChessPiece[][] copyBoard(ChessBoard board) {
         tempBoard = new ChessPiece[9][9];
         for (int col = 0; col <= 8; col++)
         {
             for (int row = 0; row <= 8; row++)
             {
-                tempBoard[col][row] = board.myChessBoard[col][row];
+                tempBoard[col][row] = board.getPiece(new ChessPosition(row, col));
             }
         }
+        return tempBoard;
     }
 }
