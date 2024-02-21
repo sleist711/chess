@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 
 //mport spark.Request;
 public class Request {
-    String username;
-    String password;
-    String requestType;
 
     static Gson serializer = new Gson();
 
