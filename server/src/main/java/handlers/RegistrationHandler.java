@@ -7,9 +7,8 @@ import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
-public class RegistrationHandler
-{
-    public static Object handle(Request request, Response response) throws Exception {
+public class RegistrationHandler {
+    public static Object handle(Request request, Response response) throws Exception
     {
         //turn the request into json string
         //make it a java object
@@ -17,16 +16,37 @@ public class RegistrationHandler
 
         //call the right service
         RegistrationService regService = new RegistrationService();
-        regService.register(regRequest);
+        String responseMessage = regService.register(regRequest);
 
-        //working right here - it's going to return the authoken, need to convert it to be a response
+        String regResult;
+        if (responseMessage.equals(""))
+        {
+            response.status(403);
+        }
+
+        else if (responseMessage.equals("{ message: Error: Bad Request}"))
+        {
+            response.status(400);
+        }
+
+        else if (responseMessage.equals("{ message : Error: Something happened. Try again }"))
+        {
+            response.status(500);
+        }
+        else {
+            response.status(200);
+        }
 
 
+        //successful registration
         //convert response to json
-        //String regResult = Result.convertToResult("You did it!");
-        //send http response
-        //response.status(200);
-        //response.body(clearResult);
+
+        regResult = Result.convertToResult(responseMessage);
+        response.body(regResult);
         return regResult;
+
+
+        //send http response
+
     }
 }

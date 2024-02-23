@@ -2,11 +2,8 @@ package service;
 import dataAccess.*;
 import request.ClearRequest;
 
-public class ClearService{
+public class ClearService extends Service{
 
-    private final UserDAO userAccess = new MemoryUserDAO();
-    private final GameDAO gameAccess = new MemoryGameDAO();
-    private final AuthDAO authAccess = new MemoryAuthDAO();
 
     public void clear(ClearRequest request)
     {

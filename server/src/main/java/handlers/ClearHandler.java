@@ -23,11 +23,11 @@ public class ClearHandler {
         clearService.clear(clearRequest);
 
         //convert response to json
-        String clearResult = Result.convertToResult("You did it!");
+        //String clearResult = Result.convertToResult("");
         //send http response
         response.status(200);
-        response.body(clearResult);
-        return clearResult;
+        //response.body(clearResult);
+        return "{}";
     }
 
 

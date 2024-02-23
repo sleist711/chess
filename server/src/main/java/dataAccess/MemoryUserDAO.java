@@ -8,7 +8,7 @@ public class MemoryUserDAO implements UserDAO{
 
     private int nextID = 1;
     //creates a map of users to usernames
-    final private HashMap<String, UserData> users = new HashMap<>();
+    //final public HashMap<String, UserData> users = new HashMap<>();
 
     //clears out the map
     @Override
@@ -17,16 +17,16 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public void checkForUser(String username)
-    {
-        //if user is already there, return true and throw error in the service
-        if(users.containsKey(username))
-        {
-            DataAccessException exception = new DataAccessException("That user already exists.");
-            throw(exception);
-        }
-        //otherwise, return and you're good to go
+    public boolean checkForUser(String username) {
+        boolean userExists = false;
 
+        //if user is already there, return true
+        if (users.containsKey(username)) {
+            userExists = true;
+        }
+
+        //otherwise, return and you're good to go
+        return userExists;
     }
 
     public void createUser(String username, String password, String email)
