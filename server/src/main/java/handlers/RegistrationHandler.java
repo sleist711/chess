@@ -15,8 +15,8 @@ public class RegistrationHandler {
         RegistrationRequest regRequest = RegistrationRequest.convertToRequest(request);
 
         //call the right service
-        RegistrationService regService = new RegistrationService();
-        String responseMessage = regService.register(regRequest);
+        //RegistrationService regService = new RegistrationService();
+        String responseMessage = RegistrationService.register(regRequest);
 
         String regResult;
         if (responseMessage.equals(""))
@@ -34,19 +34,15 @@ public class RegistrationHandler {
             response.status(500);
         }
         else {
+            //successful registration
             response.status(200);
         }
-
-
         //successful registration
-        //convert response to json
-
         regResult = Result.convertToResult(responseMessage);
         response.body(regResult);
         return regResult;
 
-
-        //send http response
-
     }
+
+
 }

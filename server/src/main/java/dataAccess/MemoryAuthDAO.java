@@ -22,4 +22,5 @@ public class MemoryAuthDAO implements AuthDAO {
         //creates and returns an auth token, puts it in the map
         return authToken;
     }
+
 }

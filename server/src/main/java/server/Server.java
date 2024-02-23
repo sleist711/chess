@@ -13,6 +13,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", ClearHandler::handle);
         Spark.post("/user", RegistrationHandler::handle);
+        Spark.post("/session", LoginHandler::handle);
         Spark.awaitInitialization();
         return Spark.port();
     }
