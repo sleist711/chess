@@ -1,10 +1,17 @@
 package serviceTests;
 
 import dataAccess.DataAccessException;
+import model.AuthData;
+import request.AuthRequest;
 import request.ClearRequest;
+import request.GameRequest;
 import request.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Array;
+import java.util.Optional;
+import java.util.Set;
 
 public class Tests {
 
@@ -158,6 +165,100 @@ public class Tests {
         {
             throw(new Exception());
         }
+
+    }
+
+    @Test
+    public void logoutSuccess() throws Exception
+    {
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        String myAuthToken = RegistrationService.authAccess.getAuth("Sydney");
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.authToken = myAuthToken;
+        String result = RegistrationService.logout(authRequest);
+
+        if(!result.equals("{}"))
+        {
+            throw(new Exception());
+        }
+
+
+    }
+
+    @Test
+    public void logoutFail() throws Exception
+    {
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        String myAuthToken = "12345";
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.authToken = myAuthToken;
+        String result = RegistrationService.logout(authRequest);
+
+        if(result.equals("{}"))
+        {
+            throw(new Exception());
+        }
+
+    }
+
+    @Test
+    public void createGameSuccess() throws Exception
+    {
+        //create user and log in
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        GameRequest newGameRequest = new GameRequest();
+        newGameRequest.gameName = "myGame";
+        newGameRequest.authToken = RegistrationService.authAccess.getAuth("Sydney");
+
+        GameService.createGame(newGameRequest);
+
+        if(GameService.gameAccess.games.isEmpty())
+        {
+            throw(new Exception());
+        }
+
 
     }
 

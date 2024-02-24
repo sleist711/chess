@@ -1,7 +1,11 @@
 package service;
 
 import dataAccess.*;
+import model.AuthData;
+import request.AuthRequest;
 import request.RegistrationRequest;
+
+import javax.xml.crypto.Data;
 
 public class RegistrationService extends Service {
 
@@ -53,7 +57,6 @@ public class RegistrationService extends Service {
     {
         String responseMessage = "";
         //checks to make sure that the corresponding username and password exist
-
         try {
             if (userAccess.users.containsKey(req.username)) {
                 if ((userAccess.users.get(req.username).password()).equals(req.password)) {
@@ -87,4 +90,46 @@ public class RegistrationService extends Service {
 
         return responseMessage;
     }
+
+    public static String logout(AuthRequest req)
+    {
+        String responseMessage = "";
+
+        try
+        {
+            //check that user exists
+
+            String username = RegistrationService.authAccess.getUser(req.authToken);
+            AuthData userToAccess = new AuthData(req.authToken, username);
+
+            //still failing here
+            if (authAccess.auth.containsKey(userToAccess))
+            {
+                AuthData updatedAuthData = new AuthData("", username);
+                authAccess.auth.replace(updatedAuthData, username);//invalidate the auth token
+            }
+            else
+            {
+                DataAccessException noUser = new DataAccessException("That is not a valid authToken");
+                throw(noUser);
+            }
+        }
+        catch(DataAccessException noUser)
+        {
+            responseMessage = "{ \"message\": \"Error: unauthorized\" }";
+            return responseMessage;
+        }
+        catch(Exception otherException)
+        {
+            responseMessage = "{ \"message\": \"Error: description\" }";
+            return responseMessage;
+        }
+
+        responseMessage = "{}";
+        return responseMessage;
+
+    }
+
+        //check that the auth token is valid
+        //logging out just means invalidating the current auth token so that they have to log in to get a new one
 }
