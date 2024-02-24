@@ -66,7 +66,7 @@ public class GameService extends Service{
         try
         {
             if (req.authToken == null) {
-                BadRequestException nullAuth = new BadRequestException("");
+                BadRequestException nullAuth = new BadRequestException("The authToken field is empty.");
                 throw(nullAuth);
             }
 
@@ -76,19 +76,25 @@ public class GameService extends Service{
                 responseMessage = gameAccess.listGames(req);
                 return responseMessage;
             }
+
+            //if it's the wrong auth token
+            else
+            {
+                BadRequestException wrongAuth = new BadRequestException("That is the wrong authToken.");
+                throw(wrongAuth);
+            }
         }
         catch(BadRequestException nullAuth)
         {
-            responseMessage = "{ \"message\": \"Error: unauthorized\" }";
+            responseMessage = "{ message: Error: unauthorized }";
             return responseMessage;
         }
         catch(Exception otherException)
         {
-            responseMessage = "{ \"message\": \"Error: Something went wrong.\" }";
+            responseMessage = "{ message: Error: Something went wrong. }";
             return responseMessage;
         }
 
-        return responseMessage;
     }
 
 }

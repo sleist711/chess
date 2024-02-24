@@ -15,11 +15,11 @@ public class GameListHandler {
         //call the right service
         String responseMessage = GameService.listGames(gameRequest);
 
-        if(responseMessage.equals("{ \"message\": \"Error: unauthorized\" }"))
+        if(responseMessage.equals("{ message: Error: unauthorized }"))
         {
             response.status(401);
         }
-        else if(responseMessage.equals("{ \"message\": \"Error: Something went wrong.\" }"))
+        else if(responseMessage.equals("{ message: Error: Something went wrong. }"))
         {
             response.status(500);
         }

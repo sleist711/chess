@@ -259,6 +259,113 @@ public class Tests {
             throw(new Exception());
         }
 
+    }
+
+    @Test
+    public void createGameFail() throws Exception
+    {
+        //create user and log in
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        GameRequest newGameRequest = new GameRequest();
+        newGameRequest.gameName = "myGame";
+        newGameRequest.authToken = "1234";
+
+        GameService.createGame(newGameRequest);
+
+        if(!GameService.gameAccess.games.isEmpty())
+        {
+            throw(new Exception());
+        }
+    }
+
+    @Test
+    public void listGamesSuccess() throws Exception{
+        //create user and log in
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        GameRequest newGameRequest = new GameRequest();
+        newGameRequest.gameName = "myGame";
+        newGameRequest.authToken = RegistrationService.authAccess.getAuth("Sydney");
+
+        GameRequest secondGameRequest = new GameRequest();
+        secondGameRequest.gameName = "mySecondGame";
+        secondGameRequest.authToken = RegistrationService.authAccess.getAuth("Sydney");
+
+        GameService.createGame(newGameRequest);
+        GameService.createGame(secondGameRequest);
+
+        String responseString = GameService.listGames(secondGameRequest);
+
+        if(responseString.equals("{ message: Error: unauthorized }") || responseString.equals("{ message: Error: Something went wrong. }"))
+        {
+            throw(new Exception());
+        }
+
+    }
+
+    @Test
+    public void listGamesFail() throws Exception
+    {
+        //create user and log in
+        ClearRequest clearRequest = new ClearRequest();
+        ClearService.clear(clearRequest);
+
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "Sydney";
+        newRequest.password = "password";
+        newRequest.email = "sydney@gmail.com";
+
+        RegistrationRequest secondRequest = new RegistrationRequest();
+        secondRequest.username = "Sydney";
+        secondRequest.password = "password";
+
+        RegistrationService.register(newRequest);
+        RegistrationService.login(secondRequest);
+
+        GameRequest newGameRequest = new GameRequest();
+        newGameRequest.gameName = "myGame";
+        newGameRequest.authToken = RegistrationService.authAccess.getAuth("Sydney");
+
+        GameRequest secondGameRequest = new GameRequest();
+        secondGameRequest.gameName = "mySecondGame";
+        secondGameRequest.authToken = "1234";
+
+        GameService.createGame(newGameRequest);
+        GameService.createGame(secondGameRequest);
+
+        String responseString = GameService.listGames(secondGameRequest);
+
+        if(!responseString.equals("{ message: Error: unauthorized }"))
+        {
+            throw(new Exception());
+        }
 
     }
 
