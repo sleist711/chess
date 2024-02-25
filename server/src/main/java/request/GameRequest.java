@@ -7,6 +7,7 @@ public class GameRequest extends Request{
     public String whiteUsername;
     public String authToken;
     public String gameName;
+    public String playerColor;
 
     public static GameRequest convertToRequest(spark.Request req)
     {

@@ -1,6 +1,7 @@
 package dataAccess;
 
 import model.UserData;
+import request.RegistrationRequest;
 
 import java.util.HashMap;
 
@@ -10,5 +11,7 @@ public interface UserDAO {
     public void clear();
     public boolean checkForUser(String username);
 
-    public void createUser(String username, String password, String email);
+    public UserData createUser(RegistrationRequest regRequest);
+
+
 }

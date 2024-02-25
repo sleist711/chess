@@ -4,14 +4,17 @@ import com.google.gson.Gson;
 import spark.Response;
 
 public class Result extends Response {
-    boolean success;
-    String message;
-    static Gson serializer = new Gson();
 
-    public static String convertToResult(String res)
+    String message;
+    public Result(String message)
     {
-        //not sure if this is right
-        String json = serializer.toJson(res);
-        return json;
+        this.message = message;
+    }
+
+    public static Object convertToResult(String message)
+    {
+        Result returnResult = new Result(message);
+        return returnResult;
     }
 }
+

@@ -3,7 +3,7 @@ package result;
 import com.google.gson.JsonObject;
 import request.ClearRequest;
 
-public class ClearResult extends Result{
+public class ClearResult{
 
     public static String convertToResult(String res)
     {

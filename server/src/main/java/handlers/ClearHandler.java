@@ -8,6 +8,7 @@ import service.*;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import com.google.gson.Gson;
 
 public class ClearHandler {
 
@@ -16,18 +17,35 @@ public class ClearHandler {
     public static Object handle(Request request, Response response) throws Exception {
         //turn the request into json string
         //make it a java object
-        ClearRequest clearRequest = ClearRequest.convertToRequest(request);
+
+        //ClearRequest clearRequest = ClearRequest.convertToRequest(request);
+        //var clearRequest = new Gson().fromJson(request.body(), ClearRequest.class);
 
         //call the right service
         ClearService clearService = new ClearService();
-        clearService.clear(clearRequest);
+        //clearService.clear(clearRequest);
+
+        clearService.clear();
+        response.status(200);
+        return "";
+
+        /*
+        var pet = new Gson().fromJson(req.body(), Pet.class);
+        pet = service.addPet(pet);
+        webSocketHandler.makeNoise(pet.name(), pet.sound());
+        return new Gson().toJson(pet);
+         */
 
         //convert response to json
-        //String clearResult = Result.convertToResult("");
+
+        //String clearResult = Result.convertToResult("{}");
         //send http response
-        response.status(200);
+        //response.status(200);
+        //return "";
+        //return new Gson().toJson('{}');
+        //return clearResult;
         //response.body(clearResult);
-        return "{}";
+        //return clearResult;
     }
 
 

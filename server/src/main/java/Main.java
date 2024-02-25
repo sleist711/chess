@@ -11,4 +11,8 @@ public class Main {
         testServer.run(8080);
 
     }
+
+    //To do
+    //write join game tests
+    //debug with dad
 }

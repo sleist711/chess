@@ -9,7 +9,7 @@ public interface AuthDAO {
     final public HashMap<AuthData, String> auth = new HashMap<>();
 
     public void clear();
-    public String createAuth(String username);
+    public AuthData createAuth(String username);
 
     //returns the current authToken for that user
     public String getAuth(String username);

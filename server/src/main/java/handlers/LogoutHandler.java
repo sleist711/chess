@@ -31,10 +31,10 @@ public class LogoutHandler {
         }
 
 
-        String logoutResult = Result.convertToResult(responseMessage);
-        response.body(logoutResult);
-        return logoutResult;
-
+        //String logoutResult = Result.convertToResult(responseMessage);
+        //response.body(logoutResult);
+        //return logoutResult;
+        return "";
 
     }
 }

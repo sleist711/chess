@@ -6,6 +6,7 @@ public class ClearRequest extends Request {
     {
         String reqString = convertToString(req);
         ClearRequest newRequest = serializer.fromJson(reqString, ClearRequest.class);
+        //System.out.println(reqString);
         return newRequest;
     }
 

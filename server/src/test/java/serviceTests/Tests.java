@@ -20,14 +20,14 @@ public class Tests {
     public void loginUserDoesntExist() throws Exception {
 
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
         newRequest.password = "password";
         newRequest.email = "sydney@gmail.com";
 
-        String result = RegistrationService.login(newRequest);
+        var result = RegistrationService.login(newRequest);
 
         if (!result.equals("{ message: Error: unauthorized }"))
         {
@@ -39,7 +39,7 @@ public class Tests {
     @Test
     public void loginSuccess() throws Exception {
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -51,7 +51,7 @@ public class Tests {
         secondRequest.password = "password";
 
         RegistrationService.register(newRequest);
-        String result = RegistrationService.login(secondRequest);
+        var result = RegistrationService.login(secondRequest);
 
         if (result.equals("{ message: Error: unauthorized }") || result.equals("{ message : Error: Something happened. Try again }"))
         {
@@ -64,7 +64,7 @@ public class Tests {
     public void wrongPassword() throws Exception
     {
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -76,7 +76,7 @@ public class Tests {
         secondRequest.password = "wrongpassword";
 
         RegistrationService.register(newRequest);
-        String result = RegistrationService.login(secondRequest);
+        var result = RegistrationService.login(secondRequest);
 
         if (!result.equals("{ message: Error: unauthorized }"))
         {
@@ -119,7 +119,7 @@ public class Tests {
         secondRequest.password = "password";
         secondRequest.email = "sydney@gmail.com";
 
-        String result = RegistrationService.register(secondRequest);
+        var result = RegistrationService.register(secondRequest);
         System.out.println(result);
         if(!result.equals("{ message: Error: Already taken}"))
         {
@@ -137,7 +137,7 @@ public class Tests {
         firstRequest.password = "password";
         firstRequest.email = "sydney@gmail.com";
 
-        String result = RegistrationService.register(firstRequest);
+        var result = RegistrationService.register(firstRequest);
 
         System.out.println(result);
         if(!result.equals("{ message: Error: Bad Request}"))
@@ -159,7 +159,7 @@ public class Tests {
 
         ClearRequest clearRequest = new ClearRequest();
         ClearService clearService = new ClearService();
-        clearService.clear(clearRequest);
+        clearService.clear();
 
         if(!ClearService.userAccess.users.isEmpty())
         {
@@ -172,7 +172,7 @@ public class Tests {
     public void logoutSuccess() throws Exception
     {
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -203,7 +203,7 @@ public class Tests {
     public void logoutFail() throws Exception
     {
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -234,7 +234,7 @@ public class Tests {
     {
         //create user and log in
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -266,7 +266,7 @@ public class Tests {
     {
         //create user and log in
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -296,7 +296,7 @@ public class Tests {
     public void listGamesSuccess() throws Exception{
         //create user and log in
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
@@ -335,7 +335,7 @@ public class Tests {
     {
         //create user and log in
         ClearRequest clearRequest = new ClearRequest();
-        ClearService.clear(clearRequest);
+        ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";

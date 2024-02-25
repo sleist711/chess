@@ -29,9 +29,10 @@ public class GameListHandler {
 
         }
 
-        String createGameResult = Result.convertToResult(responseMessage);
-        response.body(createGameResult);
-        return createGameResult;
+        //String createGameResult = Result.convertToResult(responseMessage);
+        //response.body(createGameResult);
+        //return createGameResult;
+        return "";
 
     }
 

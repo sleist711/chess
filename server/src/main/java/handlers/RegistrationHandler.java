@@ -1,7 +1,12 @@
 package handlers;
 
+import com.google.gson.Gson;
+import dataAccess.BadRequestException;
+import dataAccess.DataAccessException;
+import model.UserData;
 import request.ClearRequest;
 import request.RegistrationRequest;
+import result.RegistrationResult;
 import result.Result;
 import service.RegistrationService;
 import spark.Request;
@@ -10,39 +15,28 @@ import spark.Response;
 public class RegistrationHandler {
     public static Object handle(Request request, Response response) throws Exception
     {
-        //turn the request into json string
-        //make it a java object
-        RegistrationRequest regRequest = RegistrationRequest.convertToRequest(request);
-
-        //call the right service
-        //RegistrationService regService = new RegistrationService();
-        String responseMessage = RegistrationService.register(regRequest);
-
-        String regResult;
-        if (responseMessage.equals(""))
+        Object newUser;
+        try {
+            var registerUser = new Gson().fromJson(request.body(), RegistrationRequest.class);
+            newUser = RegistrationService.register(registerUser);
+        }
+        catch(DataAccessException noUserException)
         {
+            newUser = Result.convertToResult(noUserException.getMessage());
             response.status(403);
         }
-
-        else if (responseMessage.equals("{ message: Error: Bad Request}"))
+        catch(BadRequestException noInputException)
         {
             response.status(400);
+            newUser = Result.convertToResult(noInputException.getMessage());
         }
-
-        else if (responseMessage.equals("{ message : Error: Something happened. Try again }"))
+        catch(Exception otherException)
         {
             response.status(500);
+            newUser = Result.convertToResult(otherException.getMessage());
         }
-        else {
-            //successful registration
-            response.status(200);
-        }
-        //successful registration
-        regResult = Result.convertToResult(responseMessage);
-        response.body(regResult);
-        return regResult;
+
+        return new Gson().toJson(newUser);
 
     }
-
-
 }

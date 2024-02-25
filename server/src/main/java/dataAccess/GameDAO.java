@@ -12,4 +12,8 @@ public interface GameDAO {
     public Integer createGame(GameRequest req);
 
     public String listGames(GameRequest req);
+
+    public boolean checkForGame(Integer gameID);
+
+    public void joinGame(GameRequest req, String userColor);
 }

@@ -14,7 +14,7 @@ public class MemoryAuthDAO implements AuthDAO {
         auth.clear();
     }
 
-    public String createAuth(String username)
+    public AuthData createAuth(String username)
     {
         String authToken = UUID.randomUUID().toString();
         AuthData newAuth = new AuthData(authToken, username);
@@ -24,7 +24,7 @@ public class MemoryAuthDAO implements AuthDAO {
         //then, replace it with the new one
         auth.put(newAuth, username);
         //creates and returns an auth token, puts it in the map
-        return authToken;
+        return newAuth;
     }
 
     public AuthData getAuthData(String username)
