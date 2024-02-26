@@ -1,6 +1,8 @@
 package server;
 
-public class GameRequest extends Request{
+import server.Request;
+
+public class GameRequest extends Request {
 
     public Integer gameID;
     public String blackUsername;

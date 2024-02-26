@@ -1,7 +1,9 @@
-package server;
+package server.handlers;
 
 import com.google.gson.Gson;
 import dataAccess.BadRequestException;
+import server.GameRequest;
+import server.Result;
 import service.GameService;
 import spark.Request;
 import spark.Response;
