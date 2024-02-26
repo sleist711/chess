@@ -1,5 +1,8 @@
 package handlers;
 
+import com.google.gson.Gson;
+import dataAccess.BadRequestException;
+import dataAccess.DataAccessException;
 import request.GameRequest;
 import request.RegistrationRequest;
 import result.Result;
@@ -8,36 +11,41 @@ import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
+import javax.xml.crypto.Data;
+
 public class CreateGameHandler {
 
     public static Object handle(Request request, Response response) throws Exception
     {
-        GameRequest gameRequest = GameRequest.convertToRequest(request);
+        Object newGame;
+        try
+        {
+            var gameRequest = new Gson().fromJson(request.body(), GameRequest.class);
+            if(gameRequest == null)
+            {
+                gameRequest = new GameRequest();
+            }
+            gameRequest.authToken = request.headers("Authorization");
 
-        //call the right service
-        String responseMessage = GameService.createGame(gameRequest);
-
-        if(responseMessage.equals("{ \"message\": \"Error: unauthorized\" }"))
-        {
-            response.status(401);
-        }
-        else if (responseMessage.equals("{ \"message\": \"Error: bad request\" }"))
-        {
-            response.status(400);
-        }
-        else if (responseMessage.equals("{ \"message\": \"Error: Something went wrong.\" }"))
-        {
-            response.status(500);
-        }
-        else {
+            newGame = GameService.createGame(gameRequest);
             response.status(200);
         }
-
-
-        //String createGameResult = Result.convertToResult(responseMessage);
-        //response.body(createGameResult);
-        //return createGameResult;
-        return "";
+        catch(DataAccessException noAuth)
+        {
+            newGame = Result.convertToResult(noAuth.getMessage());
+            response.status(401);
+        }
+        catch(BadRequestException nullAuth)
+        {
+            newGame = Result.convertToResult(nullAuth.getMessage());
+            response.status(400);
+        }
+        catch(Exception otherException)
+        {
+            newGame = Result.convertToResult(otherException.getMessage());
+            response.status(500);
+        }
+        return new Gson().toJson(newGame);
     }
 
 }

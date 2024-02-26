@@ -23,7 +23,6 @@ public class GameRequest extends Request{
         }
 
         newRequest.authToken = req.headers("Authorization");
-        //System.out.println(req.headers("Authorization"));
         return newRequest;
     }
 

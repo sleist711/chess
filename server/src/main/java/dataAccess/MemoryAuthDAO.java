@@ -20,7 +20,7 @@ public class MemoryAuthDAO implements AuthDAO {
         AuthData newAuth = new AuthData(authToken, username);
 
         //remove any other item in the map that has the same username
-        auth.remove(getAuthData(username));
+        //auth.remove(getAuthData(username));
         //then, replace it with the new one
         auth.put(newAuth, username);
         //creates and returns an auth token, puts it in the map

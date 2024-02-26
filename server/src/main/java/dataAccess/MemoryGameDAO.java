@@ -9,15 +9,16 @@ import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private int nextID = 0;
+    private int nextID = 1;
 
-    public Integer createGame(GameRequest req)
+    public GameData createGame(GameRequest req)
     {
-        nextID+=1;
+
         ChessGame newGame = new ChessGame();
         GameData newGameData = new GameData(nextID, req.whiteUsername, req.blackUsername, req.gameName, newGame);
         games.put(nextID, newGameData);
-        return nextID;
+        nextID+=1;
+        return newGameData;
     }
 
     public String listGames(GameRequest req)

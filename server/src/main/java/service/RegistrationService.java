@@ -16,7 +16,7 @@ public class RegistrationService extends Service {
             DataAccessException noUserException = new DataAccessException("Error: Already Taken");
             throw(noUserException);
         }
-        if(req.username.equals("") || req.password.equals("") || req.email.equals(""))
+        if(req.username==null || req.password==null || req.email==null)
         {
             BadRequestException noInputException = new BadRequestException("Error: Bad Request");
             throw(noInputException);
@@ -48,43 +48,24 @@ public class RegistrationService extends Service {
         }
     }
 
-    public static String logout(AuthRequest req)
+    public static void logout(String authToken) throws Exception
     {
-        String responseMessage = "";
+//    public static Object logout(AuthRequest req) throws Exception
+        String username = RegistrationService.authAccess.getUser(authToken);
+        AuthData userToAccess = new AuthData(authToken, username);
 
-        try
+       //check that user exists
+        if (authAccess.auth.containsKey(userToAccess))
         {
-            //check that user exists
-
-            String username = RegistrationService.authAccess.getUser(req.authToken);
-            AuthData userToAccess = new AuthData(req.authToken, username);
-
-            //still failing here
-            if (authAccess.auth.containsKey(userToAccess))
-            {
-                AuthData updatedAuthData = new AuthData("", username);
-                authAccess.auth.replace(updatedAuthData, username);//invalidate the auth token
-            }
-            else
-            {
-                DataAccessException noUser = new DataAccessException("That is not a valid authToken");
-                throw(noUser);
-            }
+           // AuthData updatedAuthData = new AuthData("", username);
+            authAccess.auth.remove(userToAccess, username); //invalidate the old auth token
+            //return "";
         }
-        catch(DataAccessException noUser)
+        else
         {
-            responseMessage = "{ \"message\": \"Error: unauthorized\" }";
-            return responseMessage;
+            DataAccessException noUser = new DataAccessException("Error: unauthorized");
+            throw(noUser);
         }
-        catch(Exception otherException)
-        {
-            responseMessage = "{ \"message\": \"Error: description\" }";
-            return responseMessage;
-        }
-
-        responseMessage = "{}";
-        return responseMessage;
-
     }
 
         //check that the auth token is valid

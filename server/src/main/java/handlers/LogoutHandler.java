@@ -1,39 +1,52 @@
 package handlers;
 
+import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import request.AuthRequest;
+import request.RegistrationRequest;
 import result.Result;
 import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
+import javax.xml.crypto.Data;
+
 public class LogoutHandler {
 
     public static Object handle(Request request, Response response) throws Exception {
 
-        AuthRequest logoutRequest = AuthRequest.convertToRequest(request);
 
-        //call the right service
-        String responseMessage = RegistrationService.logout(logoutRequest);
-        System.out.println(responseMessage);
-        if(responseMessage.equals("{ \"message\": \"Error: unauthorized\" }"))
+        Object logoutUser;
+        response.status(200);
+
+        try {
+            var logoutRequest = new Gson().fromJson(request.body(), AuthRequest.class);
+
+            if(logoutRequest == null)
+            {
+                logoutRequest = new AuthRequest();
+            }
+            logoutRequest.authToken = request.headers("Authorization");
+
+
+            // logoutUser = RegistrationService.logout(logoutRequest);
+            //logoutUser = RegistrationService.logout(logoutRequest.authToken);
+            RegistrationService.logout(logoutRequest.authToken);
+
+        }
+        catch(DataAccessException noUser)
         {
             response.status(401);
+            logoutUser = Result.convertToResult(noUser.getMessage());
+            return new Gson().toJson(logoutUser);
         }
-        else if(responseMessage.equals("{ \"message\": \"Error: description\" }"))
+        catch(Exception otherException)
         {
             response.status(500);
+            logoutUser = Result.convertToResult(otherException.getMessage());
+            return new Gson().toJson(logoutUser);
         }
 
-        //always ends up returning 500 somehow
-        else
-        {
-            response.status(200);
-        }
-
-
-        //String logoutResult = Result.convertToResult(responseMessage);
-        //response.body(logoutResult);
-        //return logoutResult;
         return "";
 
     }

@@ -189,9 +189,9 @@ public class Tests {
         String myAuthToken = RegistrationService.authAccess.getAuth("Sydney");
         AuthRequest authRequest = new AuthRequest();
         authRequest.authToken = myAuthToken;
-        String result = RegistrationService.logout(authRequest);
+        RegistrationService.logout(authRequest.authToken);
 
-        if(!result.equals("{}"))
+        //if(!result.equals("{}"))
         {
             throw(new Exception());
         }
@@ -220,9 +220,9 @@ public class Tests {
         String myAuthToken = "12345";
         AuthRequest authRequest = new AuthRequest();
         authRequest.authToken = myAuthToken;
-        String result = RegistrationService.logout(authRequest);
+        RegistrationService.logout(authRequest.authToken);
 
-        if(result.equals("{}"))
+        //if(result.equals("{}"))
         {
             throw(new Exception());
         }
