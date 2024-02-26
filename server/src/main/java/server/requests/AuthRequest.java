@@ -1,4 +1,4 @@
-package server;
+package server.requests;
 
 public class AuthRequest extends Request {
     public String authToken;

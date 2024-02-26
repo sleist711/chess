@@ -1,7 +1,7 @@
 package dataAccess;
 
 import model.UserData;
-import server.RegistrationRequest;
+import server.requests.RegistrationRequest;
 
 import java.util.HashMap;
 

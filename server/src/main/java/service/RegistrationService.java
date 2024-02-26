@@ -2,7 +2,7 @@ package service;
 
 import dataAccess.*;
 import model.AuthData;
-import server.RegistrationRequest;
+import server.requests.RegistrationRequest;
 
 public class RegistrationService extends Service {
 

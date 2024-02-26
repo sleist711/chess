@@ -1,6 +1,6 @@
-package server;
+package server.requests;
 
-import server.Request;
+import server.requests.Request;
 
 public class GameRequest extends Request {
 

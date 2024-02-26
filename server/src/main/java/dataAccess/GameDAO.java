@@ -1,7 +1,7 @@
 package dataAccess;
 
 import model.GameData;
-import server.GameRequest;
+import server.requests.GameRequest;
 
 import java.util.Collection;
 import java.util.HashMap;

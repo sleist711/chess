@@ -3,9 +3,9 @@ package serviceTests;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
 import model.GameData;
-import server.AuthRequest;
-import server.GameRequest;
-import server.RegistrationRequest;
+import server.requests.AuthRequest;
+import server.requests.GameRequest;
+import server.requests.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
 

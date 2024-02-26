@@ -1,7 +1,7 @@
 package dataAccess;
 import chess.ChessGame;
 import model.GameData;
-import server.GameRequest;
+import server.requests.GameRequest;
 
 import java.util.Collection;
 
