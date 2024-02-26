@@ -6,9 +6,6 @@ import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDAO {
 
-    private int nextID = 1;
-    //HashMap<String, AuthData> auth = new HashMap<>();
-
     public void clear()
     {
         auth.clear();
@@ -19,11 +16,7 @@ public class MemoryAuthDAO implements AuthDAO {
         String authToken = UUID.randomUUID().toString();
         AuthData newAuth = new AuthData(authToken, username);
 
-        //remove any other item in the map that has the same username
-        //auth.remove(getAuthData(username));
-        //then, replace it with the new one
         auth.put(newAuth, username);
-        //creates and returns an auth token, puts it in the map
         return newAuth;
     }
 
@@ -52,6 +45,7 @@ public class MemoryAuthDAO implements AuthDAO {
             }
         }
 
+        assert authToken != null;
         return authToken.authToken();
     }
 
@@ -80,7 +74,5 @@ public class MemoryAuthDAO implements AuthDAO {
         }
         return false;
     }
-
-
 
 }

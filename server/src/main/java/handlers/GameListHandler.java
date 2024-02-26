@@ -7,13 +7,11 @@ import result.Result;
 import service.GameService;
 import spark.Request;
 import spark.Response;
-
-import java.util.List;
 import java.util.Map;
 
 public class GameListHandler {
 
-    public static Object handle(Request request, Response response) throws Exception
+    public static Object handle(Request request, Response response)
     {
         Object gameList;
 
@@ -25,7 +23,6 @@ public class GameListHandler {
             var list = GameService.listGames(listRequest, authToken).toArray();
             response.status(200);
             return new Gson().toJson(Map.of("games", list));
-
         }
         catch(BadRequestException wrongAuth)
         {
@@ -39,8 +36,6 @@ public class GameListHandler {
             response.status(500);
             return new Gson().toJson(gameList);
         }
-
-//right here is where it's turning null I think
     }
 
 }

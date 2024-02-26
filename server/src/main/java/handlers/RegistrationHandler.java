@@ -3,17 +3,14 @@ package handlers;
 import com.google.gson.Gson;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
-import model.UserData;
-import request.ClearRequest;
 import request.RegistrationRequest;
-import result.RegistrationResult;
 import result.Result;
 import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
 public class RegistrationHandler {
-    public static Object handle(Request request, Response response) throws Exception
+    public static Object handle(Request request, Response response)
     {
         Object newUser;
         try {
@@ -35,8 +32,6 @@ public class RegistrationHandler {
             response.status(500);
             newUser = Result.convertToResult(otherException.getMessage());
         }
-
         return new Gson().toJson(newUser);
-
     }
 }

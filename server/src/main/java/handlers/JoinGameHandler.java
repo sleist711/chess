@@ -12,7 +12,7 @@ import spark.Response;
 
 public class JoinGameHandler {
 
-    public static Object handle(Request request, Response response) throws Exception
+    public static Object handle(Request request, Response response)
     {
         Object joinedGame;
         try {
@@ -25,7 +25,6 @@ public class JoinGameHandler {
             gameToJoin.authToken = request.headers("Authorization");
 
             GameService.joinGame(gameToJoin, gameToJoin.authToken);
-
             response.status(200);
         }
         catch(AlreadyTakenException alreadyTaken)
@@ -54,5 +53,4 @@ public class JoinGameHandler {
         }
         return "";
     }
-
 }

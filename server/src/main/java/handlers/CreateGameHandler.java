@@ -4,18 +4,14 @@ import com.google.gson.Gson;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
 import request.GameRequest;
-import request.RegistrationRequest;
 import result.Result;
 import service.GameService;
-import service.RegistrationService;
 import spark.Request;
 import spark.Response;
 
-import javax.xml.crypto.Data;
-
 public class CreateGameHandler {
 
-    public static Object handle(Request request, Response response) throws Exception
+    public static Object handle(Request request, Response response)
     {
         Object newGame;
         try

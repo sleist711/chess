@@ -11,7 +11,6 @@ public interface AuthDAO {
     public void clear();
     public AuthData createAuth(String username);
 
-    //returns the current authToken for that user
     public String getAuth(String username);
 
     public  String getUser(String authToken);

@@ -1,17 +1,10 @@
 package serviceTests;
 
-import dataAccess.DataAccessException;
-import model.AuthData;
 import request.AuthRequest;
-import request.ClearRequest;
 import request.GameRequest;
 import request.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Array;
-import java.util.Optional;
-import java.util.Set;
 
 public class Tests {
 
@@ -19,7 +12,6 @@ public class Tests {
     @Test
     public void loginUserDoesntExist() throws Exception {
 
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -38,7 +30,6 @@ public class Tests {
 
     @Test
     public void loginSuccess() throws Exception {
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -63,7 +54,6 @@ public class Tests {
     @Test
     public void wrongPassword() throws Exception
     {
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -157,7 +147,6 @@ public class Tests {
 
         RegistrationService.register(firstRequest);
 
-        ClearRequest clearRequest = new ClearRequest();
         ClearService clearService = new ClearService();
         clearService.clear();
 
@@ -171,7 +160,6 @@ public class Tests {
     @Test
     public void logoutSuccess() throws Exception
     {
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -202,7 +190,6 @@ public class Tests {
     @Test
     public void logoutFail() throws Exception
     {
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -233,7 +220,6 @@ public class Tests {
     public void createGameSuccess() throws Exception
     {
         //create user and log in
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -265,7 +251,6 @@ public class Tests {
     public void createGameFail() throws Exception
     {
         //create user and log in
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -295,7 +280,6 @@ public class Tests {
     @Test
     public void listGamesSuccess() throws Exception{
         //create user and log in
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();
@@ -334,7 +318,6 @@ public class Tests {
     public void listGamesFail() throws Exception
     {
         //create user and log in
-        ClearRequest clearRequest = new ClearRequest();
         ClearService.clear();
 
         RegistrationRequest newRequest = new RegistrationRequest();

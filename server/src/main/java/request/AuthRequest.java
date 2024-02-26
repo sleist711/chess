@@ -1,7 +1,5 @@
 package request;
 
-
-
 public class AuthRequest extends Request {
     public String authToken;
 

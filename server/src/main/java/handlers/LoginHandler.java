@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataAccess.BadRequestException;
-import dataAccess.DataAccessException;
 import request.RegistrationRequest;
 import result.Result;
 import service.RegistrationService;
@@ -11,7 +10,7 @@ import spark.Response;
 
 public class LoginHandler {
 
-    public static Object handle(Request request, Response response) throws Exception {
+    public static Object handle(Request request, Response response) {
 
         Object newUser;
         try {
