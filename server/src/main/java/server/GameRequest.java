@@ -1,4 +1,4 @@
-package request;
+package server;
 
 public class GameRequest extends Request{
 

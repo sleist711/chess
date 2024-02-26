@@ -1,10 +1,8 @@
-package handlers;
+package server;
 
 import com.google.gson.Gson;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
-import request.RegistrationRequest;
-import result.Result;
 import service.RegistrationService;
 import spark.Request;
 import spark.Response;

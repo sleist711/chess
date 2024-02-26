@@ -1,12 +1,9 @@
 package dataAccess;
 import chess.ChessGame;
-import model.AuthData;
 import model.GameData;
-import request.GameRequest;
+import server.GameRequest;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static service.Service.authAccess;
 

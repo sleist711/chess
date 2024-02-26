@@ -1,12 +1,6 @@
 package dataAccess;
 import model.UserData;
-import request.RegistrationRequest;
-
-import javax.xml.crypto.Data;
-import java.util.HashMap;
-import java.util.Collection;
-
-import static service.Service.authAccess;
+import server.RegistrationRequest;
 
 public class MemoryUserDAO implements UserDAO{
 

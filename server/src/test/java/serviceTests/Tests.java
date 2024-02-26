@@ -1,18 +1,14 @@
 package serviceTests;
 
-import com.google.gson.Gson;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
-import dataAccess.MemoryGameDAO;
 import model.GameData;
-import request.AuthRequest;
-import request.GameRequest;
-import request.RegistrationRequest;
+import server.AuthRequest;
+import server.GameRequest;
+import server.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;

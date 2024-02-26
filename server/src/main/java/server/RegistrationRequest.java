@@ -1,4 +1,4 @@
-package request;
+package server;
 
 public class RegistrationRequest extends Request{
     public String username;
