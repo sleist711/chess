@@ -1,6 +1,7 @@
 package chess;
+import chess.MoveCalculators.*;
+
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    final ChessGame.TeamColor TEAM_COLOR;
+    final public ChessGame.TeamColor TEAM_COLOR;
     final ChessPiece.PieceType PIECE_TYPE;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type)

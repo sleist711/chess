@@ -1,8 +1,10 @@
-package chess;
+package chess.MoveCalculators;
+
+import chess.*;
 
 import java.util.HashSet;
 
-public class BishopMovesCalculator implements PieceMovesCalculator{
+public class BishopMovesCalculator implements PieceMovesCalculator {
     ChessPosition myPosition;
     ChessGame.TeamColor myTeamColor;
     ChessBoard myBoard;

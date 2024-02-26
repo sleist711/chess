@@ -1,6 +1,12 @@
-package chess;
+package chess.MoveCalculators;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
+import chess.MoveCalculators.PieceMovesCalculator;
+
 import java.util.HashSet;
-public class RookMovesCalculator implements PieceMovesCalculator{
+public class RookMovesCalculator implements PieceMovesCalculator {
     ChessPosition myPosition;
     ChessGame.TeamColor myTeamColor;
     ChessBoard myBoard;

@@ -11,7 +11,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    ChessPiece[][] myChessBoard;
+    public ChessPiece[][] myChessBoard;
     ArrayList<ChessPosition> initialPositions;
 
 

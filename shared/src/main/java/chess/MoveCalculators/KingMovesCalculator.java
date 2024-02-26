@@ -1,8 +1,10 @@
-package chess;
+package chess.MoveCalculators;
+
+import chess.*;
 
 import java.util.HashSet;
 
-public class KingMovesCalculator implements PieceMovesCalculator{
+public class KingMovesCalculator implements PieceMovesCalculator {
 
     //ChessBoard myChessBoard;
     ChessPosition myPosition;
