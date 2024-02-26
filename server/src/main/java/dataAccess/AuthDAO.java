@@ -14,7 +14,7 @@ public interface AuthDAO {
     //returns the current authToken for that user
     public String getAuth(String username);
 
-    public String getUser(String authToken);
+    public  String getUser(String authToken);
 
     public boolean checkAuthToken(String authToken);
 

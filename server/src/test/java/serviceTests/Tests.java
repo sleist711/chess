@@ -321,7 +321,7 @@ public class Tests {
         GameService.createGame(newGameRequest);
         GameService.createGame(secondGameRequest);
 
-        String responseString = GameService.listGames(secondGameRequest);
+        var responseString = GameService.listGames(secondGameRequest, secondGameRequest.authToken);
 
         if(responseString.equals("{ message: Error: unauthorized }") || responseString.equals("{ message: Error: Something went wrong. }"))
         {
@@ -360,7 +360,7 @@ public class Tests {
         GameService.createGame(newGameRequest);
         GameService.createGame(secondGameRequest);
 
-        String responseString = GameService.listGames(secondGameRequest);
+        var responseString = GameService.listGames(secondGameRequest, secondGameRequest.authToken);
 
         if(!responseString.equals("{ message: Error: unauthorized }"))
         {

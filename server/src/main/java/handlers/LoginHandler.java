@@ -31,13 +31,5 @@ public class LoginHandler {
         }
 
         return new Gson().toJson(newUser);
-
-        /*
-        var pet = new Gson().fromJson(req.body(), Pet.class);
-        pet = service.addPet(pet);
-        webSocketHandler.makeNoise(pet.name(), pet.sound());
-        return new Gson().toJson(pet);
-         */
-
     }
 }

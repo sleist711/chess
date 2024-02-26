@@ -1,5 +1,9 @@
 package handlers;
 
+import com.google.gson.Gson;
+import dataAccess.AlreadyTakenException;
+import dataAccess.BadRequestException;
+import dataAccess.DataAccessException;
 import request.GameRequest;
 import result.Result;
 import service.GameService;
@@ -10,35 +14,44 @@ public class JoinGameHandler {
 
     public static Object handle(Request request, Response response) throws Exception
     {
-        GameRequest gameRequest = GameRequest.convertToRequest(request);
+        Object joinedGame;
+        try {
+            var gameToJoin = new Gson().fromJson(request.body(), GameRequest.class);
 
-        //call the right service
-        String responseMessage = GameService.joinGame(gameRequest);
+            if(gameToJoin == null)
+            {
+                gameToJoin = new GameRequest();
+            }
+            gameToJoin.authToken = request.headers("Authorization");
 
-        if(responseMessage.equals("{ \"message\": \"Error: already taken\" }"))
-        {
-            response.status(403);
-        }
-        else if(responseMessage.equals("{ message: Error: bad request }"))
-        {
-            response.status(400);
-        }
-        else if(responseMessage.equals("{ message: Error: unauthorized }"))
-        {
-            response.status(401);
-        }
-        else if(responseMessage.equals("{ \"message\": \"Error: description\" }"))
-        {
-            response.status(500);
-        }
-        else
-        {
+            GameService.joinGame(gameToJoin, gameToJoin.authToken);
+
             response.status(200);
         }
-
-        //String joinGameResult = Result.convertToResult(responseMessage);
-        //response.body(joinGameResult);
-        //return joinGameResult;
+        catch(AlreadyTakenException alreadyTaken)
+        {
+            joinedGame = Result.convertToResult(alreadyTaken.getMessage());
+            response.status(403);
+            return new Gson().toJson(joinedGame);
+        }
+        catch(BadRequestException noColor)
+        {
+            joinedGame = Result.convertToResult(noColor.getMessage());
+            response.status(400);
+            return new Gson().toJson(joinedGame);
+        }
+        catch(DataAccessException wrongAuth)
+        {
+            joinedGame = Result.convertToResult(wrongAuth.getMessage());
+            response.status(401);
+            return new Gson().toJson(joinedGame);
+        }
+        catch(Exception otherException)
+        {
+            joinedGame = Result.convertToResult(otherException.getMessage());
+            response.status(500);
+            return new Gson().toJson(joinedGame);
+        }
         return "";
     }
 

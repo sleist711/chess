@@ -3,6 +3,7 @@ package dataAccess;
 import model.GameData;
 import request.GameRequest;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public interface GameDAO {
@@ -11,7 +12,7 @@ public interface GameDAO {
 
     public GameData createGame(GameRequest req);
 
-    public String listGames(GameRequest req);
+    public Collection<GameData> listGames(GameRequest req);
 
     public boolean checkForGame(Integer gameID);
 

@@ -55,6 +55,7 @@ public class MemoryAuthDAO implements AuthDAO {
         return authToken.authToken();
     }
 
+
     public String getUser(String authToken)
     {
         String username = null;

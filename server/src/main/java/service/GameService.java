@@ -7,6 +7,7 @@ import model.GameData;
 import request.GameRequest;
 import request.RegistrationRequest;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import static service.Service.authAccess;
@@ -40,120 +41,81 @@ public class GameService extends Service{
 
 
 
-    public static String listGames(GameRequest req)
+    public static Collection<GameData> listGames(GameRequest req, String authToken) throws Exception
     {
-        String responseMessage = "";
 
-        try
-        {
-            if (req.authToken == null) {
-                BadRequestException nullAuth = new BadRequestException("The authToken field is empty.");
-                throw(nullAuth);
-            }
-
-            //checks the authToken
-            if (authAccess.checkAuthToken(req.authToken)) {
-                //lists games
-                responseMessage = gameAccess.listGames(req);
-                return responseMessage;
-            }
-
-            //if it's the wrong auth token
-            else
-            {
-                BadRequestException wrongAuth = new BadRequestException("That is the wrong authToken.");
-                throw(wrongAuth);
-            }
-        }
-        catch(BadRequestException nullAuth)
-        {
-            responseMessage = "{ message: Error: unauthorized }";
-            return responseMessage;
-        }
-        catch(Exception otherException)
-        {
-            responseMessage = "{ message: Error: Something went wrong. }";
-            return responseMessage;
+        if (authToken == null) {
+            BadRequestException nullAuth = new BadRequestException("Error: unauthorized");
+            throw(nullAuth);
         }
 
+        //checks the authToken
+        if (authAccess.checkAuthToken(authToken)) {
+            //lists games
+            return gameAccess.listGames(req);
+
+        }
+        //if it's the wrong auth token
+        else
+        {
+            BadRequestException wrongAuth = new BadRequestException("Error: unauthorized");
+            throw(wrongAuth);
+        }
     }
 
-    public static String joinGame(GameRequest req)
+    public static void joinGame(GameRequest req, String authToken) throws Exception
     {
-        String responseMessage = "";
-
-        try {
-            //check the auth token
-            if (authAccess.checkAuthToken(req.authToken)) {
-                //check that the game exists
-                if (gameAccess.checkForGame(req.gameID)) {
-                    String userColor = "";
-                    //see what color they want to be
-                    if (req.playerColor == null) {
-                        //add them as an observer
+        //check the auth token
+        if (authAccess.checkAuthToken(authToken)) {
+            //check that the game exists
+            if (gameAccess.checkForGame(req.gameID)) {
+                //see what color they want to be
+                //if playercolor is null, add them as an observer here
+                if(req.playerColor == null)
+                {
+                    return;
+                }
+                if (req.playerColor.equals("BLACK")) {
+                    //problem is with the null i think
+                    if (gameAccess.games.get(req.gameID).blackUsername() != null) {
+                        //throw an error because they want to be black but there's already a player
+                        AlreadyTakenException alreadyTaken = new AlreadyTakenException("Error: already taken");
+                        throw (alreadyTaken);
                     }
-                    else if (req.playerColor.equals("BLACK")) {
-                        if (gameAccess.games.get(req.gameID).blackUsername() != null) {
-                            //throw an error because they want to be black but there's already a player
-                            AlreadyTakenException alreadyTaken = new AlreadyTakenException("Black is already taken");
-                            throw (alreadyTaken);
-                        }
-                    } else if (req.playerColor.equals("WHITE")) {
-                        if (gameAccess.games.get(req.gameID).whiteUsername() != null) {
-                            //throw an error because they want to be white but there's already a player
-                            AlreadyTakenException alreadyTaken = new AlreadyTakenException("White is already taken");
-                            throw (alreadyTaken);
-                        }
-                    }
-                    //make sure that they don't want to be both colors
-                    else if (!req.playerColor.equals("WHITE") && !req.playerColor.equals("BLACK") && req.playerColor != null) {
-                        //throw an error if it's not black or white
-                        BadRequestException noColor = new BadRequestException("You need to choose a color.");
-                        throw (noColor);
-                    }
-
-                    //if color is specified, add user as a player
-                    //otherwise, add user as observer
                     gameAccess.joinGame(req, req.playerColor);
 
                 }
-                //if game doesn't exist
-                else {
-                    BadRequestException noGame = new BadRequestException("That game doesn't exist.");
-                    throw (noGame);
+                else if (req.playerColor.equals("WHITE")) {
+                    if (gameAccess.games.get(req.gameID).whiteUsername() != null)
+                    {
+                        //throw an error because they want to be white but there's already a player
+                        AlreadyTakenException alreadyTaken = new AlreadyTakenException("Error: already taken");
+                        throw (alreadyTaken);
+                    }
+                    gameAccess.joinGame(req, req.playerColor);
                 }
+                //make sure that they don't want to be both colors
+                else if (!req.playerColor.equals("WHITE") && !req.playerColor.equals("BLACK") && req.playerColor != null)
+                {
+                    //throw an error if it's not black or white
+                    BadRequestException noColor = new BadRequestException("Error: bad request");
+                    throw (noColor);
+                }
+
             }
-            //check if authToken is null
-            //check if authToken is wrong
-            else if (!authAccess.checkAuthToken(req.authToken)) {
-                DataAccessException wrongAuth = new DataAccessException("That authToken is invalid.");
+            //if game doesn't exist
+            else {
+                BadRequestException noGame = new BadRequestException("Error: bad request");
+                throw (noGame);
+            }
+        }
+        //check if authToken is null
+        //check if authToken is wrong
+        else {
+            DataAccessException wrongAuth = new DataAccessException("Error: unauthorized");
                 throw (wrongAuth);
-            } else {
-                Exception otherException = new Exception();
-                throw (otherException);
-            }
         }
-        catch(AlreadyTakenException alreadyTaken)
-        {
-            //403
-            responseMessage = "{ \"message\": \"Error: already taken\" }";
-        }
-        catch (BadRequestException badRequest)
-        {
-            //400
-            responseMessage = "{ message: Error: bad request }";
-        }
-        catch(DataAccessException wrongAuth)
-        {
-            //401
-            responseMessage = "{ message: Error: unauthorized }";
-        }
-        catch(Exception otherException)
-        {
-            //500
-            responseMessage = "{ \"message\": \"Error: description\" }";
-        }
-        return responseMessage;
+
     }
 
 }

@@ -4,8 +4,11 @@ import model.AuthData;
 import model.GameData;
 import request.GameRequest;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static service.Service.authAccess;
 
 public class MemoryGameDAO implements GameDAO{
 
@@ -21,17 +24,10 @@ public class MemoryGameDAO implements GameDAO{
         return newGameData;
     }
 
-    public String listGames(GameRequest req)
+    public Collection<GameData> listGames(GameRequest req)
     {
-        String returnString = "{ \"games\": ";
-        for (Map.Entry<Integer, GameData> entry : games.entrySet())
-        {
-            returnString += "[{\"gameID\":" + entry.getKey() + ", \"whiteUsername\":\""
-                    + entry.getValue().whiteUsername() + "\", \"blackUsername\":\""
-                    + entry.getValue().blackUsername()+"\", \"gameName:\""
-                    + entry.getValue().gameName() +"\"} ] ";
-        }
-        return returnString;
+        return games.values();
+
     }
 
     public boolean checkForGame(Integer gameID)
@@ -55,7 +51,8 @@ public class MemoryGameDAO implements GameDAO{
             String currentWhiteUsername = games.get(req.gameID).whiteUsername();
             String currentGameName = games.get(req.gameID).gameName();
             ChessGame currentGame = games.get(req.gameID).game();
-            GameData newGame = new GameData(req.gameID, currentWhiteUsername, req.blackUsername, currentGameName, currentGame);
+            String newBlackUser = authAccess.getUser(req.authToken);
+            GameData newGame = new GameData(req.gameID, currentWhiteUsername, newBlackUser, currentGameName, currentGame);
 
             //now replace the game with the new one
             games.replace(req.gameID, newGame);
@@ -67,14 +64,12 @@ public class MemoryGameDAO implements GameDAO{
             String currentBlackUsername = games.get(req.gameID).blackUsername();
             String currentGameName = games.get(req.gameID).gameName();
             ChessGame currentGame = games.get(req.gameID).game();
-            GameData newGame = new GameData(req.gameID, req.whiteUsername, currentBlackUsername, currentGameName, currentGame);
+            String newWhiteUser = authAccess.getUser(req.authToken);
+            GameData newGame = new GameData(req.gameID, newWhiteUser, currentBlackUsername, currentGameName, currentGame);
             //now replace the game with the new one
             games.replace(req.gameID, newGame);
         }
-        else
-        {
-            //add them as an observer
-        }
+
 
     }
 
