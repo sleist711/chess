@@ -1,4 +1,7 @@
 package server.handlers;
+import com.google.gson.Gson;
+import dataAccess.ResponseException;
+import server.Result;
 import service.*;
 import spark.Request;
 import spark.Response;
@@ -9,9 +12,23 @@ public class ClearHandler {
 
     public static Object handle(Request request, Response response){
 
-        ClearService.clear();
-        response.status(200);
-        return "";
+        Object message;
+        try
+        {
+            ClearService.clear();
+            response.status(200);
+            message = "";
+        }
+        catch(ResponseException ex)
+        {
+            response.status(500);
+            message = Result.convertToResult(ex.getMessage());
+
+        }
+        return new Gson().toJson(message);
+
+
+
     }
 }
 

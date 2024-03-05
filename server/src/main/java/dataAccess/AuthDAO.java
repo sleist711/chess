@@ -8,14 +8,14 @@ import java.util.HashMap;
 public interface AuthDAO {
     final public HashMap<AuthData, String> auth = new HashMap<>();
 
-    public void clear();
-    public AuthData createAuth(String username);
+    public void clear() throws ResponseException;
+    public AuthData createAuth(String username) throws ResponseException;
 
-    public String getAuth(String username);
-
-    public  String getUser(String authToken);
+    public  String getUser(String authToken) throws ResponseException;
 
     public boolean checkAuthToken(String authToken);
+    public String getAuth(String username) throws ResponseException;
+
 
 
 }

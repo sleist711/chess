@@ -1,5 +1,6 @@
 package server;
 
+import dataAccess.*;
 import server.handlers.*;
 import spark.*;
 
@@ -18,6 +19,22 @@ public class Server {
         Spark.post("/game", CreateGameHandler::handle);
         Spark.get("/game", GameListHandler::handle);
         Spark.put("/game", JoinGameHandler::handle);
+
+        //initializing database here. not sure if correct
+        try{
+            DatabaseManager.createDatabase();
+            MySQLAuthDAO sqlAuth = new MySQLAuthDAO();
+
+
+
+        }
+        catch(DataAccessException e)
+        {
+            stop();
+        } catch (ResponseException e) {
+            throw new RuntimeException(e);
+        }
+
         Spark.awaitInitialization();
         return Spark.port();
     }

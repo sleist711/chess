@@ -35,8 +35,7 @@ public class MemoryGameDAO implements GameDAO{
         return gameExists;
     }
 
-    public void joinGame(GameRequest req, String playerColor)
-    {
+    public void joinGame(GameRequest req, String playerColor) throws ResponseException {
         //see which color they want to be
         //if they want to be black
         if(playerColor.equals("BLACK"))

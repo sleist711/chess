@@ -16,5 +16,5 @@ public interface GameDAO {
 
     public boolean checkForGame(Integer gameID);
 
-    public void joinGame(GameRequest req, String userColor);
+    public void joinGame(GameRequest req, String userColor) throws ResponseException;
 }

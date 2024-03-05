@@ -20,20 +20,6 @@ public class MemoryAuthDAO implements AuthDAO {
         return newAuth;
     }
 
-    public AuthData getAuthData(String username)
-    {
-        AuthData authToken = null;
-        for (Map.Entry<AuthData, String> entry : auth.entrySet())
-        {
-            if(username.equals(entry.getValue()))
-            {
-                authToken = entry.getKey();
-            }
-        }
-
-        return authToken;
-    }
-
     public String getAuth(String username)
     {
         AuthData authToken = null;

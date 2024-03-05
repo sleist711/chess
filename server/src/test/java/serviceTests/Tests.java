@@ -2,6 +2,7 @@ package serviceTests;
 
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
+import dataAccess.ResponseException;
 import model.GameData;
 import server.requests.AuthRequest;
 import server.requests.GameRequest;
@@ -17,7 +18,13 @@ public class Tests {
 
     @Test
     public void loginUserDoesntExist() {
-        ClearService.clear();
+        try {
+            ClearService.clear();
+        }
+        catch(ResponseException e)
+        {
+            fail();
+        }
         RegistrationRequest newRequest = new RegistrationRequest();
         newRequest.username = "Sydney";
         newRequest.password = "password";
