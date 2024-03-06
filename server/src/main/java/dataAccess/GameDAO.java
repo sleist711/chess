@@ -12,7 +12,7 @@ public interface GameDAO {
 
     public GameData createGame(GameRequest req) throws ResponseException;
 
-    public Collection<GameData> listGames(GameRequest req);
+    public Collection<GameData> listGames(GameRequest req) throws ResponseException;
 
     public boolean checkForGame(Integer gameID);
 

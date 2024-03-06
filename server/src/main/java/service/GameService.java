@@ -31,11 +31,9 @@ public class GameService extends Service{
 
     public static Collection<GameData> listGames(GameRequest req, String authToken) throws Exception
     {
-
         if (authToken == null) {
             throw(new BadRequestException("Error: unauthorized"));
         }
-
         //checks the authToken
         if (authAccess.checkAuthToken(authToken)) {
             return gameAccess.listGames(req);

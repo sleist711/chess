@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import model.GameData;
 import server.requests.GameRequest;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,12 +57,14 @@ public class MySQLGameDAO implements GameDAO{
         return new GameData(id, req.whiteUsername, req.blackUsername, req.gameName, newGame);
     }
 
-    public Collection<GameData> listGames(GameRequest req)
+    public Collection<GameData> listGames(GameRequest req) throws ResponseException
     {
         //working here
-        var result = new ArrayList<ChessGame>();
+        var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, json FROM gamedata";
+
+            //depending on what listGames needs to return, this may be wrong
+            var statement = "SELECT * FROM gamedata";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -70,10 +73,19 @@ public class MySQLGameDAO implements GameDAO{
                 }
             }
         } catch (Exception e) {
-            throw new ResponseException("Unable to read data: %s", e.getMessage());
+            throw new ResponseException("Unable to read data");
         }
         return result;
     };
+    private GameData readGame(ResultSet rs) throws SQLException {
+        var gameID = rs.getInt("gameID");
+        var whiteUsername = rs.getString("whiteUsername");
+        var blackUsername = rs.getString("blackUsername");
+        var gameName = rs.getString("gameName");
+        var json = rs.getString("json");
+        var chessGame = new Gson().fromJson(json, ChessGame.class);
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+    }
 
     public boolean checkForGame(Integer gameID)
     {

@@ -18,6 +18,7 @@ public class ClearHandler {
             ClearService.clear();
             response.status(200);
             message = "";
+            return message;
         }
         catch(ResponseException ex)
         {
