@@ -102,7 +102,7 @@ public class MySQLAuthDAO implements AuthDAO{
                 ps.setString(1, username);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        username = rs.getString("authToken");
+                        authToken = rs.getString("authToken");
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class MySQLAuthDAO implements AuthDAO{
         catch (Exception e) {
             throw new ResponseException(String.format("Unable to read data: %s", e.getMessage()));
         }
-        return username;
+        return authToken;
     };
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {

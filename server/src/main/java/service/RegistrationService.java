@@ -2,6 +2,7 @@ package service;
 
 import dataAccess.*;
 import model.AuthData;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import server.requests.RegistrationRequest;
 
 public class RegistrationService extends Service {
@@ -24,8 +25,13 @@ public class RegistrationService extends Service {
     public static Object login(RegistrationRequest req) throws Exception
     {
         //checks to make sure that the corresponding username and password exist
-        if (userAccess.users.containsKey(req.username)) {
-            if ((userAccess.users.get(req.username).password()).equals(req.password)) {
+        if (userAccess.checkForUser(req.username)) {
+
+            //problem here
+            var encryptPW = userAccess.getPassword(req.username);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if (encoder.matches(req.password,encryptPW)) {
                 //updates the authtoken, returns the new one
                 return authAccess.createAuth(req.username);
             }

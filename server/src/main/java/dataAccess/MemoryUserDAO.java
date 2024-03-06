@@ -25,4 +25,9 @@ public class MemoryUserDAO implements UserDAO{
         users.put(newUser.username(), newUser);
         return newUser;
     }
+
+    public String getPassword(String username)
+    {
+        return users.get(username).password();
+    }
 }
