@@ -27,7 +27,7 @@ public class Server {
             DatabaseManager.createDatabase();
             MySQLAuthDAO sqlAuth = new MySQLAuthDAO();
             MySQLUserDAO sqlUser = new MySQLUserDAO();
-
+            MySQLGameDAO sqlGame = new MySQLGameDAO();
             /*
             testing login
 

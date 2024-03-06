@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public interface GameDAO {
-    public void clear();
+    public void clear() throws ResponseException;
     HashMap<Integer, GameData> games = new HashMap<>();
 
-    public GameData createGame(GameRequest req);
+    public GameData createGame(GameRequest req) throws ResponseException;
 
     public Collection<GameData> listGames(GameRequest req);
 

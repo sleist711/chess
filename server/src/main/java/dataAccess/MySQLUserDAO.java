@@ -89,7 +89,6 @@ public class MySQLUserDAO implements UserDAO{
             throw new ResponseException("Unable to update database");
         }
     }
-
     public String getPassword(String username) throws ResponseException
     {
         String encryptPW = null;

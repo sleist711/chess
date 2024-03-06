@@ -11,7 +11,15 @@ public class Service {
             throw new RuntimeException(e);
         }
     }
-    public static final GameDAO gameAccess = new MemoryGameDAO();
+    public static final GameDAO gameAccess;
+    static {
+        try {
+            gameAccess = new MySQLGameDAO();
+        }
+        catch (ResponseException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static final AuthDAO authAccess;
 
     static {
