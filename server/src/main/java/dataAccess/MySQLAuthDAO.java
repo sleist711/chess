@@ -2,6 +2,8 @@ package dataAccess;
 import model.AuthData;
 import java.sql.SQLException;
 import java.util.UUID;
+
+import static dataAccess.DatabaseManager.databaseName;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -26,7 +28,7 @@ public class MySQLAuthDAO implements AuthDAO{
     }
     private final String[] createStatements =
     {
-        "USE chess;",
+        "USE " + databaseName + ";",
         "CREATE TABLE IF NOT EXISTS authdata (authToken varChar(255) NOT NULL, username text NOT NULL, PRIMARY KEY (authToken));"
         };
 

@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static dataAccess.DatabaseManager.databaseName;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -28,7 +30,7 @@ public class MySQLGameDAO implements GameDAO {
 
     private final String[] createStatements =
     {
-            "USE chess;",
+            "USE " + databaseName + ";",
             "CREATE TABLE IF NOT EXISTS gamedata(gameID int NOT NULL AUTO_INCREMENT, whiteUsername varChar(255), blackUsername varChar(255), gameName varChar(255) NOT NULL, json text NOT NULL, PRIMARY KEY(gameID));"
     };
 

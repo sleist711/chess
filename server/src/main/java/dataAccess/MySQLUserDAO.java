@@ -4,6 +4,8 @@ import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import server.requests.RegistrationRequest;
 import java.sql.SQLException;
+
+import static dataAccess.DatabaseManager.databaseName;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -27,7 +29,9 @@ public class MySQLUserDAO implements UserDAO{
     }
     private final String[] createStatements =
         {
-                "USE chess;",
+
+
+                "USE " + databaseName + ";",
                 "CREATE TABLE IF NOT EXISTS userdata (username varChar(255) NOT NULL, password varChar(255) NOT NULL, email varChar(255) NOT NULL, PRIMARY KEY (username));"
         };
     public void clear() throws ResponseException {
