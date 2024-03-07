@@ -35,7 +35,7 @@ public class MySQLGameDAO implements GameDAO {
     };
 
     public void clear() throws ResponseException {
-        var statement = "TRUNCATE gameData";
+        var statement = "TRUNCATE gamedata";
         executeUpdate(statement);
     }
     public GameData createGame(GameRequest req) throws ResponseException {
@@ -112,7 +112,7 @@ public class MySQLGameDAO implements GameDAO {
             } catch (SQLException ex) {
                 throw new ResponseException("Error: Unable to read data");
             }
-            var statement3 = "UPDATE gameData SET blackUsername='" + newBlackUser + "' WHERE gameID='" + req.gameID + "';";
+            var statement3 = "UPDATE gamedata SET blackUsername='" + newBlackUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
         }
         else if (userColor.equals("WHITE"))
@@ -132,7 +132,7 @@ public class MySQLGameDAO implements GameDAO {
             } catch (SQLException ex) {
                 throw new ResponseException("Error: Unable to read data");
             }
-            var statement3 = "UPDATE gameData SET whiteUsername='" + newWhiteUser + "' WHERE gameID='" + req.gameID + "';";
+            var statement3 = "UPDATE gamedata SET whiteUsername='" + newWhiteUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
         }
     }
