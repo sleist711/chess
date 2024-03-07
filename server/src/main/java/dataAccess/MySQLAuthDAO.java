@@ -1,10 +1,7 @@
 package dataAccess;
-
 import model.AuthData;
-
 import java.sql.SQLException;
 import java.util.UUID;
-
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -127,9 +124,7 @@ public class MySQLAuthDAO implements AuthDAO{
     }
 
     public void remove(AuthData userToAccess, String username) throws ResponseException {
-        //ok so I think it's removing all authtokens with that username, but it should just be doing it to one authtoken - the one that currently is logged in
         var statement = "DELETE FROM authdata WHERE authToken ='"+userToAccess.authToken()+"';";
-
         executeUpdate(statement);
     }
 }

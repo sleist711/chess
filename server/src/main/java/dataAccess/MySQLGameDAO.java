@@ -1,15 +1,12 @@
 package dataAccess;
-
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 import server.requests.GameRequest;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -30,38 +27,29 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     private final String[] createStatements =
-            {
-                    "USE chess;",
-                    "CREATE TABLE IF NOT EXISTS gamedata(gameID int NOT NULL AUTO_INCREMENT, whiteUsername varChar(255), blackUsername varChar(255), gameName varChar(255) NOT NULL, json text NOT NULL, PRIMARY KEY(gameID));"
-            };
+    {
+            "USE chess;",
+            "CREATE TABLE IF NOT EXISTS gamedata(gameID int NOT NULL AUTO_INCREMENT, whiteUsername varChar(255), blackUsername varChar(255), gameName varChar(255) NOT NULL, json text NOT NULL, PRIMARY KEY(gameID));"
+    };
 
     public void clear() throws ResponseException {
         var statement = "TRUNCATE gameData";
         executeUpdate(statement);
     }
-
-    ;
-
-
     public GameData createGame(GameRequest req) throws ResponseException {
         ChessGame newGame = new ChessGame();
 
         var statement = "INSERT INTO gamedata (whiteUsername, blackUsername, gameName, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(newGame);
-
-
-        //not sure if this will be returning the right id
         var id = executeUpdate(statement, req.whiteUsername, req.blackUsername, req.gameName, json);
 
         return new GameData(id, req.whiteUsername, req.blackUsername, req.gameName, newGame);
     }
 
     public Collection<GameData> listGames(GameRequest req) throws ResponseException {
-        //working here
         var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
 
-            //depending on what listGames needs to return, this may be wrong
             var statement = "SELECT * FROM gamedata";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
@@ -75,8 +63,6 @@ public class MySQLGameDAO implements GameDAO {
         }
         return result;
     }
-
-    ;
 
     private GameData readGame(ResultSet rs) throws SQLException {
         var gameID = rs.getInt("gameID");
@@ -107,75 +93,44 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     public void joinGame(GameRequest req, String userColor) throws ResponseException, DataAccessException {
-        String currentWhiteUsername = null;
-        String currentGameName = null;
-        String currentChessGame = null;
-        String currentBlackUsername=null;
 
         if (userColor.equals("BLACK")) {
             String newBlackUser = null;
 
             try (var conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT * FROM gameData WHERE gameID=?";
+                var statement = "SELECT username from authdata where authToken=?";
                 try (var ps = conn.prepareStatement(statement)) {
-                    ps.setInt(1, req.gameID);
+                    ps.setString(1, req.authToken);
                     try (var rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            currentWhiteUsername = rs.getString("whiteUsername");
-                            currentGameName = rs.getString("gameName");
-                            currentChessGame = rs.getString("json");
-                        }
-                    }
-                }
-                var statement2 = "SELECT username from authdata where authToken=?";
-                try (var ps2 = conn.prepareStatement(statement2)) {
-                    ps2.setString(1, req.authToken);
-                    try (var rs2 = ps2.executeQuery()) {
-                        if (rs2.next()) {
-                            newBlackUser = rs2.getString("username");
+                            newBlackUser = rs.getString("username");
                         }
                     }
                 }
             } catch (SQLException ex) {
                 throw new ResponseException("Unable to read data");
             }
-
             var statement3 = "UPDATE gameData SET blackUsername='" + newBlackUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
         }
         else if (userColor.equals("WHITE"))
         {
-
             String newWhiteUser = null;
 
             try (var conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT * FROM gameData WHERE gameID=?";
+                var statement = "SELECT username from authdata where authToken=?";
                 try (var ps = conn.prepareStatement(statement)) {
-                    ps.setInt(1, req.gameID);
+                    ps.setString(1, req.authToken);
                     try (var rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            currentBlackUsername = rs.getString("blackUsername");
-                            currentGameName = rs.getString("gameName");
-                            currentChessGame = rs.getString("json");
-                        }
-                    }
-                }
-                var statement2 = "SELECT username from authdata where authToken=?";
-                try (var ps2 = conn.prepareStatement(statement2)) {
-                    ps2.setString(1, req.authToken);
-                    try (var rs2 = ps2.executeQuery()) {
-                        if (rs2.next()) {
-                            newWhiteUser = rs2.getString("username");
+                            newWhiteUser = rs.getString("username");
                         }
                     }
                 }
             } catch (SQLException ex) {
                 throw new ResponseException("Unable to read data");
             }
-
-            //GameData newGame = new GameData(req.gameID, currentWhiteUsername, newBlackUser, currentGameName, currentChessGame);
             var statement3 = "UPDATE gameData SET whiteUsername='" + newWhiteUser + "' WHERE gameID='" + req.gameID + "';";
-            //need to figure out how to insert data at a specific index
             executeUpdate(statement3);
         }
     }
@@ -222,7 +177,6 @@ public class MySQLGameDAO implements GameDAO {
         }
         return false;
     }
-
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {
         try (var conn = DatabaseManager.getConnection()) {

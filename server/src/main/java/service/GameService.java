@@ -27,8 +27,6 @@ public class GameService extends Service{
         return newGame;
     }
 
-
-
     public static Collection<GameData> listGames(GameRequest req, String authToken) throws Exception
     {
         if (authToken == null) {
@@ -92,7 +90,5 @@ public class GameService extends Service{
         else {
             throw (new DataAccessException("Error: unauthorized"));
         }
-
     }
-
 }

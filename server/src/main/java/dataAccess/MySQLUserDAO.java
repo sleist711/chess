@@ -3,9 +3,7 @@ package dataAccess;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import server.requests.RegistrationRequest;
-
 import java.sql.SQLException;
-
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
