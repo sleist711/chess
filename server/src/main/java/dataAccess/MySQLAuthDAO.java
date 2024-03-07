@@ -127,7 +127,9 @@ public class MySQLAuthDAO implements AuthDAO{
     }
 
     public void remove(AuthData userToAccess, String username) throws ResponseException {
-        var statement = "DELETE FROM authdata WHERE username ='"+username+"';";
+        //ok so I think it's removing all authtokens with that username, but it should just be doing it to one authtoken - the one that currently is logged in
+        var statement = "DELETE FROM authdata WHERE authToken ='"+userToAccess.authToken()+"';";
+
         executeUpdate(statement);
     }
 }
