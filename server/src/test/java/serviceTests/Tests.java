@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static service.Service.userAccess;
 
 public class Tests {
 
@@ -74,7 +75,7 @@ public class Tests {
 
         RegistrationService.register(newRequest);
 
-        if(!RegistrationService.userAccess.users.containsKey("Sydney"))
+        if(!userAccess.checkForUser("Sydney"))
         {
             throw(new Exception());
         }
@@ -120,7 +121,7 @@ public class Tests {
 
         ClearService.clear();
 
-        if(!ClearService.userAccess.users.isEmpty())
+        if(!userAccess.users.isEmpty())
         {
             throw(new Exception());
         }
@@ -205,7 +206,7 @@ public class Tests {
 
         GameService.createGame(newGameRequest);
 
-        if(GameService.gameAccess.games.isEmpty())
+        if(GameService.gameAccess.listGames(newGameRequest).isEmpty())
         {
             throw(new Exception());
         }
@@ -376,7 +377,7 @@ public class Tests {
 
         GameRequest gameRequest = new GameRequest();
         gameRequest.playerColor = "WHITE";
-        gameRequest.gameID = 4;
+        gameRequest.gameID = 1;
         gameRequest.authToken = RegistrationService.authAccess.getAuth("Sydney");
 
         //will throw an exception if not successful
