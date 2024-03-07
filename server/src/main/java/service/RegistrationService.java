@@ -27,7 +27,6 @@ public class RegistrationService extends Service {
         //checks to make sure that the corresponding username and password exist
         if (userAccess.checkForUser(req.username)) {
 
-            //problem here
             var encryptPW = userAccess.getPassword(req.username);
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -52,9 +51,9 @@ public class RegistrationService extends Service {
         AuthData userToAccess = new AuthData(authToken, username);
 
        //check that user exists
-        if (authAccess.auth.containsKey(userToAccess))
+        if (userAccess.checkForUser(userToAccess.username()))
         {
-            authAccess.auth.remove(userToAccess, username); //invalidate the old auth token
+            authAccess.remove(userToAccess, username); //invalidate the old auth token
         }
         else
         {

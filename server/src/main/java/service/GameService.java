@@ -59,7 +59,7 @@ public class GameService extends Service{
                     return;
                 }
                 if (req.playerColor.equals("BLACK")) {
-                    if (gameAccess.games.get(req.gameID).blackUsername() != null) {
+                    if (gameAccess.existsBlackPlayer(req.gameID)) {
                         //throw an error because they want to be black but there's already a player
                         throw (new AlreadyTakenException("Error: already taken"));
                     }
@@ -67,7 +67,7 @@ public class GameService extends Service{
                 }
 
                 else if (req.playerColor.equals("WHITE")) {
-                    if (gameAccess.games.get(req.gameID).whiteUsername() != null)
+                    if (gameAccess.existsWhitePlayer(req.gameID))
                     {
                         //throw an error because they want to be white but there's already a player
                         throw (new AlreadyTakenException("Error: already taken"));

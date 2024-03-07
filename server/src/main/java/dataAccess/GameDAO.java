@@ -16,5 +16,8 @@ public interface GameDAO {
 
     public boolean checkForGame(Integer gameID);
 
-    public void joinGame(GameRequest req, String userColor) throws ResponseException;
+    public void joinGame(GameRequest req, String userColor) throws ResponseException, DataAccessException;
+
+    public boolean existsBlackPlayer(int gameID);
+    public boolean existsWhitePlayer(int gameID);
 }

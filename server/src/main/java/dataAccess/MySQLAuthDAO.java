@@ -83,16 +83,6 @@ public class MySQLAuthDAO implements AuthDAO{
         return false;
     }
 
-    /*
-    private Pet readPet(ResultSet rs) throws SQLException {
-        var id = rs.getInt("id");
-        var json = rs.getString("json");
-        var pet = new Gson().fromJson(json, Pet.class);
-        return pet.setId(id);
-    }
-
-     */
-
     public String getAuth(String username) throws ResponseException
     {
         String authToken = null;
@@ -134,5 +124,10 @@ public class MySQLAuthDAO implements AuthDAO{
         catch (SQLException | DataAccessException e) {
             throw new ResponseException("Unable to update database");
         }
+    }
+
+    public void remove(AuthData userToAccess, String username) throws ResponseException {
+        var statement = "DELETE FROM authdata WHERE username ='"+username+"';";
+        executeUpdate(statement);
     }
 }

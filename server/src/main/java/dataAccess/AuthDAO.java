@@ -16,6 +16,9 @@ public interface AuthDAO {
     public boolean checkAuthToken(String authToken);
     public String getAuth(String username) throws ResponseException;
 
+    public void remove(AuthData userToAccess, String username) throws ResponseException;
+
+
 
 
 }

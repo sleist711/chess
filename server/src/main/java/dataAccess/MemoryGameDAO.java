@@ -65,6 +65,24 @@ public class MemoryGameDAO implements GameDAO{
 
     }
 
+    public boolean existsBlackPlayer(int gameID) {
+        if (games.get(gameID).blackUsername() != null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    public boolean existsWhitePlayer(int gameID)
+    {
+        if (games.get(gameID).whiteUsername() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     @Override
     public void clear() {
         games.clear();
