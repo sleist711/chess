@@ -108,7 +108,7 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (SQLException ex) {
-                throw new ResponseException("Unable to read data");
+                throw new ResponseException("Error: Unable to read data");
             }
             var statement3 = "UPDATE gameData SET blackUsername='" + newBlackUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
@@ -128,7 +128,7 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (SQLException ex) {
-                throw new ResponseException("Unable to read data");
+                throw new ResponseException("Error: Unable to read data");
             }
             var statement3 = "UPDATE gameData SET whiteUsername='" + newWhiteUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
@@ -149,7 +149,7 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new ResponseException("Unable to read data");
+                throw new ResponseException("Error: Unable to read data");
             }
         } catch (DataAccessException | SQLException | ResponseException e) {
             throw new RuntimeException(e);
@@ -170,7 +170,7 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new ResponseException("Unable to read data");
+                throw new ResponseException("Error: Unable to read data");
             }
         } catch (DataAccessException | SQLException | ResponseException e) {
             throw new RuntimeException(e);
@@ -196,7 +196,7 @@ public class MySQLGameDAO implements GameDAO {
                 return 0;
             }
         } catch (SQLException | DataAccessException e) {
-            throw new ResponseException("Unable to update database");
+            throw new ResponseException("Error: Unable to update database");
         }
     }
 }

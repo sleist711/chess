@@ -1,8 +1,6 @@
 package serviceTests;
 
-import dataAccess.BadRequestException;
-import dataAccess.DataAccessException;
-import dataAccess.ResponseException;
+import dataAccess.*;
 import model.GameData;
 import server.requests.AuthRequest;
 import server.requests.GameRequest;
