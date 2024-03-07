@@ -452,9 +452,7 @@ public class dataAccessTests {
 
             Collection<GameData> responseString = gameAccess.listGames(secondGameRequest);
 
-            if (responseString.isEmpty()) {
-                fail();
-            }
+            assertFalse(responseString.isEmpty());
         }
         catch(ResponseException ex)
         {
@@ -571,12 +569,13 @@ public class dataAccessTests {
             gameAccess.createGame(req);
             gameAccess.joinGame(req, "BLACK");
             blackExists = gameAccess.existsBlackPlayer(req.gameID);
-            assertTrue(blackExists);
+
         }
         catch(ResponseException | DataAccessException ex)
         {
             fail();
         }
+        assertTrue(blackExists);
 
     }
     @Test
@@ -632,12 +631,13 @@ public class dataAccessTests {
             gameAccess.createGame(req);
             gameAccess.joinGame(req, "WHITE");
             whiteExists = gameAccess.existsWhitePlayer(req.gameID);
-            assertTrue(whiteExists);
+
         }
         catch(ResponseException | DataAccessException ex)
         {
             fail();
         }
+        assertTrue(whiteExists);
 
     }
 
