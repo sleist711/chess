@@ -28,30 +28,6 @@ public class Server {
             MySQLAuthDAO sqlAuth = new MySQLAuthDAO();
             MySQLUserDAO sqlUser = new MySQLUserDAO();
             MySQLGameDAO sqlGame = new MySQLGameDAO();
-            /*
-            testing login
-
-            RegistrationRequest request1 = new RegistrationRequest();
-            request1.username = "syd";
-            request1.password = "pw";
-            request1.email = "askdfjh";
-
-            //sqlUser.createUser(request1);
-
-            RegistrationRequest login = new RegistrationRequest();
-            login.username = "syd";
-            login.password = "pw";
-            try{
-                RegistrationService.login(login);
-            }
-            catch(Exception ex)
-            {
-                stop();
-            }
-            */
-
-
-
 
         }
         catch(DataAccessException e)

@@ -2,6 +2,9 @@ package ui;
 
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
+import server.requests.GameRequest;
+import server.requests.RegistrationRequest;
+import spark.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,9 +25,38 @@ public class ServerFacade {
 
     public void clear() throws ResponseException
     {
-        //don't think the path is right.
-        var path = "/chess";
+        var path = "/db";
         this.makeRequest("DELETE", path, null, null);
+    }
+
+    public String login(RegistrationRequest loginRequest) throws ResponseException{
+
+        var path = "/session";
+        //not sure this response class will work
+        var response = this.makeRequest("POST", path, loginRequest, Response.class);
+
+        //not sure if this will return it the way that I want it to
+        return response.toString();
+    }
+
+    public String register(RegistrationRequest registerRequest) throws ResponseException{
+        var path = "/user";
+        var response = this.makeRequest("POST", path, registerRequest, Response.class);
+        return response.toString();
+    }
+
+    public String createGame(GameRequest gameRequest) throws ResponseException{
+        var path = "/game";
+        var response = this.makeRequest("POST", path, gameRequest, Response.class);
+        return response.toString();
+    }
+
+    public String listGames(GameRequest gameRequest, String authToken) throws ResponseException
+    {
+        var path = "/game";
+        gameRequest.authToken = authToken;
+        var response = this.makeRequest("GET", path, gameRequest, Response.class);
+        return response.toString();
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
