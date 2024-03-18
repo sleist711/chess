@@ -1,9 +1,11 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
 import model.AuthData;
 import server.requests.GameRequest;
+import server.requests.GameResult;
 import server.requests.RegistrationRequest;
 import server.requests.RegistrationResult;
 import spark.Response;
@@ -20,7 +22,6 @@ import java.net.URL;
 public class ServerFacade {
 
     private final String serverUrl;
-
     public ServerFacade(String url) {
         serverUrl = url;
     }
@@ -28,48 +29,56 @@ public class ServerFacade {
     public void clear() throws ResponseException
     {
         var path = "/db";
-        this.makeRequest("DELETE", path, null, null);
+        this.makeRequest("DELETE", path, null, null, null);
     }
 
     public String login(RegistrationRequest loginRequest) throws ResponseException{
 
         var path = "/session";
         //not sure this response class will work
-        var response = this.makeRequest("POST", path, loginRequest, RegistrationResult.class);
-
-        //not sure if this will return it the way that I want it to
+        var response = this.makeRequest("POST", path, loginRequest, RegistrationResult.class, null);
+        Repl.setAuth(response.authToken);
         return response.authToken;
     }
 
     public String register(RegistrationRequest registerRequest) throws ResponseException{
         var path = "/user";
-        var response = this.makeRequest("POST", path, registerRequest, RegistrationResult.class);
+        var response = this.makeRequest("POST", path, registerRequest, RegistrationResult.class, null);
+        Repl.setAuth(response.authToken);
         return response.authToken;
     }
 
     public String createGame(GameRequest gameRequest) throws ResponseException{
         var path = "/game";
-        var response = this.makeRequest("POST", path, gameRequest, Response.class);
-        return response.toString();
+        var response = this.makeRequest("POST", path, gameRequest, GameResult.class, Repl.getAuth());
+        return response.gameID.toString();
     }
 
-    public String listGames(GameRequest gameRequest, String authToken) throws ResponseException
+    public GameResult[] listGames(GameRequest gameRequest) throws ResponseException
     {
         var path = "/game";
-        gameRequest.authToken = authToken;
-        var response = this.makeRequest("GET", path, gameRequest, Response.class);
-        return response.toString();
+        record listGameResponse(GameResult[] games) {
+        }
+        var response = this.makeRequest("GET", path, gameRequest, listGameResponse.class, Repl.getAuth());
+        return response.games();
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
-            writeHeader(request, http);
+            if(auth != null)
+            {
+                http.addRequestProperty("authorization", auth);
+            }
+
+            if (!method.equals("GET"))
+            {
+                writeBody(request, http);
+            }
 
             http.connect();
             throwIfNotSuccessful(http);

@@ -42,6 +42,7 @@ public class MySQLGameDAO implements GameDAO {
         ChessGame newGame = new ChessGame();
 
         var statement = "INSERT INTO gamedata (whiteUsername, blackUsername, gameName, json) VALUES (?, ?, ?, ?)";
+        //the json is empty here for some reason
         var json = new Gson().toJson(newGame);
         var id = executeUpdate(statement, req.whiteUsername, req.blackUsername, req.gameName, json);
 
@@ -199,7 +200,7 @@ public class MySQLGameDAO implements GameDAO {
             }
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException("Error: Unable to update database");
-        }
+        }//error is right here. unable to update database when i call list games
     }
 }
 

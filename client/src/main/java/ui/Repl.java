@@ -7,6 +7,7 @@ public class Repl
     PreLogin preLogin;
     PostLogin postLogin;
     Gameplay gamePlay;
+    static String authToken;
 
 
     public Repl(String serverUrl)
@@ -14,6 +15,7 @@ public class Repl
         preLogin = new PreLogin(serverUrl);
         postLogin = new PostLogin(serverUrl);
         gamePlay = new Gameplay();
+        authToken = "";
 
     }
 
@@ -70,5 +72,15 @@ public class Repl
 
 
         System.out.println();
+    }
+
+    public static String getAuth()
+    {
+        return authToken;
+    }
+
+    public static void setAuth(String newAuth)
+    {
+       authToken = newAuth;
     }
 }

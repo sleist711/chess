@@ -17,6 +17,7 @@ public class Main {
 
         Server chessServer = new Server();
         chessServer.run(8080);
+        /*
         try{
             MySQLAuthDAO authDAO = new MySQLAuthDAO();
             authDAO.clear();
@@ -29,6 +30,8 @@ public class Main {
         {
             System.exit(0);
         }
+
+         */
 
 
         new Repl(serverUrl).run();

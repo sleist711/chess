@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class PreLogin extends ChessClient{
 
+    String authToken;
     public PreLogin(String serverUrl)
     {
         super(serverUrl);
@@ -35,7 +36,7 @@ public class PreLogin extends ChessClient{
             newRequest.username = params[0];
             newRequest.password = params[1];
 
-            String authToken = server.login(newRequest);
+            authToken = server.login(newRequest);
             state = State.SIGNEDIN;
             return String.format("Your authToken is %s", authToken);
         }
@@ -50,7 +51,7 @@ public class PreLogin extends ChessClient{
             newRequest.password = params[1];
             newRequest.email = params[2];
 
-            String authToken = server.register(newRequest);
+            authToken = server.register(newRequest);
             return String.format("Your authToken is %s", authToken);
         }
         throw new ResponseException("Expected more registration information.");

@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import dataAccess.ResponseException;
 import server.requests.GameRequest;
 import server.requests.RegistrationRequest;
@@ -7,6 +9,7 @@ import server.requests.RegistrationRequest;
 import java.util.Arrays;
 
 public class PostLogin extends ChessClient{
+
     public PostLogin(String serverUrl)
     {
         super(serverUrl);
@@ -29,11 +32,11 @@ public class PostLogin extends ChessClient{
 
     public String createGame(String... params) throws ResponseException
     {
-        if(params.length == 2)
+        if(params.length == 1)
         {
             GameRequest newRequest = new GameRequest();
             newRequest.gameName = params[0];
-            newRequest.authToken = params[1];
+
             String gameID = server.createGame(newRequest);
             return String.format("The gameID of the game %s is %s", newRequest.gameName, gameID);
         }
@@ -41,14 +44,16 @@ public class PostLogin extends ChessClient{
     }
 
     public String listGames(String ... params) throws ResponseException{
-        if(params.length == 1)
-        {
-            GameRequest newRequest = new GameRequest();
-            String authToken = params[0];
-            String gameList = server.listGames(newRequest, authToken);
-            return gameList;
+        GameRequest newRequest = new GameRequest();
+
+        var games = server.listGames(newRequest);
+        var result = new StringBuilder();
+        var gson = new Gson();
+        for (var game : games) {
+            result.append(gson.toJson(game)).append('\n');
         }
-        throw new ResponseException("Expected more authToken information.");
+        return result.toString();
+
     }
 
     public String joinGame(String ... params) throws ResponseException{
