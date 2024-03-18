@@ -1,4 +1,8 @@
 import chess.*;
+import dataAccess.MySQLAuthDAO;
+import dataAccess.MySQLGameDAO;
+import dataAccess.MySQLUserDAO;
+import server.Server;
 import ui.Repl;
 
 public class Main {
@@ -10,6 +14,22 @@ public class Main {
         {
             serverUrl = args[0];
         }
+
+        Server chessServer = new Server();
+        chessServer.run(8080);
+        try{
+            MySQLAuthDAO authDAO = new MySQLAuthDAO();
+            authDAO.clear();
+            MySQLGameDAO gameDAO = new MySQLGameDAO();
+            gameDAO.clear();
+            MySQLUserDAO userDAO = new MySQLUserDAO();
+            userDAO.clear();
+        }
+        catch(Exception ex)
+        {
+            System.exit(0);
+        }
+
 
         new Repl(serverUrl).run();
 

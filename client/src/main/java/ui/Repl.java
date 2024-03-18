@@ -18,7 +18,7 @@ public class Repl
     }
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to chess.");
+        System.out.println("Welcome to chess.");
         System.out.print(preLogin.help());
 
         Scanner scanner = new Scanner(System.in);
@@ -45,6 +45,10 @@ public class Repl
         }
 
         //now we're in postlogin
+        System.out.println();
+        System.out.println("You are logged in.");
+        System.out.print(postLogin.help());
+
         while(postLogin.gameState != GameState.INPLAY)
         {
             ChessClient.printPrompt();
