@@ -29,10 +29,11 @@ public class PostLogin extends ChessClient{
 
     public String createGame(String... params) throws ResponseException
     {
-        if(params.length == 1)
+        if(params.length == 2)
         {
             GameRequest newRequest = new GameRequest();
             newRequest.gameName = params[0];
+            newRequest.authToken = params[1];
             String gameID = server.createGame(newRequest);
             return String.format("The gameID of the game %s is %s", newRequest.gameName, gameID);
         }
@@ -77,8 +78,8 @@ public class PostLogin extends ChessClient{
     public String help()
     {
         return """
-                create <NAME> - a game
-                list <authToken> - games
+                create <NAME> <AUTHTOKEN> - a game
+                list <AUTHTOKEN> - games
                 join <ID> [BLACK | WHITE | <empty>] - a game
                 observe <ID> - a game
                 quit - playing chess

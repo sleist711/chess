@@ -69,6 +69,8 @@ public class ServerFacade {
             http.setDoOutput(true);
 
             writeBody(request, http);
+            writeHeader(request, http);
+
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
@@ -86,6 +88,7 @@ public class ServerFacade {
             }
         }
     }
+
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
         var status = http.getResponseCode();
