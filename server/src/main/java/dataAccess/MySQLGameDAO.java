@@ -97,7 +97,7 @@ public class MySQLGameDAO implements GameDAO {
 
     public void joinGame(GameRequest req, String userColor) throws ResponseException, DataAccessException {
 
-        if (userColor.equals("BLACK")) {
+        if (userColor.equalsIgnoreCase("BLACK")) {
             String newBlackUser = null;
 
             try (var conn = DatabaseManager.getConnection()) {
@@ -116,7 +116,7 @@ public class MySQLGameDAO implements GameDAO {
             var statement3 = "UPDATE gamedata SET blackUsername='" + newBlackUser + "' WHERE gameID='" + req.gameID + "';";
             executeUpdate(statement3);
         }
-        else if (userColor.equals("WHITE"))
+        else if (userColor.equalsIgnoreCase("WHITE"))
         {
             String newWhiteUser = null;
 

@@ -23,6 +23,7 @@ public class PostLogin extends ChessClient{
             return switch (cmd) {
                 case "create" -> createGame(params);
                 case "list" -> listGames(params);
+                case "join" -> joinGame(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -57,9 +58,18 @@ public class PostLogin extends ChessClient{
     }
 
     public String joinGame(String ... params) throws ResponseException{
-        if(params.length == 3)
+        if(params.length >= 1)
         {
+            GameRequest newRequest = new GameRequest();
+            newRequest.gameID = Integer.parseInt(params[0]);
 
+            if(params.length == 2)
+            {
+                newRequest.playerColor = params[1];
+            }
+
+            server.joinGame(newRequest);
+            return String.format("You joined the game as %s.", newRequest.playerColor);
         }
         throw new ResponseException("Expected more registration information.");
     }

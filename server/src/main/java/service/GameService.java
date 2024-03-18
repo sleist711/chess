@@ -56,7 +56,7 @@ public class GameService extends Service{
                 {
                     return;
                 }
-                if (req.playerColor.equals("BLACK")) {
+                if (req.playerColor.equalsIgnoreCase("BLACK")) {
                     if (gameAccess.existsBlackPlayer(req.gameID)) {
                         //throw an error because they want to be black but there's already a player
                         throw (new AlreadyTakenException("Error: already taken"));
@@ -64,7 +64,7 @@ public class GameService extends Service{
                     gameAccess.joinGame(req, req.playerColor);
                 }
 
-                else if (req.playerColor.equals("WHITE")) {
+                else if (req.playerColor.equalsIgnoreCase("WHITE")) {
                     if (gameAccess.existsWhitePlayer(req.gameID))
                     {
                         //throw an error because they want to be white but there's already a player
@@ -74,7 +74,7 @@ public class GameService extends Service{
                 }
 
                 //make sure that they don't want to be both colors
-                else if (!req.playerColor.equals("WHITE") && !req.playerColor.equals("BLACK") && req.playerColor != null)
+                else if (!req.playerColor.equalsIgnoreCase("WHITE") && !req.playerColor.equalsIgnoreCase("BLACK") && req.playerColor != null)
                 {
                     //throw an error if it's not black or white
                     throw (new BadRequestException("Error: bad request"));
