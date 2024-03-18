@@ -24,6 +24,7 @@ public class PostLogin extends ChessClient{
                 case "create" -> createGame(params);
                 case "list" -> listGames(params);
                 case "join" -> joinGame(params);
+                case "observe" -> observeGame(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -74,12 +75,13 @@ public class PostLogin extends ChessClient{
         throw new ResponseException("Expected more registration information.");
     }
 
-    public String observeGame(String ... params) throws ResponseException{
-        if(params.length == 3)
+    public String observeGame(String... params) throws ResponseException{
+        if(params.length == 1)
         {
-
+            joinGame(params);
+            return ("You joined the game as an observer");
         }
-        throw new ResponseException("Expected more registration information.");
+        throw new ResponseException("You cannot include a color as an observer.");
     }
 
     public String logout(String ... params) throws ResponseException{
