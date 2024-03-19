@@ -76,7 +76,9 @@ public class PostLogin extends ChessClient{
 
             server.joinGame(newRequest);
             //Repl.state = State.INPLAY;
-            //drawBoard();
+            String[] startPosition = new String[]{"0"};
+
+            ChessBoard.main(startPosition);
 
             return String.format("\nYou joined the game as %s.", newRequest.playerColor);
         }

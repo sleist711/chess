@@ -12,14 +12,9 @@ import static ui.EscapeSequences.*;
 public class ChessBoard {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_CHARS = 3;
-    private static final int LINE_WIDTH_IN_CHARS = 1;
     private static final String EMPTY = "   ";
     private static String currentChar = EMPTY;
     private static String currentColor = null;
-    //private static final String X = " X ";
-    //private static final String O = " O ";
-    //private static Random rand = new Random();
 
 
     public static void main(String[] args)
@@ -28,14 +23,20 @@ public class ChessBoard {
 
         out.print(ERASE_SCREEN);
 
-        drawHeaders(out);
+        //drawHeaders(out);
 
         chess.ChessBoard board = new chess.ChessBoard();
         board.resetBoard();
-        drawTicTacToeBoard(out, board);
+        drawSquares(out, board);
 
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_WHITE);
+
+        drawSquaresFlipped(out, board);
+
+        //out.print(RESET_BG_COLOR);
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(RESET_TEXT_COLOR);
     }
 
     private static void drawHeaders(PrintStream out) {
@@ -52,13 +53,11 @@ public class ChessBoard {
         out.println();
     }
 
-    private static void drawTicTacToeBoard(PrintStream out, chess.ChessBoard board) {
-
-        drawSquares(out, board);
-    }
 
     private static void drawSquares(PrintStream out, chess.ChessBoard board)
     {
+
+        drawHeaders(out);
 
         String[] rowHeaders = {"   ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
 
@@ -70,8 +69,6 @@ public class ChessBoard {
             out.print(SET_TEXT_COLOR_GREEN);
             out.print(rowHeaders[rowInBoard]);
 
-            //if row+col is even
-            //if row+col is odd
             for (int squareInRow = 1; squareInRow <= BOARD_SIZE_IN_SQUARES; squareInRow += 1) {
                 //set the char to print here
                 setCurrentChar(board, rowInBoard, squareInRow);
@@ -87,39 +84,52 @@ public class ChessBoard {
                     out.print(currentColor);
                     out.print(currentChar);
                 }
-
-                /*
-                //if it's an even row
-                if (rowInBoard % 2 == 0) {
-                    //for each square in the row
-                    {
-                        out.print(SET_BG_COLOR_WHITE);
-                        out.print(SET_TEXT_COLOR_BLACK);
-                        out.print(currentChar);
-
-                        //this needs to be changed so that it's the next element in the board
-                        out.print(SET_BG_COLOR_BLACK);
-                        out.print(SET_TEXT_COLOR_WHITE);
-                        setCurrentChar(board, rowInBoard, squareInRow+1);
-                        out.print(currentChar);
-                    }
-
-                }
-                //if it's an even row
-                else {
-                    //for each square in the row
-                    out.print(SET_BG_COLOR_BLACK);
-                    out.print(SET_TEXT_COLOR_WHITE);
-                    out.print(currentChar);
-
-                    out.print(SET_BG_COLOR_WHITE);
-                    out.print(SET_TEXT_COLOR_BLACK);
-                    setCurrentChar(board, rowInBoard, squareInRow+1);
-                    out.print(currentChar);
-
-                 */
             }
 
+            //print the column with the row names
+            out.print(SET_BG_COLOR_BLACK);
+            out.print(SET_TEXT_COLOR_GREEN);
+            out.print(rowHeaders[rowInBoard]);
+            setBlack(out);
+            out.println();
+
+        }
+
+        drawHeaders(out);
+        out.println();
+    }
+
+    private static void drawSquaresFlipped(PrintStream out, chess.ChessBoard board)
+    {
+
+        drawHeaders(out);
+
+        String[] rowHeaders = {"   ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
+
+        //for each row
+        for (int rowInBoard = 8; rowInBoard >= 1;  --rowInBoard)
+        {
+            //print the column with the row names
+            out.print(SET_BG_COLOR_BLACK);
+            out.print(SET_TEXT_COLOR_GREEN);
+            out.print(rowHeaders[rowInBoard]);
+
+            for (int squareInRow = 1; squareInRow <= BOARD_SIZE_IN_SQUARES; squareInRow += 1) {
+                //set the char to print here
+                setCurrentChar(board, rowInBoard, squareInRow);
+                if((squareInRow + rowInBoard) % 2 == 0) {
+                    out.print(SET_BG_COLOR_WHITE);
+                    out.print(SET_TEXT_COLOR_BLACK);
+                    out.print(currentColor);
+                    out.print(currentChar);
+                }
+                else
+                {
+                    out.print(SET_BG_COLOR_BLACK);
+                    out.print(currentColor);
+                    out.print(currentChar);
+                }
+            }
 
             //print the column with the row names
             out.print(SET_BG_COLOR_BLACK);
@@ -177,27 +187,10 @@ public class ChessBoard {
 
         }
     }
-    private static void setWhite(PrintStream out) {
-        out.print(SET_BG_COLOR_WHITE);
-        out.print(SET_TEXT_COLOR_WHITE);
-    }
-
-    private static void setRed(PrintStream out) {
-        out.print(SET_BG_COLOR_RED);
-        out.print(SET_TEXT_COLOR_RED);
-    }
 
     private static void setBlack(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
-    private static void printPlayer(PrintStream out, String player) {
-        out.print(SET_BG_COLOR_WHITE);
-        out.print(SET_TEXT_COLOR_BLACK);
-
-        out.print(player);
-
-        setWhite(out);
-    }
 }
