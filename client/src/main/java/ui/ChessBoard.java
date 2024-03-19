@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -15,6 +16,7 @@ public class ChessBoard {
     private static final int LINE_WIDTH_IN_CHARS = 1;
     private static final String EMPTY = "   ";
     private static String currentChar = EMPTY;
+    private static String currentColor = null;
     //private static final String X = " X ";
     //private static final String O = " O ";
     //private static Random rand = new Random();
@@ -58,7 +60,7 @@ public class ChessBoard {
     private static void drawSquares(PrintStream out, chess.ChessBoard board)
     {
 
-        String[] rowHeaders = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", "   "};
+        String[] rowHeaders = {"   ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
 
         //for each row
         for (int rowInBoard = 1; rowInBoard <= BOARD_SIZE_IN_SQUARES; ++rowInBoard)
@@ -76,12 +78,13 @@ public class ChessBoard {
                 if((squareInRow + rowInBoard) % 2 == 0) {
                     out.print(SET_BG_COLOR_WHITE);
                     out.print(SET_TEXT_COLOR_BLACK);
+                    out.print(currentColor);
                     out.print(currentChar);
                 }
                 else
                 {
                     out.print(SET_BG_COLOR_BLACK);
-                    out.print(SET_TEXT_COLOR_WHITE);
+                    out.print(currentColor);
                     out.print(currentChar);
                 }
 
@@ -136,6 +139,8 @@ public class ChessBoard {
         if (board.getPiece(new ChessPosition(rowInBoard, squareInRow)) == null)
         {
             currentChar = EMPTY;
+            currentColor = SET_TEXT_COLOR_BLACK;
+            return;
         }
         else if (board.getPiece(new ChessPosition(rowInBoard, squareInRow)).getPieceType() == ChessPiece.PieceType.KING)
         {
@@ -160,6 +165,16 @@ public class ChessBoard {
         else if (board.getPiece(new ChessPosition(rowInBoard, squareInRow)).getPieceType() == ChessPiece.PieceType.BISHOP)
         {
             currentChar = " B ";
+        }
+        if(board.getPiece(new ChessPosition(rowInBoard, squareInRow)).getTeamColor() == ChessGame.TeamColor.WHITE)
+        {
+            currentColor = SET_TEXT_COLOR_RED; //set color to red
+        }
+        else
+        {
+            //set color to blue
+            currentColor = SET_TEXT_COLOR_BLUE;
+
         }
     }
     private static void setWhite(PrintStream out) {
