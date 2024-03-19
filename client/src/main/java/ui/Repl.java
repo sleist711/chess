@@ -8,6 +8,7 @@ public class Repl
     PostLogin postLogin;
     Gameplay gamePlay;
     static String authToken;
+    static State state = State.SIGNEDOUT;
 
 
     public Repl(String serverUrl)
@@ -21,57 +22,54 @@ public class Repl
 
     public void run() {
         System.out.println("Welcome to chess.");
-        System.out.print(preLogin.help());
-
         Scanner scanner = new Scanner(System.in);
         var result = "";
         String line = "";
 
-        //while we're running prelogin, signed out
-        while (preLogin.state == State.SIGNEDOUT) {
-            ChessClient.printPrompt();
-            line = scanner.nextLine();
-            try {
-                result = preLogin.eval(line);
-                //if it's quit
-                if(line.equals("quit"))
-                {
-                    System.exit(0);
-                }
-                System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
-            }
-            catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
-            }
-        }
 
-        //now we're in postlogin
-        System.out.println();
-        System.out.println("You are logged in.");
-        System.out.print(postLogin.help());
-
-        while(postLogin.gameState != GameState.INPLAY)
+        while (!line.equals("quit"))
         {
-            ChessClient.printPrompt();
-            line = scanner.nextLine();
-            try {
-                result = postLogin.eval(line);
-                //if it's quit
-                if(line.equals("quit"))
-                {
-                    System.exit(0);
+
+            //while we're running prelogin, signed out
+            if (state == State.SIGNEDOUT)
+            {
+                System.out.print(preLogin.help());
+                ChessClient.printPrompt();
+                line = scanner.nextLine();
+                try {
+                    result = preLogin.eval(line);
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
                 }
-                System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
+                catch (Throwable e) {
+                    var msg = e.toString();
+                    System.out.print(msg);
+                }
+                System.out.println();
             }
-            catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
+            //now we're in postlogin
+            if (state == State.SIGNEDIN)
+            {
+                System.out.print(postLogin.help());
+
+                ChessClient.printPrompt();
+                line = scanner.nextLine();
+                try {
+                    result = postLogin.eval(line);
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
+                }
+                catch (Throwable e) {
+                    var msg = e.toString();
+                    System.out.print(msg);
+                }
+                System.out.println();
+            }
+
+            if(state == State.INPLAY)
+            {
+                //if the game is in play. Implement this in phase 6.
             }
         }
-
-
-        System.out.println();
+        System.exit(0);
     }
 
     public static String getAuth()

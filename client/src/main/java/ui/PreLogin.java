@@ -37,7 +37,7 @@ public class PreLogin extends ChessClient{
             newRequest.password = params[1];
 
             authToken = server.login(newRequest);
-            state = State.SIGNEDIN;
+            Repl.state = State.SIGNEDIN;
             return String.format("Your authToken is %s", authToken);
         }
         throw new ResponseException("Expected more login information");

@@ -6,7 +6,11 @@ import dataAccess.ResponseException;
 import server.requests.GameRequest;
 import server.requests.RegistrationRequest;
 
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+
+import static ui.EscapeSequences.*;
 
 public class PostLogin extends ChessClient{
 
@@ -25,6 +29,7 @@ public class PostLogin extends ChessClient{
                 case "list" -> listGames(params);
                 case "join" -> joinGame(params);
                 case "observe" -> observeGame(params);
+                case "logout" -> logout(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -70,7 +75,10 @@ public class PostLogin extends ChessClient{
             }
 
             server.joinGame(newRequest);
-            return String.format("You joined the game as %s.", newRequest.playerColor);
+            //Repl.state = State.INPLAY;
+            //drawBoard();
+
+            return String.format("\nYou joined the game as %s.", newRequest.playerColor);
         }
         throw new ResponseException("Expected more registration information.");
     }
@@ -79,17 +87,19 @@ public class PostLogin extends ChessClient{
         if(params.length == 1)
         {
             joinGame(params);
+
+            //Repl.state = State.INPLAY;
             return ("You joined the game as an observer");
         }
         throw new ResponseException("You cannot include a color as an observer.");
     }
 
     public String logout(String ... params) throws ResponseException{
-        if(params.length == 3)
-        {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        server.logout(newRequest);
 
-        }
-        throw new ResponseException("Expected more registration information.");
+        Repl.state = State.SIGNEDOUT;
+        return ("You are logged out.");
     }
 
     public String help()
@@ -103,4 +113,5 @@ public class PostLogin extends ChessClient{
                 help - with possible commands
                 """;
     }
+
 }

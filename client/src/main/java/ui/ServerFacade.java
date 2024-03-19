@@ -41,6 +41,12 @@ public class ServerFacade {
         return response.authToken;
     }
 
+    public void logout(RegistrationRequest logoutRequest) throws ResponseException{
+
+        var path = "/session";
+        this.makeRequest("DELETE", path, logoutRequest, RegistrationResult.class, Repl.getAuth());
+    }
+
     public String register(RegistrationRequest registerRequest) throws ResponseException{
         var path = "/user";
         var response = this.makeRequest("POST", path, registerRequest, RegistrationResult.class, null);
