@@ -3,6 +3,7 @@ package clientTests;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.requests.GameRequest;
+import server.requests.GameResult;
 import server.requests.RegistrationRequest;
 import ui.ServerFacade;
 
@@ -181,6 +182,137 @@ public class ServerFacadeTests {
         }
 
         assertTrue(id > 0);
+    }
+
+    @Test
+    public void createGameFail()
+    {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "player1";
+        newRequest.password = "password";
+        newRequest.email = "p1@gmail.com";
+        int id = 0;
+
+        GameRequest gameRequest = new GameRequest();
+        gameRequest.gameName = "sydsgame";
+
+        try {
+            facade.register(newRequest);
+            id = Integer.parseInt(facade.createGame(gameRequest));
+        }
+        catch(Exception ex)
+        {
+            assertTrue(ex.getMessage().contains("failure"));
+        }
+    }
+
+    @Test
+    public void listGamePass()
+    {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "player1";
+        newRequest.password = "password";
+        newRequest.email = "p1@gmail.com";
+        GameResult[] gameList = new GameResult[0];
+
+        GameRequest gameRequest = new GameRequest();
+        gameRequest.gameName = "sydsgame";
+
+        try {
+            facade.register(newRequest);
+            facade.login(newRequest);
+            facade.createGame(gameRequest);
+            gameList = facade.listGames(gameRequest);
+        }
+        catch(Exception ex)
+        {
+            fail();
+        }
+
+        assertTrue(gameList.length == 1);
+    }
+
+    @Test
+    public void listGameFail()
+    {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "player1";
+        newRequest.password = "password";
+        newRequest.email = "p1@gmail.com";
+        GameResult[] gameList = new GameResult[0];
+
+        GameRequest gameRequest = new GameRequest();
+        gameRequest.gameName = "sydsgame";
+
+        try {
+            facade.register(newRequest);
+            facade.login(newRequest);
+            facade.createGame(gameRequest);
+            facade.logout(newRequest);
+            gameList = facade.listGames(gameRequest);
+        }
+        catch(Exception ex)
+        {
+            assertTrue(ex.getMessage().contains("failure"));
+        }
+
+    }
+
+    @Test
+    public void joinGameFail()
+    {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "player1";
+        newRequest.password = "password";
+        newRequest.email = "p1@gmail.com";
+
+
+        GameRequest gameRequest = new GameRequest();
+        gameRequest.gameName = "sydsgame";
+
+        GameRequest joinGameRequest = new GameRequest();
+        joinGameRequest.gameID = 4;
+        joinGameRequest.playerColor = "white";
+
+        try {
+            facade.register(newRequest);
+            facade.login(newRequest);
+            facade.createGame(gameRequest);
+            facade.joinGame(joinGameRequest);
+        }
+        catch(Exception ex)
+        {
+            assertTrue(ex.getMessage().contains("failure"));
+        }
+    }
+
+    @Test
+    public void joinGamePass()
+    {
+        RegistrationRequest newRequest = new RegistrationRequest();
+        newRequest.username = "player1";
+        newRequest.password = "password";
+        newRequest.email = "p1@gmail.com";
+        String message = "";
+
+        GameRequest gameRequest = new GameRequest();
+        gameRequest.gameName = "sydsgame";
+
+        GameRequest joinGameRequest = new GameRequest();
+        joinGameRequest.gameID = 1;
+        joinGameRequest.playerColor = "white";
+
+        try {
+            facade.register(newRequest);
+            facade.login(newRequest);
+            facade.createGame(gameRequest);
+            facade.joinGame(joinGameRequest);
+        }
+        catch(Exception ex)
+        {
+            message = ex.getMessage();
+        }
+        assertTrue(message.equals(""));
     }
 
 
