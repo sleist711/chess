@@ -38,7 +38,7 @@ public class Repl
                 line = scanner.nextLine();
                 try {
                     result = preLogin.eval(line);
-                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result + "\n");
                 }
                 catch (Throwable e) {
                     var msg = e.toString();
@@ -55,7 +55,7 @@ public class Repl
                 line = scanner.nextLine();
                 try {
                     result = postLogin.eval(line);
-                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result);
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result + "\n");
                 }
                 catch (Throwable e) {
                     var msg = e.toString();
@@ -68,8 +68,13 @@ public class Repl
             {
                 //if the game is in play. Implement this in phase 6.
             }
+            if(line.equals("quit"))
+            {
+                System.exit(0);
+            }
+
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     public static String getAuth()

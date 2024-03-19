@@ -91,6 +91,9 @@ public class PostLogin extends ChessClient{
             joinGame(params);
 
             //Repl.state = State.INPLAY;
+            String[] startPosition = new String[]{"0"};
+            ChessBoard.main(startPosition);
+
             return ("You joined the game as an observer");
         }
         throw new ResponseException("You cannot include a color as an observer.");

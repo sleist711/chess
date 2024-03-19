@@ -35,7 +35,6 @@ public class ServerFacade {
     public String login(RegistrationRequest loginRequest) throws ResponseException{
 
         var path = "/session";
-        //not sure this response class will work
         var response = this.makeRequest("POST", path, loginRequest, RegistrationResult.class, null);
         Repl.setAuth(response.authToken);
         return response.authToken;
