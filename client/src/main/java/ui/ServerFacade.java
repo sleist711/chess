@@ -50,6 +50,7 @@ public class ServerFacade {
         var path = "/user";
         var response = this.makeRequest("POST", path, registerRequest, RegistrationResult.class, null);
         Repl.setAuth(response.authToken);
+
         return response.authToken;
     }
 

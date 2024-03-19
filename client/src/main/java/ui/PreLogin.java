@@ -51,6 +51,7 @@ public class PreLogin extends ChessClient{
             newRequest.password = params[1];
             newRequest.email = params[2];
 
+            Repl.state = State.SIGNEDIN;
             authToken = server.register(newRequest);
             return String.format("Your authToken is %s", authToken);
         }
