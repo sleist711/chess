@@ -23,7 +23,6 @@ public class ChessBoard {
 
         out.print(ERASE_SCREEN);
 
-        //drawHeaders(out);
 
         chess.ChessBoard board = new chess.ChessBoard();
         board.resetBoard();
@@ -34,7 +33,6 @@ public class ChessBoard {
 
         drawSquaresFlipped(out, board);
 
-        //out.print(RESET_BG_COLOR);
         out.print(SET_BG_COLOR_DARK_GREY);
         out.print(RESET_TEXT_COLOR);
     }
@@ -99,7 +97,7 @@ public class ChessBoard {
         out.println();
     }
 
-    private static void drawSquaresFlipped(PrintStream out, chess.ChessBoard board)
+    public static void drawSquaresFlipped(PrintStream out, chess.ChessBoard board)
     {
 
         drawHeaders(out);

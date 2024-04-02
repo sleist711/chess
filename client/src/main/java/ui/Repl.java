@@ -15,7 +15,7 @@ public class Repl
     {
         preLogin = new PreLogin(serverUrl);
         postLogin = new PostLogin(serverUrl);
-        gamePlay = new Gameplay();
+        gamePlay = new Gameplay(serverUrl);
         authToken = "";
 
     }
@@ -63,10 +63,21 @@ public class Repl
                 }
                 System.out.println();
             }
-
+        //working here to incorporate the in game options
             if(state == State.INPLAY)
             {
-                //if the game is in play. Implement this in phase 6.
+                System.out.print(gamePlay.help());
+                ChessClient.printPrompt();
+                line = scanner.nextLine();
+                try {
+                    result = postLogin.eval(line);
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result + "\n");
+                }
+                catch (Throwable e) {
+                    var msg = e.toString();
+                    System.out.print(msg);
+                }
+                System.out.println();
             }
             if(line.equals("quit"))
             {

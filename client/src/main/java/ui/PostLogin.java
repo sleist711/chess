@@ -1,5 +1,6 @@
 package ui;
 
+import WebSocket.WebSocketFacade;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
@@ -67,18 +68,41 @@ public class PostLogin extends ChessClient{
         if(params.length >= 1)
         {
             GameRequest newRequest = new GameRequest();
-            newRequest.gameID = Integer.parseInt(params[0]);
+            String authToken = params[0];
+            newRequest.gameID = Integer.parseInt(params[1]);
 
-            if(params.length == 2)
+            if(params.length == 3)
             {
-                newRequest.playerColor = params[1];
+                newRequest.playerColor = params[2];
             }
 
+            //calls the server API to join them to the game or verify it exists
             server.joinGame(newRequest);
-            //Repl.state = State.INPLAY;
+            //Open a WebSocket connecion with the server (using the /connect endpoint) so it can send and receive gameplay messages.
+            ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+
+            //Send either a JOIN_PLAYER or JOIN_OBSERVER WebSocket message to the server.
+            if (newRequest.playerColor == null)
+            {
+                //ws.joinObserver(authToken);
+            }
+            else
+            {
+                ws.joinPlayer(authToken);
+            }
+
+            //transition to gameplay UI
+            Repl.state = State.INPLAY;
+
             String[] startPosition = new String[]{"0"};
 
+            //make a new board for the game
+
+            //modify this to take in a chess board
             ChessBoard.main(startPosition);
+
+            //update the current chess game
+            //currentGame =
 
             return String.format("\nYou joined the game as %s.", newRequest.playerColor);
         }
@@ -90,7 +114,7 @@ public class PostLogin extends ChessClient{
         {
             joinGame(params);
 
-            //Repl.state = State.INPLAY;
+            Repl.state = State.INPLAY;
             String[] startPosition = new String[]{"0"};
             ChessBoard.main(startPosition);
 
@@ -112,7 +136,7 @@ public class PostLogin extends ChessClient{
         return """
                 create <NAME> <AUTHTOKEN> - a game
                 list <AUTHTOKEN> - games
-                join <ID> [BLACK | WHITE | <empty>] - a game
+                join <AUTHTOKEN> <ID> [BLACK | WHITE | <empty>] - a game
                 observe <ID> - a game
                 quit - playing chess
                 help - with possible commands

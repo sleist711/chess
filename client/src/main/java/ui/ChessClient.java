@@ -1,15 +1,24 @@
 package ui;
 
+import WebSocket.NotificationHandler;
+import WebSocket.WebSocketFacade;
+import chess.ChessGame;
 import dataAccess.ResponseException;
 
 import java.util.Arrays;
 
 public class ChessClient {
-    private String visitorName = null;
+    String visitorName = null;
     ServerFacade server;
     State state = State.SIGNEDOUT;
     GameState gameState = GameState.NOTINPLAY;
-    private String serverUrl;
+    public String serverUrl;
+
+    NotificationHandler notificationHandler;
+    public WebSocketFacade ws;
+
+
+    ChessGame currentGame = null;
 
 
 

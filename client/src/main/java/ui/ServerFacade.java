@@ -21,7 +21,7 @@ import java.net.URL;
 
 public class ServerFacade {
 
-    private final String serverUrl;
+    final String serverUrl;
     public ServerFacade(String url) {
         serverUrl = url;
     }
