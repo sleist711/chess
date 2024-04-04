@@ -68,12 +68,13 @@ public class PostLogin extends ChessClient{
         if(params.length >= 1)
         {
             GameRequest newRequest = new GameRequest();
-            String authToken = params[0];
-            newRequest.gameID = Integer.parseInt(params[1]);
+            String playerName = params[0];
+            String authToken = params[1];
+            newRequest.gameID = Integer.parseInt(params[2]);
 
-            if(params.length == 3)
+            if(params.length == 4)
             {
-                newRequest.playerColor = params[2];
+                newRequest.playerColor = params[3];
             }
 
             //calls the server API to join them to the game or verify it exists
@@ -84,11 +85,11 @@ public class PostLogin extends ChessClient{
             //Send either a JOIN_PLAYER or JOIN_OBSERVER WebSocket message to the server.
             if (newRequest.playerColor == null)
             {
-                //ws.joinObserver(authToken);
+                ws.joinObserver(authToken, playerName);
             }
             else
             {
-                ws.joinPlayer(authToken);
+                ws.joinPlayer(authToken, playerName, newRequest.playerColor);
             }
 
             //transition to gameplay UI
@@ -136,7 +137,7 @@ public class PostLogin extends ChessClient{
         return """
                 create <NAME> <AUTHTOKEN> - a game
                 list <AUTHTOKEN> - games
-                join <AUTHTOKEN> <ID> [BLACK | WHITE | <empty>] - a game
+                join <NAME> <AUTHTOKEN> <ID> [BLACK | WHITE | <empty>] - a game
                 observe <ID> - a game
                 quit - playing chess
                 help - with possible commands

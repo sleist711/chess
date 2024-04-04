@@ -15,8 +15,9 @@ public class Main {
             serverUrl = args[0];
         }
 
-        Server chessServer = new Server();
-        chessServer.run(8080);
+        //trying this to make multiple instances work
+        //Server chessServer = new Server();
+        //chessServer.run(8080);
 
         try{
             MySQLAuthDAO authDAO = new MySQLAuthDAO();

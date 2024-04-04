@@ -1,5 +1,7 @@
 package WebSocket;
 
+import dataAccess.MySQLAuthDAO;
+import dataAccess.MySQLUserDAO;
 import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
@@ -42,15 +44,29 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
+    public void joinObserver(String auth, String username) throws ResponseException
+    {
+        try {
+            var command = new UserGameCommand(auth);
+            command.setCommandType(UserGameCommand.CommandType.JOIN_OBSERVER);
+            command.setUsername(username);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        }
+        catch(IOException ex) {
+            throw new ResponseException(ex.getMessage());
+        }
+    }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    public void joinPlayer(String authToken) throws ResponseException {
+    public void joinPlayer(String authToken, String username, String color) throws ResponseException {
 
         try {
             //create command message
             UserGameCommand newCommand = new UserGameCommand(authToken);
+            newCommand.setUsername(username);
+            newCommand.setPlayerColor(color);
             newCommand.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
 
             //send message to server

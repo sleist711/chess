@@ -25,11 +25,25 @@ public class UserGameCommand {
     protected CommandType commandType;
 
     private final String authToken;
+    private String username;
+    private String playerColor;
+
+    public String getPlayerColor()
+    {
+        return this.playerColor;
+    }
+
+    public void setPlayerColor(String color)
+    {
+        this.playerColor = color;
+    }
 
     public String getAuthString() {
         return authToken;
     }
 
+    public void setUsername(String username){this.username = username;}
+    public String getUserName() {return username;}
     public CommandType getCommandType() {
         return this.commandType;
     }
