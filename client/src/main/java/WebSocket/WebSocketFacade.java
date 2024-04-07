@@ -1,5 +1,6 @@
 package WebSocket;
 
+import chess.ChessGame;
 import dataAccess.MySQLAuthDAO;
 import dataAccess.MySQLUserDAO;
 import dataAccess.ResponseException;
@@ -33,8 +34,9 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    notificationHandler.notify(serverMessage);
+                 //   ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    //notificationHandler.notify(serverMessage);
+                    System.out.println(message);
                 }
             });
 
@@ -60,7 +62,8 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    public void joinPlayer(String authToken, String username, String color) throws ResponseException {
+    //public void joinPlayer(String authToken, String username, String color, ChessGame currentGame) throws ResponseException {
+    public void joinPlayer(String authToken, String username, String color, Integer currentGame) throws ResponseException {
 
         try {
             //create command message
@@ -68,6 +71,8 @@ public class WebSocketFacade extends Endpoint {
             newCommand.setUsername(username);
             newCommand.setPlayerColor(color);
             newCommand.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
+            //newCommand.setGame(currentGame);
+            newCommand.setGame(currentGame);
 
             //send message to server
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
@@ -81,4 +86,9 @@ public class WebSocketFacade extends Endpoint {
     public void leaveGame(String visitorName) throws ResponseException {
         return;
     }
+
+
+    public void onError()
+    {}
+
 }

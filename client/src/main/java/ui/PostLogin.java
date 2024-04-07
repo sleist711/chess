@@ -4,12 +4,15 @@ import WebSocket.WebSocketFacade;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
+import model.GameData;
 import server.requests.GameRequest;
 import server.requests.RegistrationRequest;
+import service.GameService;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
@@ -35,6 +38,8 @@ public class PostLogin extends ChessClient{
             };
         } catch (ResponseException ex) {
             return ex.getMessage();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -64,7 +69,7 @@ public class PostLogin extends ChessClient{
 
     }
 
-    public String joinGame(String ... params) throws ResponseException{
+    public String joinGame(String ... params) throws Exception {
         if(params.length >= 1)
         {
             GameRequest newRequest = new GameRequest();
@@ -77,8 +82,33 @@ public class PostLogin extends ChessClient{
                 newRequest.playerColor = params[3];
             }
 
-            //calls the server API to join them to the game or verify it exists
+            //calls the server facade to join them to the game or verify it exists
             server.joinGame(newRequest);
+
+            try {
+                //get the list of current games
+                Collection<GameData> currentGameList = GameService.listGames(newRequest, authToken);
+
+                //if the game id matches the one they're joining
+                for (GameData game : currentGameList) {
+                    if (game.gameID() == newRequest.gameID) {
+                        //set that one to the current game
+                        currentGame = game.game();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+            //set tehe player name
+            playerName = newRequest.blackUsername;
+            if(playerName == null)
+            {
+                playerName = newRequest.whiteUsername;
+            }
+
             //Open a WebSocket connecion with the server (using the /connect endpoint) so it can send and receive gameplay messages.
             ws = new WebSocketFacade(server.serverUrl, notificationHandler);
 
@@ -89,7 +119,9 @@ public class PostLogin extends ChessClient{
             }
             else
             {
-                ws.joinPlayer(authToken, playerName, newRequest.playerColor);
+                //pass in the chess game
+               // ws.joinPlayer(authToken, playerName, newRequest.playerColor, currentGame);
+                ws.joinPlayer(authToken, playerName, newRequest.playerColor, newRequest.gameID);
             }
 
             //transition to gameplay UI
@@ -110,7 +142,7 @@ public class PostLogin extends ChessClient{
         throw new ResponseException("Expected more registration information.");
     }
 
-    public String observeGame(String... params) throws ResponseException{
+    public String observeGame(String... params) throws Exception {
         if(params.length == 1)
         {
             joinGame(params);

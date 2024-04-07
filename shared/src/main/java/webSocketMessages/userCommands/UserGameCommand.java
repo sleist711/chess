@@ -1,5 +1,7 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
+
 import java.util.Objects;
 
 /**
@@ -14,6 +16,15 @@ public class UserGameCommand {
         this.authToken = authToken;
     }
 
+   // public ChessGame getGame() {
+        //return this.currentGame;
+    //}
+    public Integer getGame()
+    {
+        return this.gameID;
+    }
+
+
     public enum CommandType {
         JOIN_PLAYER,
         JOIN_OBSERVER,
@@ -27,6 +38,16 @@ public class UserGameCommand {
     private final String authToken;
     private String username;
     private String playerColor;
+    //private ChessGame currentGame;
+    private Integer gameID;
+
+   // public void setGame(ChessGame game) {
+       // this.currentGame = game;
+    //}
+    public void setGame(Integer game)
+    {
+        this.gameID = game;
+    }
 
     public String getPlayerColor()
     {

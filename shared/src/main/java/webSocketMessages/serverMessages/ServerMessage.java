@@ -1,5 +1,6 @@
 package webSocketMessages.serverMessages;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -13,6 +14,8 @@ import java.util.Objects;
 public class ServerMessage {
     ServerMessageType serverMessageType;
     String messageContents;
+    //ChessGame game;
+    Integer game;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -22,6 +25,14 @@ public class ServerMessage {
 
     public ServerMessage(ServerMessageType type) {
         this.serverMessageType = type;
+    }
+    //public void setGame(ChessGame game)
+    //{
+    //    this.game = game;
+    //}
+    public void setGame(Integer game)
+    {
+        this.game = game;
     }
 
     public ServerMessageType getServerMessageType() {

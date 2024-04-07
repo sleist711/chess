@@ -1,7 +1,9 @@
 package server.webSocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import com.mysql.cj.jdbc.ConnectionGroupManager;
+import dataAccess.ResponseException;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import org.eclipse.jetty.websocket.api.Session;
@@ -20,7 +22,7 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch(command.getCommandType())
         {
-            case JOIN_PLAYER -> joinPlayer(command.getUserName(), session, command.getPlayerColor());
+            case JOIN_PLAYER -> joinPlayer(command.getUserName(), session, command.getPlayerColor(), command.getGame());
             case JOIN_OBSERVER -> joinObserver(command.getUserName(), session);
 
         }
@@ -35,8 +37,14 @@ public class WebSocketHandler {
         //should make sure that this is actually broadcasting
         connections.broadcast(playerName, notification);
     }
-    private void joinPlayer(String playerName, Session session, String playerColor) throws IOException
+    //private void joinPlayer(String playerName, Session session, String playerColor, ChessGame currentGame) throws IOException
+    private void joinPlayer(String playerName, Session session, String playerColor, Integer currentGame) throws IOException
     {
+        //if there's no player name???
+        if(playerName == null)
+        {
+            playerName = "unknown";
+        }
         connections.add(playerName, session);
         var message = String.format("%s has joined the game as the color %s", playerName, playerColor);
         var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
@@ -51,7 +59,10 @@ public class WebSocketHandler {
         //put the game in the message
         //session.getremote thing from client
         //this is sent to everyoine when updated
-        newConnection.send(new Gson().toJson(new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME)));
+        ServerMessage message1 = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        message1.setGame(currentGame);
+        //try sending the messgae
+        newConnection.send(new Gson().toJson(currentGame));
     }
 
 
@@ -70,8 +81,8 @@ public class WebSocketHandler {
     //@OnWebSocketError
     //public void onError(Throwable throwable)
     //{
-    //    return;
-   // }
+      //  throw new ResponseException(throwable.getMessage());
+    //}
 
     //send message
     //broadcast message
