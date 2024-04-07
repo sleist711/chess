@@ -45,6 +45,7 @@ public class WebSocketHandler {
         {
             playerName = "unknown";
         }
+
         connections.add(playerName, session);
         var message = String.format("%s has joined the game as the color %s", playerName, playerColor);
         var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
