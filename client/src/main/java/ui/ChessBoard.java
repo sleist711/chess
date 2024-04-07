@@ -52,7 +52,7 @@ public class ChessBoard {
     }
 
 
-    private static void drawSquares(PrintStream out, chess.ChessBoard board)
+    public static void drawSquares(PrintStream out, chess.ChessBoard board)
     {
 
         drawHeaders(out);

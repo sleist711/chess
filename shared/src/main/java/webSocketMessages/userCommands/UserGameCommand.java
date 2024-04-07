@@ -19,7 +19,7 @@ public class UserGameCommand {
    // public ChessGame getGame() {
         //return this.currentGame;
     //}
-    public Integer getGame()
+    public Integer getGameID()
     {
         return this.gameID;
     }

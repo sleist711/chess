@@ -3,26 +3,33 @@ package server.webSocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import com.mysql.cj.jdbc.ConnectionGroupManager;
+import dataAccess.MySQLGameDAO;
 import dataAccess.ResponseException;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import org.eclipse.jetty.websocket.api.Session;
+import server.requests.GameRequest;
+import service.GameService;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.UserGameCommand;
 
+import javax.websocket.Endpoint;
 import java.io.IOException;
+import java.util.Collection;
 
 @WebSocket
-public class WebSocketHandler {
+public class WebSocketHandler
+{
 
     private final ConnectionHandler connections = new ConnectionHandler();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws Exception {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch(command.getCommandType())
         {
-            case JOIN_PLAYER -> joinPlayer(command.getUserName(), session, command.getPlayerColor(), command.getGame());
+            case JOIN_PLAYER -> joinPlayer(command.getUserName(), session, command.getPlayerColor(), command.getGameID(), command.getAuthString());
             case JOIN_OBSERVER -> joinObserver(command.getUserName(), session);
 
         }
@@ -37,9 +44,7 @@ public class WebSocketHandler {
         //should make sure that this is actually broadcasting
         connections.broadcast(playerName, notification);
     }
-    //private void joinPlayer(String playerName, Session session, String playerColor, ChessGame currentGame) throws IOException
-    private void joinPlayer(String playerName, Session session, String playerColor, Integer currentGame) throws IOException
-    {
+    private void joinPlayer(String playerName, Session session, String playerColor, Integer currentGame, String authString) throws Exception {
         //if there's no player name???
         if(playerName == null)
         {
@@ -61,9 +66,29 @@ public class WebSocketHandler {
         //session.getremote thing from client
         //this is sent to everyoine when updated
         ServerMessage message1 = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        message1.setGame(currentGame);
-        //try sending the messgae
-        newConnection.send(new Gson().toJson(currentGame));
+        //need to get the list of games and set the attribute to an actual game so it can be deserialized
+        GameRequest gamereq = new GameRequest();
+        //gamereq.gameID = currentGame;
+        ChessGame loadedGame = null;
+        Collection<GameData> games= GameService.listGames(gamereq, authString);
+        for (GameData game: games)
+        {
+            if (game.gameID() == currentGame)
+            {
+                loadedGame = game.game();
+            }
+        }
+
+        message1.setGame(loadedGame);
+
+
+        //serialize the chess game
+
+        //failing on this line. I don't think it's going back to the client
+        //session.getRemote().sendString("Sending a message");
+        session.getRemote().sendString(new Gson().toJson(message1));
+
+
     }
 
 

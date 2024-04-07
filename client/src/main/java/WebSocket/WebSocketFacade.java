@@ -8,24 +8,24 @@ import dataAccess.ResponseException;
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
 import spark.Spark;
+import ui.ChessBoard;
 import webSocketMessages.userCommands.UserGameCommand;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+
 public class WebSocketFacade extends Endpoint {
 
     Session session;
-    NotificationHandler notificationHandler;
-
     public WebSocketFacade(String url, NotificationHandler notificationHandler) throws ResponseException {
         try{
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
-            //might need to fix here
-            //this.notificationHandler = notificationHandler;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
@@ -34,9 +34,10 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                 //   ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    //notificationHandler.notify(serverMessage);
-                    System.out.println(message);
+                    //deserialize the new game and print it
+                    ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
+                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                    ChessBoard.drawSquares(out, loadedGame.getBoard());
                 }
             });
 
@@ -73,6 +74,7 @@ public class WebSocketFacade extends Endpoint {
             newCommand.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
             //newCommand.setGame(currentGame);
             newCommand.setGame(currentGame);
+
 
             //send message to server
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));

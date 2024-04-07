@@ -15,6 +15,7 @@ public class ChessGame {
     ChessBoard myBoard;
     ChessPiece[][] tempBoard;
     public ChessGame() {
+        myBoard = new ChessBoard();
     }
 
     /**

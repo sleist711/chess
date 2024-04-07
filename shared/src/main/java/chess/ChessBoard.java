@@ -20,6 +20,7 @@ public class ChessBoard {
         //initializing a chessboard of 8x8 chess pieces
         //setting it to 9x9 so that I can have spaces 1-8
         myChessBoard = new ChessPiece[9][9];
+        resetBoard();
     }
 
     /**
