@@ -1,23 +1,15 @@
 package WebSocket;
 
-import chess.ChessGame;
-import dataAccess.MySQLAuthDAO;
-import dataAccess.MySQLUserDAO;
 import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
-import spark.Spark;
-import ui.ChessBoard;
 import webSocketMessages.userCommands.UserGameCommand;
-import webSocketMessages.serverMessages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 public class WebSocketFacade extends Endpoint {
 
@@ -34,10 +26,15 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
+                    //I think I need multiple options of how to print out the message. Based on if it;s
+                    //a notification or load game
+                    System.out.println(message);
+                    /*
                     //deserialize the new game and print it
                     ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
                     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
                     ChessBoard.drawSquares(out, loadedGame.getBoard());
+                }*/
                 }
             });
 
