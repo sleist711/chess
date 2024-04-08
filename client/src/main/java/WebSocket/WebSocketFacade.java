@@ -1,9 +1,11 @@
 package WebSocket;
 
+import chess.ChessGame;
 import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
+import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
@@ -61,17 +63,13 @@ public class WebSocketFacade extends Endpoint {
     }
 
     //public void joinPlayer(String authToken, String username, String color, ChessGame currentGame) throws ResponseException {
-    public void joinPlayer(String authToken, String username, String color, Integer currentGame) throws ResponseException {
+    public void joinPlayer(String authToken, String color, Integer currentGame) throws ResponseException {
 
         try {
             //create command message
-            UserGameCommand newCommand = new UserGameCommand(authToken);
-            newCommand.setUsername(username);
-            newCommand.setPlayerColor(color);
+            //not sure if the value of will work
+            JoinPlayer newCommand = new JoinPlayer(authToken, currentGame, ChessGame.TeamColor.valueOf(color));
             newCommand.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
-            //newCommand.setGame(currentGame);
-            newCommand.setGame(currentGame);
-
 
             //send message to server
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));

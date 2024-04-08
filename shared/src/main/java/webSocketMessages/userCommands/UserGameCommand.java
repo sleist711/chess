@@ -16,15 +16,6 @@ public class UserGameCommand {
         this.authToken = authToken;
     }
 
-   // public ChessGame getGame() {
-        //return this.currentGame;
-    //}
-    public Integer getGameID()
-    {
-        return this.gameID;
-    }
-
-
     public enum CommandType {
         JOIN_PLAYER,
         JOIN_OBSERVER,
@@ -36,35 +27,37 @@ public class UserGameCommand {
     protected CommandType commandType;
 
     private final String authToken;
-    private String username;
-    private String playerColor;
-    //private ChessGame currentGame;
-    private Integer gameID;
+
 
    // public void setGame(ChessGame game) {
        // this.currentGame = game;
     //}
-    public void setGame(Integer game)
-    {
-        this.gameID = game;
-    }
+    //public void setGame(Integer game)
+    //{
+       // this.gameID = game;
+    //}
 
-    public String getPlayerColor()
+    /*public String getPlayerColor()
     {
         return this.playerColor;
     }
+    */
+
+    /*
 
     public void setPlayerColor(String color)
     {
         this.playerColor = color;
     }
 
+
+     */
     public String getAuthString() {
         return authToken;
     }
 
-    public void setUsername(String username){this.username = username;}
-    public String getUserName() {return username;}
+
+
     public CommandType getCommandType() {
         return this.commandType;
     }

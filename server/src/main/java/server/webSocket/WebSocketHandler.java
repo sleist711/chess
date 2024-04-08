@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 //import com.mysql.cj.jdbc.ConnectionGroupManager;
 //import dataAccess.MySQLGameDAO;
 //import dataAccess.ResponseException;
+import dataAccess.MySQLAuthDAO;
 import model.GameData;
 
 
@@ -14,11 +15,15 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.requests.GameRequest;
 import service.GameService;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.UserGameCommand;
 
 //import javax.websocket.Endpoint;
 import java.io.IOException;
 import java.util.Collection;
+
+import static service.Service.authAccess;
+import static service.Service.gameAccess;
 
 @WebSocket
 public class WebSocketHandler
@@ -41,8 +46,11 @@ public class WebSocketHandler
         //can use services or daos
         switch(command.getCommandType())
         {
-            case JOIN_PLAYER -> joinPlayer(command.getUserName(), session, command.getPlayerColor(), command.getGameID(), command.getAuthString());
-            case JOIN_OBSERVER -> joinObserver(command.getUserName(), session);
+            case JOIN_PLAYER:
+                JoinPlayer joinPlayerCommand = new Gson().fromJson(message, JoinPlayer.class);
+                joinPlayer(joinPlayerCommand, session);
+                break;
+            //case JOIN_OBSERVER -> joinObserver(command.getUserName(), session);
 
         }
     }
@@ -56,15 +64,13 @@ public class WebSocketHandler
         //should make sure that this is actually broadcasting
         connections.broadcast(playerName, notification);
     }
-    private void joinPlayer(String playerName, Session session, String playerColor, Integer currentGame, String authString) throws Exception {
-        //if there's no player name???
-        if(playerName == null)
-        {
-            playerName = "unknown";
-        }
+    private void joinPlayer(JoinPlayer command, Session session) throws Exception {
+
+        String playerName = authAccess.getUser(command.getAuthString());
 
         connections.add(playerName, session);
-        var message = String.format("%s has joined the game as the color %s", playerName, playerColor);
+
+        var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
         var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
         notification.setMessageContents(message);
         //should make sure that this is actually broadcasting
@@ -74,13 +80,16 @@ public class WebSocketHandler
 
         //this is sent to everyone when updated
         ServerMessage message1 = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+
         //need to get the list of games and set the attribute to an actual game, so it can be deserialized
         GameRequest gamereq = new GameRequest();
+        gamereq.authToken = command.getAuthString();
+
         ChessGame loadedGame = null;
-        Collection<GameData> games= GameService.listGames(gamereq, authString);
+        Collection<GameData> games= gameAccess.listGames(gamereq);
         for (GameData game: games)
         {
-            if (game.gameID() == currentGame)
+            if (game.gameID() == command.getGameID())
             {
                 loadedGame = game.game();
             }
