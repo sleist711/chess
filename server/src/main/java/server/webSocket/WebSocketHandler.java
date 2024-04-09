@@ -14,6 +14,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.requests.GameRequest;
 import service.GameService;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.UserGameCommand;
@@ -68,38 +71,91 @@ public class WebSocketHandler
 
         String playerName = authAccess.getUser(command.getAuthString());
 
-        connections.add(playerName, session);
+        //check conditions here
 
-        var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
-        var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        notification.setMessageContents(message);
-        //should make sure that this is actually broadcasting
-
-        //modify the broadcast function to only send the notification to people in that game
-        connections.broadcast(playerName, notification);
-
-        //this is sent to everyone when updated
-        ServerMessage message1 = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-
-        //need to get the list of games and set the attribute to an actual game, so it can be deserialized
-        GameRequest gamereq = new GameRequest();
-        gamereq.authToken = command.getAuthString();
-
-        ChessGame loadedGame = null;
-        Collection<GameData> games= gameAccess.listGames(gamereq);
-        for (GameData game: games)
+        //game exists
+        ServerMessage sentMessage = null;
+        
+        if(!gameAccess.checkForGame(command.getGameID()))
         {
-            if (game.gameID() == command.getGameID())
+            //send error message
+            var message = "Error: That game does not exist.";
+            Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+            messageToSend.setErrorMessage(message);
+            session.getRemote().sendString(new Gson().toJson(messageToSend));
+            sentMessage = messageToSend;
+        }
+        //invalid authtoken
+        if(!authAccess.checkAuthToken(command.getAuthString()))
+        {
+            //send error message
+            var message = "Error: That authtoken is invalid.";
+            Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+            messageToSend.setErrorMessage(message);
+            session.getRemote().sendString(new Gson().toJson(messageToSend));
+            sentMessage = messageToSend;
+        }
+        else if(command.getTeamColor().toString().toLowerCase().equals("black"))
+        {
+            if(gameAccess.existsBlackPlayer(command.getGameID()))
             {
-                loadedGame = game.game();
+                //send error message
+                var message = "Error: That spot is already taken.";
+                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                messageToSend.setErrorMessage(message);
+                session.getRemote().sendString(new Gson().toJson(messageToSend));
+                sentMessage = messageToSend;
             }
         }
+        else if(command.getTeamColor().toString().toLowerCase().equals("white"))
+        {
+            if(gameAccess.existsWhitePlayer(command.getGameID()))
+            {
+                //send error message
+                var message = "Error: That spot is already taken.";
+                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                messageToSend.setErrorMessage(message);
+                session.getRemote().sendString(new Gson().toJson(messageToSend));
+                sentMessage = messageToSend;
+            }
+        }
+        else
+        {
+            //should only send back if there are no errors
+             LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
 
-        message1.setGame(loadedGame);
+            //need to get the list of games and set the attribute to an actual game, so it can be deserialized
+            GameRequest gamereq = new GameRequest();
+            gamereq.authToken = command.getAuthString();
 
-        //serialize the chess game
-        //failing on this line in the actual test. I don't think it's going back to the client
-        session.getRemote().sendString(new Gson().toJson(message1));
+            ChessGame loadedGame = null;
+            Collection<GameData> games= gameAccess.listGames(gamereq);
+            for (GameData game: games)
+            {
+                if (game.gameID() == command.getGameID())
+                {
+                    loadedGame = game.game();
+                }
+            }
+
+            messageToSend.setGame(loadedGame);
+
+            //serialize the chess game
+            session.getRemote().sendString(new Gson().toJson(messageToSend));
+            sentMessage = messageToSend;
+        }
+
+        if(sentMessage.getServerMessageType() != ServerMessage.ServerMessageType.ERROR) {
+            connections.add(playerName, session);
+            var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
+            var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+            notification.setMessage(message);
+            
+            //modify the broadcast function to only send the notification to people in that game!!!!
+            connections.broadcast(playerName, notification);
+        }
+
+        
 
 
     }

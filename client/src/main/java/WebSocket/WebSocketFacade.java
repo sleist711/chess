@@ -5,13 +5,20 @@ import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
+import ui.ChessBoard;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
+import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 public class WebSocketFacade extends Endpoint {
 
@@ -28,15 +35,32 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    //I think I need multiple options of how to print out the message. Based on if it;s
-                    //a notification or load game
-                    System.out.println(message);
-                    /*
-                    //deserialize the new game and print it
-                    ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
-                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-                    ChessBoard.drawSquares(out, loadedGame.getBoard());
-                }*/
+
+                    ServerMessage receivedmessage = new Gson().fromJson(message, ServerMessage.class);
+
+                    switch(receivedmessage.getServerMessageType())
+                    {
+                        case NOTIFICATION:
+                        {
+                            Notification outputMessage = new Gson().fromJson(message, Notification.class);
+                            System.out.println(outputMessage.getMessage());
+                        }
+
+                        case ERROR:
+                        {
+                            Error outputMessage = new Gson().fromJson(message, Error.class);
+                            System.out.println(outputMessage.getErrorMessage());
+                        }
+                        case LOAD_GAME:
+                        {
+                            //LoadGame outputMessage = new Gson().fromJson(message, LoadGame.class);
+                            ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
+                            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                            ChessBoard.drawSquares(out, loadedGame.getBoard());
+                        }
+                    }
+
+
                 }
             });
 
@@ -46,12 +70,12 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void joinObserver(String auth, String username) throws ResponseException
+    public void joinObserver(String auth) throws ResponseException
     {
         try {
             var command = new UserGameCommand(auth);
             command.setCommandType(UserGameCommand.CommandType.JOIN_OBSERVER);
-            command.setUsername(username);
+            //command.setUsername(username);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         }
         catch(IOException ex) {
@@ -67,8 +91,7 @@ public class WebSocketFacade extends Endpoint {
 
         try {
             //create command message
-            //not sure if the value of will work
-            JoinPlayer newCommand = new JoinPlayer(authToken, currentGame, ChessGame.TeamColor.valueOf(color));
+            JoinPlayer newCommand = new JoinPlayer(authToken, currentGame, ChessGame.TeamColor.valueOf(color.toUpperCase()));
             newCommand.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
 
             //send message to server
