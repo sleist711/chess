@@ -75,7 +75,6 @@ public class WebSocketFacade extends Endpoint {
         try {
             var command = new UserGameCommand(auth);
             command.setCommandType(UserGameCommand.CommandType.JOIN_OBSERVER);
-            //command.setUsername(username);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         }
         catch(IOException ex) {
@@ -86,7 +85,6 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    //public void joinPlayer(String authToken, String username, String color, ChessGame currentGame) throws ResponseException {
     public void joinPlayer(String authToken, String color, Integer currentGame) throws ResponseException {
 
         try {

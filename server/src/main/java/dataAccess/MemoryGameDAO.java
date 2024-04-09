@@ -82,6 +82,15 @@ public class MemoryGameDAO implements GameDAO{
         }
     }
 
+    @Override
+    public String getBlackPlayer(int gameID) {
+        return null;
+    }
+
+    @Override
+    public String getWhitePlayer(int gameID) {
+        return null;
+    }
 
     @Override
     public void clear() {

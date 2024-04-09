@@ -20,4 +20,9 @@ public interface GameDAO {
 
     public boolean existsBlackPlayer(int gameID);
     public boolean existsWhitePlayer(int gameID);
+
+    public String getWhitePlayer(int gameID);
+    public String getBlackPlayer(int gameID);
+
+
 }

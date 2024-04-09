@@ -181,6 +181,52 @@ public class MySQLGameDAO implements GameDAO {
         return false;
     }
 
+    public String getBlackPlayer(int gameID)
+    {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT blackUsername from gamedata WHERE gameID='" + gameID + "';";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (var returnStatement = preparedStatement.executeQuery()) {
+                    if (returnStatement.next()) {
+                        if(returnStatement.getString("blackUsername") != null)
+                        {
+                            String blackUser = returnStatement.getString("blackUsername");
+                            return blackUser;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new ResponseException("Error: Unable to read data");
+            }
+        } catch (DataAccessException | SQLException | ResponseException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public String getWhitePlayer(int gameID)
+    {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT whiteUsername from gamedata WHERE gameID='" + gameID + "';";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (var returnStatement = preparedStatement.executeQuery()) {
+                    if (returnStatement.next()) {
+                        if(returnStatement.getString("whiteUsername") != null)
+                        {
+                            String whiteUsername = returnStatement.getString("whiteUsername");
+                            return whiteUsername;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new ResponseException("Error: Unable to read data");
+            }
+        } catch (DataAccessException | SQLException | ResponseException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     private int executeUpdate(String statement, Object... params) throws ResponseException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {

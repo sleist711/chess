@@ -108,7 +108,7 @@ public class PostLogin extends ChessClient{
             //Send either a JOIN_PLAYER or JOIN_OBSERVER WebSocket message to the server.
             if (newRequest.playerColor == null)
             {
-               // ws.joinObserver(authToken, playerName);
+                ws.joinObserver(authToken);
             }
             else
             {
