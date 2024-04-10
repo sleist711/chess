@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 //import com.mysql.cj.jdbc.ConnectionGroupManager;
 //import dataAccess.MySQLGameDAO;
 //import dataAccess.ResponseException;
+import com.google.gson.GsonBuilder;
 import dataAccess.MySQLAuthDAO;
 import dataAccess.ResponseException;
 import model.GameData;
@@ -95,16 +96,16 @@ public class WebSocketHandler
         loadedGame.setTeamTurn(null);
 
         //updates game in the database
-        gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonGame = gson.toJson(loadedGame);
+        gameAccess.updateGame(gamereq, jsonGame);
 
-        //testing
-        Collection<GameData> games2= gameAccess.listGames(gamereq);
 
         //send notification to everyone in the game
         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
         notification.setMessage(String.format("%s resigned from the game.", playerName));
         //serialize the chess game
-        connections.sendAll(notification);
+        connections.sendAll(notification, resignCommand.getGameID());
 
     }
 
@@ -160,12 +161,12 @@ public class WebSocketHandler
             //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
 
-            connections.add(playerName, session);
+            connections.add(playerName, session, command.getGameID());
             var message = String.format("%s has joined the game as an observer", playerName);
             var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
             notification.setMessage(message);
 
-            connections.broadcast(playerName, notification);
+            connections.broadcast(playerName, notification, command.getGameID());
         }
     }
     private void joinPlayer(JoinPlayer command, Session session) throws Exception {
@@ -250,13 +251,13 @@ public class WebSocketHandler
             messageToSend.setGame(loadedGame);
 
 
-            connections.add(playerName, session);
+            connections.add(playerName, session, command.getGameID());
             var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
             var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
             notification.setMessage(message);
 
             //modify the broadcast function to only send the notification to people in that game!!!!
-            connections.broadcast(playerName, notification);
+            connections.broadcast(playerName, notification, command.getGameID());
 
             //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
@@ -342,16 +343,16 @@ public class WebSocketHandler
         LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
         messageToSend.setGame(loadedGame);
         //serialize the chess game
-        connections.sendAll(messageToSend);
+        connections.sendAll(messageToSend, makeMoveCommand.getGameID());
 
         //send notification to everyone but the root client
-        connections.add(playerName, session);
+        connections.add(playerName, session, makeMoveCommand.getGameID());
         var notifMessage = String.format("%s made the move %s to %s", playerName, makeMoveCommand.getMove().getStartPosition().toString(), makeMoveCommand.getMove().getEndPosition().toString());
         var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
         notification.setMessage(notifMessage);
 
         //modify the broadcast function to only send the notification to people in that game!!!!
-        connections.broadcast(playerName, notification);
+        connections.broadcast(playerName, notification, makeMoveCommand.getGameID());
 
 
     }
