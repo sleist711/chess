@@ -29,6 +29,7 @@ public class Gameplay extends ChessClient{
             return switch (cmd) {
                 //case "redraw" -> redrawBoard(params);
                 case "move" -> movePiece(params);
+                case "resign" -> resign(params);
 
                 default -> help();
             };
@@ -36,6 +37,18 @@ public class Gameplay extends ChessClient{
         //catch (ResponseException ex) {
            // return ex.getMessage();
         //}
+    }
+
+    public String resign(String ... params) throws Exception
+    {
+        String authToken = params[0];
+        Integer gameID = Integer.valueOf(params[1]);
+
+        //websocket
+        ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+        ws.resign(authToken, gameID);
+
+        return String.format("You resigned from game %d", gameID);
     }
 
     public String movePiece(String ... params) throws Exception
@@ -47,15 +60,11 @@ public class Gameplay extends ChessClient{
         ChessPosition endPosition = ChessPosition.convertToPosition(params[4]);
         ChessPiece.PieceType promotionType = ChessPiece.PieceType.valueOf(params[5]);
 
-
-        ws = new WebSocketFacade(server.serverUrl, notificationHandler);
-
         //websocket
+        ws = new WebSocketFacade(server.serverUrl, notificationHandler);
         ws.movePiece(authToken, gameID, startPosition, endPosition, promotionType);
 
-
         return String.format("You made the move %s to %s with your %s", startPosition.toString(), endPosition.toString(), pieceType.toString());
-
     }
 
     public String help()
@@ -64,7 +73,7 @@ public class Gameplay extends ChessClient{
                 redraw < BLACK | WHITE | OBSERVER > - the chess board
                 leave - your current game
                 move <AUTH> <ID> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
-                resign - your current game
+                resign <AUTH> <ID> - your current game
                 highlight - possible moves for a piece
                 help - with possible commands
                 """;

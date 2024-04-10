@@ -16,6 +16,7 @@ import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.Resign;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
@@ -128,6 +129,21 @@ public class WebSocketFacade extends Endpoint {
 
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
 
+        }
+        catch (IOException ex)
+        {
+            throw new ResponseException(ex.getMessage());
+        }
+    }
+
+    public void resign(String authToken, Integer gameID) throws ResponseException {
+        try
+        {
+            //create command
+            Resign newCommand = new Resign(authToken, gameID);
+            newCommand.setCommandType(UserGameCommand.CommandType.RESIGN);
+
+            this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
         }
         catch (IOException ex)
         {

@@ -22,10 +22,7 @@ import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 //import javax.websocket.Endpoint;
 import java.io.IOException;
@@ -66,8 +63,49 @@ public class WebSocketHandler
             case MAKE_MOVE:
                 MakeMove makeMoveCommand = new Gson().fromJson(message, MakeMove.class);
                 makeMove(makeMoveCommand, session);
+                break;
+            case RESIGN:
+                Resign resignCommand = new Gson().fromJson(message, Resign.class);
+                resign(resignCommand, session);
 
         }
+    }
+
+    private void resign(Resign resignCommand, Session session) throws Exception
+    {
+        String playerName = authAccess.getUser(resignCommand.getAuthString());
+
+        //need to get the list of games and set the attribute to an actual game, so it can be deserialized
+        GameRequest gamereq = new GameRequest();
+        gamereq.authToken = resignCommand.getAuthString();
+        gamereq.gameID = resignCommand.getGameID();
+
+        ChessGame loadedGame = null;
+        Collection<GameData> games= gameAccess.listGames(gamereq);
+
+        for (GameData game: games)
+        {
+            if (game.gameID() == resignCommand.getGameID())
+            {
+                loadedGame = game.game();
+            }
+        }
+
+        //set turn to null so no one can make a move
+        loadedGame.setTeamTurn(null);
+
+        //updates game in the database
+        gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
+
+        //testing
+        Collection<GameData> games2= gameAccess.listGames(gamereq);
+
+        //send notification to everyone in the game
+        Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+        notification.setMessage(String.format("%s resigned from the game.", playerName));
+        //serialize the chess game
+        connections.sendAll(notification);
+
     }
 
     private void joinObserver(JoinObserver command, Session session) throws Exception
@@ -231,7 +269,6 @@ public class WebSocketHandler
     {
         String playerName = authAccess.getUser(makeMoveCommand.getAuthString());
 
-
         //get the right game
         ChessGame loadedGame = null;
 
@@ -257,6 +294,14 @@ public class WebSocketHandler
             return;
         }
 
+        //if someone has resigned
+        if(loadedGame.getTeamTurn() == null)
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: This game is over.");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
+        }
         //if they're trying to move a piece that isn't theirs
         ChessPiece pieceToMove = loadedGame.myBoard.myChessBoard[makeMoveCommand.getMove().getStartPosition().getColumn()][makeMoveCommand.getMove().getStartPosition().getRow()];
         if(pieceToMove.getTeamColor() == ChessGame.TeamColor.WHITE && !gameAccess.getWhitePlayer(gamereq.gameID).equals(playerName) )
@@ -275,6 +320,7 @@ public class WebSocketHandler
         }
 
 
+
         //makes the move
         assert loadedGame != null;
 
@@ -290,8 +336,7 @@ public class WebSocketHandler
         }
 
         //updates database
-
-            gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
+        gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
 
         //send loadGame message to everyone in the game
         LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
