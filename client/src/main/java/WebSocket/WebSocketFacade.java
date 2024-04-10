@@ -44,12 +44,14 @@ public class WebSocketFacade extends Endpoint {
                         {
                             Notification outputMessage = new Gson().fromJson(message, Notification.class);
                             System.out.println(outputMessage.getMessage());
+                            break;
                         }
 
                         case ERROR:
                         {
                             Error outputMessage = new Gson().fromJson(message, Error.class);
                             System.out.println(outputMessage.getErrorMessage());
+                            break;
                         }
                         case LOAD_GAME:
                         {
@@ -57,6 +59,7 @@ public class WebSocketFacade extends Endpoint {
                             ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
                             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
                             ChessBoard.drawSquares(out, loadedGame.getBoard());
+                            break;
                         }
                     }
 

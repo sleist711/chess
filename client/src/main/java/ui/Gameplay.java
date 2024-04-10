@@ -1,5 +1,8 @@
 package ui;
 
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import dataAccess.ResponseException;
 import server.requests.RegistrationRequest;
 
@@ -21,6 +24,7 @@ public class Gameplay extends ChessClient{
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 //case "redraw" -> redrawBoard(params);
+                case "move" -> movePiece(params);
 
                 default -> help();
             };
@@ -30,12 +34,23 @@ public class Gameplay extends ChessClient{
         //}
     }
 
+    public String movePiece(String ... params) throws Exception
+    {
+        ChessPiece.PieceType pieceType = ChessPiece.PieceType.valueOf(params[0]);
+        ChessPosition startPosition = ChessPosition.convertToPosition(params[1]);
+        ChessPosition endPosition = ChessPosition.convertToPosition(params[2]);
+        ChessPiece.PieceType promotionType = ChessPiece.PieceType.valueOf(params[3]);
+
+        currentGame.makeMove(new ChessMove(startPosition, endPosition, promotionType));
+        return String.format("You made the move %s to %s with your %s", startPosition.toString(), endPosition.toString(), pieceType.toString());
+    }
+
     public String help()
     {
         return """
                 redraw < BLACK | WHITE | OBSERVER > - the chess board
                 leave - your current game
-                move - one of your chess pieces
+                move < PIECE TYPE | START POSITION | END POSITION | PROMOTION TYPE > - one of your chess pieces
                 resign - your current game
                 highlight - possible moves for a piece
                 help - with possible commands

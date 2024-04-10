@@ -4,7 +4,7 @@ import chess.ChessGame;
 
 public class LoadGame extends ServerMessage{
 
-    Integer gameID;
+    //Integer gameID;
     ChessGame game;
     public LoadGame(ServerMessageType type) {
         super(type);
@@ -17,6 +17,6 @@ public class LoadGame extends ServerMessage{
 
     public void setGameID (Integer id)
     {
-        this.gameID = id;
+        //this.gameID = id;
     }
 }

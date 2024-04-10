@@ -21,6 +21,48 @@ public class ChessPosition {
 
     }
 
+    ChessPosition convertToPosition(String position)
+    {
+        char colChar = position.charAt(0);
+        Integer rowInt = position.charAt(1).getNumericValue;
+        Integer newRow;
+        Integer newCol = 0;
+
+        switch (colChar)
+        {
+            case 'a':
+                newCol = 1;
+                break;
+            case 'b':
+                newCol = 2;
+                break;
+            case 'c':
+                newCol = 3;
+                break;
+            case 'd':
+                newCol = 4;
+                break;
+            case 'e':
+                newCol = 5;
+                break;
+            case 'f':
+                newCol = 6;
+                break;
+            case 'g':
+                newCol = 7;
+                break;
+            case 'h':
+                newCol = 8;
+                break;
+
+        }
+
+        newRow = rowInt;
+        ChessPosition newPosition = new ChessPosition(newRow, newCol);
+
+        return newPosition;
+    }
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row

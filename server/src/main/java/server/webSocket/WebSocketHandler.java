@@ -153,18 +153,20 @@ public class WebSocketHandler
         {
             if(gameAccess.existsBlackPlayer(command.getGameID()))
             {
-                //send error message
-                var message = "Error: That spot is already taken.";
-                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
-                messageToSend.setErrorMessage(message);
-                session.getRemote().sendString(new Gson().toJson(messageToSend));
-                sentMessage = messageToSend;
+                //if the black player isn't the same as the player trying to join
+                if (!gameAccess.getBlackPlayer(command.getGameID()).equals(playerName))
+                {
+                    //send error message
+                    var message = "Error: That spot is already taken.";
+                    Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                    messageToSend.setErrorMessage(message);
+                    session.getRemote().sendString(new Gson().toJson(messageToSend));
+                    sentMessage = messageToSend;
+                }
             }
         }
         else if(command.getTeamColor().toString().toLowerCase().equals("white"))
         {
-            //need to make sure that the white player isn't myself
-            //working here
             if(gameAccess.existsWhitePlayer(command.getGameID()))
             {
                 //if the white player isn't the same as the player trying to join
@@ -239,3 +241,10 @@ public class WebSocketHandler
     //send message
     //broadcast message
 }
+
+
+
+
+//TO DO
+//fix observe option
+//only send notifs to people in the game

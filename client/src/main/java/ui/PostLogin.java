@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static service.Service.gameAccess;
 import static ui.EscapeSequences.*;
 
 public class PostLogin extends ChessClient{
@@ -76,6 +77,19 @@ public class PostLogin extends ChessClient{
 
             String authToken = params[0];
             newRequest.gameID = Integer.parseInt(params[1]);
+            newRequest.authToken = authToken;
+
+            //set the current game to be the one you just joined
+            Collection<GameData> games= gameAccess.listGames(newRequest);
+            for (GameData game: games)
+            {
+                if (game.gameID() == newRequest.gameID)
+                {
+                    currentGame = game.game();
+                }
+            }
+
+
 
             if(params.length == 3)
             {
@@ -134,10 +148,25 @@ public class PostLogin extends ChessClient{
     }
 
     public String observeGame(String... params) throws Exception {
-        if(params.length == 1)
+        if(params.length == 2)
         {
-            joinGame(params);
+            GameRequest newRequest = new GameRequest();
 
+            String authToken = params[0];
+            newRequest.gameID = Integer.parseInt(params[1]);
+            newRequest.authToken = authToken;
+
+            //set the current game to be the one you just joined
+            Collection<GameData> games= gameAccess.listGames(newRequest);
+            for (GameData game: games)
+            {
+                if (game.gameID() == newRequest.gameID)
+                {
+                    currentGame = game.game();
+                }
+            }
+
+            server.joinGame(newRequest);
             Repl.state = State.INPLAY;
             String[] startPosition = new String[]{"0"};
             ChessBoard.main(startPosition);
@@ -161,7 +190,7 @@ public class PostLogin extends ChessClient{
                 create <NAME> <AUTHTOKEN> - a game
                 list <AUTHTOKEN> - games
                 join <AUTHTOKEN> <ID> [BLACK | WHITE | <empty>] - a game
-                observe <ID> - a game
+                observe <AUTHTOKEN> <ID> - a game
                 quit - playing chess
                 help - with possible commands
                 """;
