@@ -249,11 +249,21 @@ public class WebSocketHandler
 
         //makes the move
         assert loadedGame != null;
-        loadedGame.makeMove(makeMoveCommand.getMove());
+
+        try {
+            loadedGame.makeMove(makeMoveCommand.getMove());
+        }
+        catch(InvalidMoveException ex)
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: It's not your turn!");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
+        }
 
         //updates database
-        //problem - gameid is null
-        gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
+
+            gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
 
         //send loadGame message to everyone in the game
         LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
