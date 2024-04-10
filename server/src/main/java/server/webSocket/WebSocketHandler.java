@@ -74,11 +74,14 @@ public class WebSocketHandler
             var message = "Error: That game does not exist.";
             Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
             messageToSend.setErrorMessage(message);
-            session.getRemote().sendString(new Gson().toJson(messageToSend));
+
+            String json = new Gson().toJson(messageToSend);
+            session.getRemote().sendString(json);
             sentMessage = messageToSend;
         }
+
         //invalid authtoken
-        if(!authAccess.checkAuthToken(command.getAuthString()))
+        else if(!authAccess.checkAuthToken(command.getAuthString()))
         {
             //send error message
             var message = "Error: That authtoken is invalid.";
@@ -110,10 +113,7 @@ public class WebSocketHandler
 
             //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
-            sentMessage = messageToSend;
-        }
 
-        if(sentMessage.getServerMessageType() != ServerMessage.ServerMessageType.ERROR) {
             connections.add(playerName, session);
             var message = String.format("%s has joined the game as an observer", playerName);
             var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
@@ -121,15 +121,12 @@ public class WebSocketHandler
 
             connections.broadcast(playerName, notification);
         }
-
-
     }
     private void joinPlayer(JoinPlayer command, Session session) throws Exception {
 
         String playerName = authAccess.getUser(command.getAuthString());
 
         //check conditions here
-
         //game exists
         ServerMessage sentMessage = null;
         
@@ -169,20 +166,21 @@ public class WebSocketHandler
             //need to make sure that the white player isn't myself
             //working here
             if(gameAccess.existsWhitePlayer(command.getGameID()))
+            {
+                //if the white player isn't the same as the player trying to join
                 if (!gameAccess.getWhitePlayer(command.getGameID()).equals(playerName))
                 {
-                    //let them join
+                    //send error message
+                    var message = "Error: That spot is already taken.";
+                    Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                    messageToSend.setErrorMessage(message);
+                    session.getRemote().sendString(new Gson().toJson(messageToSend));
+                    sentMessage = messageToSend;
                 }
-            {
-                //send error message
-                var message = "Error: That spot is already taken.";
-                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
-                messageToSend.setErrorMessage(message);
-                session.getRemote().sendString(new Gson().toJson(messageToSend));
-                sentMessage = messageToSend;
+
             }
         }
-        else
+        if(sentMessage == null)
         {
             //should only send back if there are no errors
              LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
@@ -203,15 +201,14 @@ public class WebSocketHandler
 
             messageToSend.setGame(loadedGame);
 
-            if(messageToSend.getServerMessageType() != ServerMessage.ServerMessageType.ERROR) {
-                connections.add(playerName, session);
-                var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
-                notification.setMessage(message);
 
-                //modify the broadcast function to only send the notification to people in that game!!!!
-                connections.broadcast(playerName, notification);
-            }
+            connections.add(playerName, session);
+            var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
+            var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+            notification.setMessage(message);
+
+            //modify the broadcast function to only send the notification to people in that game!!!!
+            connections.broadcast(playerName, notification);
 
             //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
