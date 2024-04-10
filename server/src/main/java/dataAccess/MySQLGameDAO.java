@@ -42,7 +42,6 @@ public class MySQLGameDAO implements GameDAO {
         ChessGame newGame = new ChessGame();
 
         var statement = "INSERT INTO gamedata (whiteUsername, blackUsername, gameName, json) VALUES (?, ?, ?, ?)";
-        //the json is empty here for some reason
         var json = new Gson().toJson(newGame);
         var id = executeUpdate(statement, req.whiteUsername, req.blackUsername, req.gameName, json);
 
@@ -94,6 +93,18 @@ public class MySQLGameDAO implements GameDAO {
         }
         return false;
     }
+    public void updateGame(GameRequest req, String newGame) throws Exception
+    {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "UPDATE gamedata SET json='" + newGame + "' WHERE gameID = '" + req.gameID + "';";
+            executeUpdate(statement);
+        } catch (SQLException ex) {
+            throw new ResponseException("Error: Unable to update");
+        }
+
+    }
+
+
 
     public void joinGame(GameRequest req, String userColor) throws ResponseException, DataAccessException {
 
@@ -246,7 +257,7 @@ public class MySQLGameDAO implements GameDAO {
             }
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException("Error: Unable to update database");
-        }//error is right here. unable to update database when i call list games
+        }
     }
 }
 

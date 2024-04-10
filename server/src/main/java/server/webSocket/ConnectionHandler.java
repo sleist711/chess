@@ -1,5 +1,6 @@
 package server.webSocket;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 
 import webSocketMessages.serverMessages.ServerMessage;
@@ -35,6 +36,19 @@ public class ConnectionHandler {
         // Clean up any connections that were left open.
         for (var c : removeList) {
             connections.remove(c.visitorName);
+        }
+    }
+
+
+    public void sendAll(ServerMessage notification) throws IOException
+    {
+        String message = new Gson().toJson(notification);
+
+        for (var c : connections.values()) {
+            if (c.session.isOpen()) {
+                c.send(message);
+
+            }
         }
     }
 }

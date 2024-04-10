@@ -25,4 +25,5 @@ public interface GameDAO {
     public String getBlackPlayer(int gameID);
 
 
+    void updateGame(GameRequest req, String json) throws Exception;
 }

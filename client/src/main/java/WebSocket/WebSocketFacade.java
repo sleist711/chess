@@ -1,16 +1,21 @@
 package WebSocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
+import org.eclipse.jetty.server.Authentication;
 import ui.ChessBoard;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
@@ -112,4 +117,21 @@ public class WebSocketFacade extends Endpoint {
     public void onError()
     {}
 
+    public void movePiece(String authToken, Integer gameID, ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionType) throws ResponseException {
+        try
+        {
+            ChessMove newMove = new ChessMove(startPosition, endPosition, promotionType);
+
+            //create command
+            MakeMove newCommand = new MakeMove(authToken, gameID, newMove);
+            newCommand.setCommandType(UserGameCommand.CommandType.MAKE_MOVE);
+
+            this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
+
+        }
+        catch (IOException ex)
+        {
+            throw new ResponseException(ex.getMessage());
+        }
+    }
 }

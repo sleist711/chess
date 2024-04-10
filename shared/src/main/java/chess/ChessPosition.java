@@ -21,10 +21,10 @@ public class ChessPosition {
 
     }
 
-    ChessPosition convertToPosition(String position)
+    public static ChessPosition convertToPosition(String position)
     {
         char colChar = position.charAt(0);
-        Integer rowInt = position.charAt(1).getNumericValue;
+        Integer rowInt = Character.getNumericValue(position.charAt(1));
         Integer newRow;
         Integer newCol = 0;
 

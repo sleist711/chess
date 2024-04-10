@@ -16,6 +16,9 @@ public class ChessGame {
     ChessPiece[][] tempBoard;
     public ChessGame() {
         myBoard = new ChessBoard();
+
+        //experimenting here with making the current turn white to start
+        currentTurn = TeamColor.WHITE;
     }
 
     /**

@@ -96,4 +96,8 @@ public class MemoryGameDAO implements GameDAO{
     public void clear() {
         games.clear();
     }
+
+    public void updateGame(GameRequest gameReq, String json) throws Exception
+    {
+    }
 }

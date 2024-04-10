@@ -1,11 +1,14 @@
 package server.webSocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 //import com.mysql.cj.jdbc.ConnectionGroupManager;
 //import dataAccess.MySQLGameDAO;
 //import dataAccess.ResponseException;
 import dataAccess.MySQLAuthDAO;
+import dataAccess.ResponseException;
 import model.GameData;
 
 
@@ -20,6 +23,7 @@ import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
 
 //import javax.websocket.Endpoint;
@@ -58,6 +62,9 @@ public class WebSocketHandler
                 JoinObserver joinObserverCommand = new Gson().fromJson(message, JoinObserver.class);
                 joinObserver(joinObserverCommand, session);
                 break;
+            case MAKE_MOVE:
+                MakeMove makeMoveCommand = new Gson().fromJson(message, MakeMove.class);
+                makeMove(makeMoveCommand, session);
 
         }
     }
@@ -216,6 +223,53 @@ public class WebSocketHandler
             session.getRemote().sendString(new Gson().toJson(messageToSend));
 
         }
+
+    }
+
+    private void makeMove(MakeMove makeMoveCommand, Session session) throws Exception
+    {
+        String playerName = authAccess.getUser(makeMoveCommand.getAuthString());
+
+
+        //get the right game
+        ChessGame loadedGame = null;
+
+        GameRequest gamereq = new GameRequest();
+        gamereq.authToken = makeMoveCommand.getAuthString();
+        gamereq.gameID = makeMoveCommand.getGameID();
+
+        Collection<GameData> games= gameAccess.listGames(gamereq);
+        for (GameData game: games)
+        {
+            if (game.gameID() == makeMoveCommand.getGameID())
+            {
+                loadedGame = game.game();
+            }
+        }
+
+        //makes the move
+        assert loadedGame != null;
+        loadedGame.makeMove(makeMoveCommand.getMove());
+
+        //updates database
+        //problem - gameid is null
+        gameAccess.updateGame(gamereq, new Gson().toJson(loadedGame));
+
+        //send loadGame message to everyone in the game
+        LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
+        messageToSend.setGame(loadedGame);
+        //serialize the chess game
+        connections.sendAll(messageToSend);
+
+        //send notification to everyone but the root client
+        connections.add(playerName, session);
+        var notifMessage = String.format("%s made the move %s to %s", playerName, makeMoveCommand.getMove().getStartPosition().toString(), makeMoveCommand.getMove().getEndPosition().toString());
+        var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+        notification.setMessage(notifMessage);
+
+        //modify the broadcast function to only send the notification to people in that game!!!!
+        connections.broadcast(playerName, notification);
+
 
     }
 

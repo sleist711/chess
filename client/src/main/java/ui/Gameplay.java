@@ -1,14 +1,18 @@
 package ui;
 
+import WebSocket.WebSocketFacade;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import com.google.gson.Gson;
 import dataAccess.ResponseException;
 import server.requests.RegistrationRequest;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+
+import static service.Service.gameAccess;
 
 public class Gameplay extends ChessClient{
 
@@ -17,7 +21,7 @@ public class Gameplay extends ChessClient{
         super(serverUrl);
     }
 
-    public String eval(String input) {
+    public String eval(String input) throws Exception {
         //try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
@@ -36,13 +40,22 @@ public class Gameplay extends ChessClient{
 
     public String movePiece(String ... params) throws Exception
     {
-        ChessPiece.PieceType pieceType = ChessPiece.PieceType.valueOf(params[0]);
-        ChessPosition startPosition = ChessPosition.convertToPosition(params[1]);
-        ChessPosition endPosition = ChessPosition.convertToPosition(params[2]);
-        ChessPiece.PieceType promotionType = ChessPiece.PieceType.valueOf(params[3]);
+        String authToken = params[0];
+        Integer gameID = Integer.valueOf(params[1]);
+        ChessPiece.PieceType pieceType = ChessPiece.PieceType.valueOf(params[2]);
+        ChessPosition startPosition = ChessPosition.convertToPosition(params[3]);
+        ChessPosition endPosition = ChessPosition.convertToPosition(params[4]);
+        ChessPiece.PieceType promotionType = ChessPiece.PieceType.valueOf(params[5]);
 
-        currentGame.makeMove(new ChessMove(startPosition, endPosition, promotionType));
+
+        ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+
+        //websocket
+        ws.movePiece(authToken, gameID, startPosition, endPosition, promotionType);
+
+
         return String.format("You made the move %s to %s with your %s", startPosition.toString(), endPosition.toString(), pieceType.toString());
+
     }
 
     public String help()
@@ -50,7 +63,7 @@ public class Gameplay extends ChessClient{
         return """
                 redraw < BLACK | WHITE | OBSERVER > - the chess board
                 leave - your current game
-                move < PIECE TYPE | START POSITION | END POSITION | PROMOTION TYPE > - one of your chess pieces
+                move <AUTH> <ID> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
                 resign - your current game
                 highlight - possible moves for a piece
                 help - with possible commands
