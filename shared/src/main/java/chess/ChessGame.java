@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class ChessGame {
 
     TeamColor currentTurn;
-    ChessBoard myBoard;
+    public ChessBoard myBoard;
     ChessPiece[][] tempBoard;
     public ChessGame() {
         myBoard = new ChessBoard();

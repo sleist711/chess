@@ -2,6 +2,7 @@ package server.webSocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 //import com.mysql.cj.jdbc.ConnectionGroupManager;
@@ -247,6 +248,33 @@ public class WebSocketHandler
             }
         }
 
+        //make sure the player isn't an observer
+        if(!gameAccess.getWhitePlayer(gamereq.gameID).equals(playerName) && !gameAccess.getBlackPlayer(gamereq.gameID).equals(playerName))
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: You are just observing this game.");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
+        }
+
+        //if they're trying to move a piece that isn't theirs
+        ChessPiece pieceToMove = loadedGame.myBoard.myChessBoard[makeMoveCommand.getMove().getStartPosition().getColumn()][makeMoveCommand.getMove().getStartPosition().getRow()];
+        if(pieceToMove.getTeamColor() == ChessGame.TeamColor.WHITE && !gameAccess.getWhitePlayer(gamereq.gameID).equals(playerName) )
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: You are just observing this game.");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
+        }
+        else if(pieceToMove.getTeamColor() == ChessGame.TeamColor.BLACK && !gameAccess.getBlackPlayer(gamereq.gameID).equals(playerName))
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: You are just observing this game.");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
+        }
+
+
         //makes the move
         assert loadedGame != null;
 
@@ -256,7 +284,7 @@ public class WebSocketHandler
         catch(InvalidMoveException ex)
         {
             Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
-            errorMessage.setErrorMessage("Error: It's not your turn!");
+            errorMessage.setErrorMessage("Error: Invalid move");
             session.getRemote().sendString(new Gson().toJson(errorMessage));
             return;
         }
