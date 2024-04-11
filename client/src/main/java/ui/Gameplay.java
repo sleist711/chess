@@ -13,12 +13,10 @@ public class Gameplay extends ChessClient{
     }
 
     public String eval(String input) throws Exception {
-        //try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                //case "redraw" -> redrawBoard(params);
                 case "move" -> movePiece(params);
                 case "resign" -> resign(params);
                 case "leave" -> leaveGame(params);
@@ -123,50 +121,5 @@ public class Gameplay extends ChessClient{
                 help - with possible commands
                 """;
     }
-
-    /*
-    public String redrawBoard(String ... params) throws ResponseException{
-        if(params.length == 3)
-        {
-            //String playerName = authAccess.getUser(params[0]);
-            Integer gameID = Integer.valueOf(params[1]);
-
-            GameRequest gamereq = new GameRequest();
-            gamereq.authToken = params[0];
-            gamereq.gameID = gameID;
-
-            ChessGame loadedGame = null;
-            Collection<GameData> games= gameAccess.listGames(gamereq);
-
-            for (GameData game: games)
-            {
-                if (game.gameID() == gameID)
-                {
-                    loadedGame = game.game();
-                }
-            }
-
-            if (params[2].equalsIgnoreCase("black"))
-            {
-                var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
-                //draw it flipped with the board
-                ChessBoard.drawSquaresFlipped(out, loadedGame.getBoard());
-            }
-            else if(params[2].equalsIgnoreCase("white") || params[2].equalsIgnoreCase("observer"))
-            {
-                //draw the board with white on the bottom
-                var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
-                ChessBoard.drawSquares(out, loadedGame.getBoard());
-            }
-        }
-        return(String.format("Redrew the board as %s", params[2].toLowerCase()));
-    }
-    */
-
-
-
-
 
 }

@@ -1,8 +1,7 @@
 package requests;
 
 
-public class GameResult //
-// extends Response
+public class GameResult
 {
 
     public Integer gameID;
@@ -11,8 +10,5 @@ public class GameResult //
     public String authToken;
     public String gameName;
     public String playerColor;
-
-
-
 
 }

@@ -14,12 +14,6 @@ public class ChessClient {
     NotificationHandler notificationHandler;
     public WebSocketFacade ws;
 
-
-    //ChessGame currentGame = null;
-
-    //this class tells it what to do between the server and each request for
-    //each potential action
-
     //default constructor
     public ChessClient()
     {
@@ -35,8 +29,5 @@ public class ChessClient {
     static void printPrompt() {
         System.out.print("\n" + EscapeSequences.RESET_TEXT_COLOR + ">>> " + EscapeSequences.SET_TEXT_COLOR_GREEN);
     }
-
-
-
 }
 

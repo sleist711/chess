@@ -3,16 +3,9 @@ package ui;
 import WebSocket.WebSocketFacade;
 import com.google.gson.Gson;
 import clientShared.ResponseException;
-
 import requests.GameRequest;
 import requests.RegistrationRequest;
-
-
 import java.util.Arrays;
-
-
-
-
 
 public class PostLogin extends ChessClient
 {
@@ -77,45 +70,12 @@ public class PostLogin extends ChessClient
             newRequest.gameID = Integer.parseInt(params[1]);
             newRequest.authToken = authToken;
 
-            /*
-            //set the current game to be the one you just joined
-            Collection<GameData> games= gameAccess.listGames(newRequest);
-            for (GameData game: games)
-            {
-                if (game.gameID() == newRequest.gameID)
-                {
-                    currentGame = game.game();
-                }
-            }
-
-             */
-
             if (params.length == 3) {
                 newRequest.playerColor = params[2];
             }
             //calls the server facade to join them to the game or verify it exists
             server.joinGame(newRequest);
 
-            //try {
-                /*
-                //get the list of current games
-                Collection<GameData> currentGameList = GameService.listGames(newRequest, authToken);
-
-                //if the game id matches the one they're joining
-                for (GameData game : currentGameList) {
-                    if (game.gameID() == newRequest.gameID) {
-                        //set that one to the current game
-                        currentGame = game.game();
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-
-
-                 */
 
                 //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
                 ws = new WebSocketFacade(server.serverUrl, notificationHandler);
@@ -149,18 +109,6 @@ public class PostLogin extends ChessClient
                 newRequest.gameID = Integer.parseInt(params[1]);
                 newRequest.authToken = authToken;
 
-            /*
-            //set the current game to be the one you just joined
-            Collection<GameData> games= gameAccess.listGames(newRequest);
-            for (GameData game: games)
-            {
-                if (game.gameID() == newRequest.gameID)
-                {
-                    currentGame = game.game();
-                }
-            }
-
-             */
 
                 server.joinGame(newRequest);
                 Repl.state = State.INPLAY;
