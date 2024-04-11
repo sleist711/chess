@@ -1,7 +1,5 @@
 package requests;
 
-import spark.Response;
-
 public class RegistrationResult
         //extends Response
 {
