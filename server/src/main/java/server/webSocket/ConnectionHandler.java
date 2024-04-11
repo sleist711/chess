@@ -2,15 +2,10 @@ package server.webSocket;
 
 import com.google.gson.Gson;
 
-import org.eclipse.jetty.util.MultiMap;
 import org.eclipse.jetty.websocket.api.Session;
-
 import webSocketMessages.serverMessages.ServerMessage;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,9 +22,6 @@ public class ConnectionHandler {
         connections.put(visitorName, connection);
 
         //maps each connection to a gameID
-        ArrayList<Integer> gameIDList = new ArrayList<Integer>();
-        gameIDList.add(gameID);
-
         usersInGames.put(connection, gameID);
     }
 
@@ -95,7 +87,6 @@ public class ConnectionHandler {
         for (var c : usersInGames.entrySet()) {
             if (c.getKey().session.isOpen()) {
                 if (Objects.equals(c.getValue(), gameID)) {
-                    //c.getKey().send(notification.toString());
                     c.getKey().send(message);
                 }
             }

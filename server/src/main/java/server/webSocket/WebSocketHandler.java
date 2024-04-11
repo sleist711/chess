@@ -1,16 +1,11 @@
 package server.webSocket;
 
 import chess.ChessGame;
-import chess.ChessMove;
 import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
-//import com.mysql.cj.jdbc.ConnectionGroupManager;
-//import dataAccess.MySQLGameDAO;
-//import dataAccess.ResponseException;
+
 import com.google.gson.GsonBuilder;
-import dataAccess.MySQLAuthDAO;
-import dataAccess.ResponseException;
 import model.GameData;
 
 
@@ -18,15 +13,11 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.requests.GameRequest;
-import service.GameService;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
-
-//import javax.websocket.Endpoint;
-import java.io.IOException;
 import java.util.Collection;
 
 import static service.Service.authAccess;

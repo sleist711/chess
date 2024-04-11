@@ -1,8 +1,4 @@
 import chess.*;
-import dataAccess.MySQLAuthDAO;
-import dataAccess.MySQLGameDAO;
-import dataAccess.MySQLUserDAO;
-import server.Server;
 import ui.Repl;
 
 public class Main {

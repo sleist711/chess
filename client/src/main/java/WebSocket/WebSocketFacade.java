@@ -8,10 +8,8 @@ import dataAccess.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;
-import org.eclipse.jetty.server.Authentication;
 import ui.ChessBoard;
 import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
