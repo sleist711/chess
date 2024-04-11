@@ -114,7 +114,7 @@ public class WebSocketFacade extends Endpoint {
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
 
             //close the session - not sure if this is right
-            session.close();
+            //session.close();
         }
         catch(IOException ex)
         {

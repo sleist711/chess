@@ -35,8 +35,14 @@ public class ConnectionHandler {
 
     public void remove(String visitorName) {
         Connection connectionToRemove = connections.get(visitorName);
-        connections.remove(visitorName);
+
+        if(connectionToRemove == null)
+        {
+            return;
+        }
+
         usersInGames.remove(connectionToRemove);
+        connections.remove(visitorName);
     }
 
     public void broadcast(String excludeVisitorName, ServerMessage notification, Integer gameID) throws IOException {
@@ -76,6 +82,8 @@ public class ConnectionHandler {
 
         // Clean up any connections that were left open.
         for (var c : removeList) {
+            usersInGames.remove(c);
+            //testing here ^^^^
             connections.remove(c.visitorName);
         }
     }
@@ -84,11 +92,11 @@ public class ConnectionHandler {
     public void sendAll(ServerMessage notification, Integer gameID) throws IOException {
         String message = new Gson().toJson(notification);
 
-
         for (var c : usersInGames.entrySet()) {
             if (c.getKey().session.isOpen()) {
                 if (Objects.equals(c.getValue(), gameID)) {
-                    c.getKey().send(notification.toString());
+                    //c.getKey().send(notification.toString());
+                    c.getKey().send(message);
                 }
             }
 
