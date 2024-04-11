@@ -1,7 +1,7 @@
 package requests;
 
 
-public class GameRequest extends Request {
+public class GameRequest {
 
     public Integer gameID;
     public String blackUsername;
