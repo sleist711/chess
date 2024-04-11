@@ -1,4 +1,4 @@
-package clientShared;
+package server;
 
 import spark.Response;
 

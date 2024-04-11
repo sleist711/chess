@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 
 import clientShared.ResponseException;
 import requests.GameRequest;
-import clientShared.GameResult;
+import server.GameResult;
 import requests.RegistrationRequest;
-import server.requests.RegistrationResult;
+import server.RegistrationResult;
 
 import java.io.IOException;
 import java.io.InputStream;
