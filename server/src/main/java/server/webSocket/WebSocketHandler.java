@@ -75,11 +75,12 @@ public class WebSocketHandler
     private void resign(Resign resignCommand, Session session) throws Exception
     {
         String playerName = authAccess.getUser(resignCommand.getAuthString());
+        Integer gameID = resignCommand.getGameID();
 
         //need to get the list of games and set the attribute to an actual game, so it can be deserialized
         GameRequest gamereq = new GameRequest();
         gamereq.authToken = resignCommand.getAuthString();
-        gamereq.gameID = resignCommand.getGameID();
+        gamereq.gameID = gameID;
 
         ChessGame loadedGame = null;
         Collection<GameData> games= gameAccess.listGames(gamereq);
@@ -90,6 +91,26 @@ public class WebSocketHandler
             {
                 loadedGame = game.game();
             }
+        }
+
+        //if it's an observer that wants to resign
+        if(!gameAccess.getBlackPlayer(gameID).equals(playerName) && !gameAccess.getWhitePlayer(gameID).equals(playerName))
+        {
+            //send error message
+            var message = "Error: An observer cannot resign.";
+            Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+            messageToSend.setErrorMessage(message);
+            session.getRemote().sendString(new Gson().toJson(messageToSend));
+            return;
+        }
+
+        //if someone has resigned already
+        if(loadedGame.getTeamTurn() == null)
+        {
+            Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
+            errorMessage.setErrorMessage("Error: This game is already over.");
+            session.getRemote().sendString(new Gson().toJson(errorMessage));
+            return;
         }
 
         //set turn to null so no one can make a move
