@@ -356,14 +356,14 @@ public class WebSocketHandler
         if(pieceToMove.getTeamColor() == ChessGame.TeamColor.WHITE && !gameAccess.getWhitePlayer(gamereq.gameID).equals(playerName) )
         {
             Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
-            errorMessage.setErrorMessage("Error: You are just observing this game.");
+            errorMessage.setErrorMessage("Error: You're trying to move a piece that isn't yours.");
             session.getRemote().sendString(new Gson().toJson(errorMessage));
             return;
         }
         else if(pieceToMove.getTeamColor() == ChessGame.TeamColor.BLACK && !gameAccess.getBlackPlayer(gamereq.gameID).equals(playerName))
         {
             Error errorMessage = new Error(ServerMessage.ServerMessageType.ERROR);
-            errorMessage.setErrorMessage("Error: You are just observing this game.");
+            errorMessage.setErrorMessage("Error: You're trying to move a piece that isn't yours.");
             session.getRemote().sendString(new Gson().toJson(errorMessage));
             return;
         }
@@ -401,9 +401,3 @@ public class WebSocketHandler
         connections.broadcast(playerName, notification, makeMoveCommand.getGameID());
     }
 }
-
-
-
-
-//TO DO
-//fix observe option

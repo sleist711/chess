@@ -67,10 +67,54 @@ public class Gameplay extends ChessClient{
     {
         String authToken = params[0];
         Integer gameID = Integer.valueOf(params[1]);
-        ChessPiece.PieceType pieceType = ChessPiece.PieceType.valueOf(params[2]);
+        ChessPiece.PieceType pieceType = null;
+
+        switch(params[2].toLowerCase())
+        {
+            case "pawn":
+                pieceType = ChessPiece.PieceType.PAWN;
+                break;
+            case "rook":
+                pieceType = ChessPiece.PieceType.ROOK;
+                break;
+            case "knight":
+                pieceType = ChessPiece.PieceType.KNIGHT;
+                break;
+            case "queen":
+                pieceType = ChessPiece.PieceType.QUEEN;
+                break;
+            case "king":
+                pieceType = ChessPiece.PieceType.KING;
+                break;
+            case "bishop":
+                pieceType = ChessPiece.PieceType.BISHOP;
+                break;
+        }
         ChessPosition startPosition = ChessPosition.convertToPosition(params[3]);
         ChessPosition endPosition = ChessPosition.convertToPosition(params[4]);
-        ChessPiece.PieceType promotionType = ChessPiece.PieceType.valueOf(params[5]);
+
+        ChessPiece.PieceType promotionType = null;
+        switch(params[5].toLowerCase())
+        {
+            case "pawn":
+                pieceType = ChessPiece.PieceType.PAWN;
+                break;
+            case "rook":
+                pieceType = ChessPiece.PieceType.ROOK;
+                break;
+            case "knight":
+                pieceType = ChessPiece.PieceType.KNIGHT;
+                break;
+            case "queen":
+                pieceType = ChessPiece.PieceType.QUEEN;
+                break;
+            case "king":
+                pieceType = ChessPiece.PieceType.KING;
+                break;
+            case "bishop":
+                pieceType = ChessPiece.PieceType.BISHOP;
+                break;
+        }
 
         //websocket
         ws = new WebSocketFacade(server.serverUrl, notificationHandler);
@@ -84,15 +128,15 @@ public class Gameplay extends ChessClient{
         return """
                 redraw <AUTH> <ID> <BLACK | WHITE | OBSERVER> - the chess board
                 leave <AUTH> <ID> - your current game
-                move <AUTH> <ID> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
+                move <AUTH> <ID> <PIECE> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
                 resign <AUTH> <ID> - your current game
                 highlight - possible moves for a piece
                 help - with possible commands
                 """;
     }
 
-    public String redrawBoard(String ... params) throws ResponseException {
-        if(params.length == 2)
+    public String redrawBoard(String ... params) throws ResponseException{
+        if(params.length == 3)
         {
             //String playerName = authAccess.getUser(params[0]);
             Integer gameID = Integer.valueOf(params[1]);
@@ -127,7 +171,7 @@ public class Gameplay extends ChessClient{
                 ChessBoard.drawSquares(out, loadedGame.getBoard());
             }
         }
-        throw new ResponseException("Expected different input");
+        return(String.format("Redrew the board as %s", params[2].toLowerCase()));
     }
 
 

@@ -63,14 +63,14 @@ public class Repl
                 }
                 System.out.println();
             }
-        //working here to incorporate the in game options
+
             if(state == State.INPLAY)
             {
                 System.out.print(gamePlay.help());
                 ChessClient.printPrompt();
                 line = scanner.nextLine();
                 try {
-                    result = postLogin.eval(line);
+                    result = gamePlay.eval(line);
                     System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + result + "\n");
                 }
                 catch (Throwable e) {
@@ -79,13 +79,13 @@ public class Repl
                 }
                 System.out.println();
             }
+
             if(line.equals("quit"))
             {
                 System.exit(0);
             }
-
         }
-        //System.exit(0);
+
     }
 
     public static String getAuth()

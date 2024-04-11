@@ -56,7 +56,6 @@ public class WebSocketFacade extends Endpoint {
                         }
                         case LOAD_GAME:
                         {
-                            //LoadGame outputMessage = new Gson().fromJson(message, LoadGame.class);
                             ChessGame loadedGame = new Gson().fromJson(message, ChessGame.class);
                             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
                             ChessBoard.drawSquares(out, loadedGame.getBoard());
@@ -111,7 +110,7 @@ public class WebSocketFacade extends Endpoint {
             newCommand.setCommandType(UserGameCommand.CommandType.LEAVE);
             this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
 
-            //close the session - not sure if this is right
+            //close the session
             //session.close();
         }
         catch(IOException ex)
