@@ -1,5 +1,3 @@
-package requests;
-
 import com.google.gson.Gson;
 
 
