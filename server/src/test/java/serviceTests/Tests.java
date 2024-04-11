@@ -3,7 +3,7 @@ package serviceTests;
 import clientShared.ResponseException;
 import dataAccess.*;
 import model.GameData;
-import server.requests.AuthRequest;
+import server.AuthRequest;
 import requests.GameRequest;
 import requests.RegistrationRequest;
 import service.*;
