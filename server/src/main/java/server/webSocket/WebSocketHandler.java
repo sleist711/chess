@@ -32,16 +32,7 @@ public class WebSocketHandler
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
-        //make a child class for each user game command that extends user game command
-        //deserialize to a usergame command
-        //based on the command type, then re-deserialize as the right command type
 
-        //same thing for server message, should have base class servermessage with chiuld class
-        //all variables should have same name as specs
-
-        //right now every player has null username
-        //user authtoken to get username
-        //can use services or daos
         switch(command.getCommandType())
         {
             case JOIN_PLAYER:
@@ -169,8 +160,6 @@ public class WebSocketHandler
     {
         String playerName = authAccess.getUser(command.getAuthString());
 
-        ServerMessage sentMessage = null;
-
         if(!gameAccess.checkForGame(command.getGameID()))
         {
             //send error message
@@ -180,7 +169,6 @@ public class WebSocketHandler
 
             String json = new Gson().toJson(messageToSend);
             session.getRemote().sendString(json);
-            sentMessage = messageToSend;
         }
 
         //invalid authtoken
@@ -191,7 +179,6 @@ public class WebSocketHandler
             Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
             messageToSend.setErrorMessage(message);
             session.getRemote().sendString(new Gson().toJson(messageToSend));
-            sentMessage = messageToSend;
         }
         else
         {
@@ -228,11 +215,10 @@ public class WebSocketHandler
     private void joinPlayer(JoinPlayer command, Session session) throws Exception {
 
         String playerName = authAccess.getUser(command.getAuthString());
-
-        //check conditions here
-        //game exists
         ServerMessage sentMessage = null;
-        
+
+
+        //game exists
         if(!gameAccess.checkForGame(command.getGameID()))
         {
             //send error message
@@ -240,7 +226,7 @@ public class WebSocketHandler
             Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
             messageToSend.setErrorMessage(message);
             session.getRemote().sendString(new Gson().toJson(messageToSend));
-            sentMessage = messageToSend;
+            return;
         }
         //invalid authtoken
         else if(!authAccess.checkAuthToken(command.getAuthString()))
@@ -250,7 +236,7 @@ public class WebSocketHandler
             Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
             messageToSend.setErrorMessage(message);
             session.getRemote().sendString(new Gson().toJson(messageToSend));
-            sentMessage = messageToSend;
+            return;
         }
         else if(command.getTeamColor().toString().toLowerCase().equals("black"))
         {
@@ -264,7 +250,7 @@ public class WebSocketHandler
                     Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
                     messageToSend.setErrorMessage(message);
                     session.getRemote().sendString(new Gson().toJson(messageToSend));
-                    sentMessage = messageToSend;
+                    return;
                 }
             }
         }
@@ -280,13 +266,36 @@ public class WebSocketHandler
                     Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
                     messageToSend.setErrorMessage(message);
                     session.getRemote().sendString(new Gson().toJson(messageToSend));
-                    sentMessage = messageToSend;
+                    return;
                 }
 
             }
         }
-        if(sentMessage == null)
+        //user actually is in the game
+        if(command.getTeamColor().toString().toLowerCase().equals("black"))
         {
+            if(!gameAccess.existsBlackPlayer(command.getGameID())) {
+                //send error message
+                var message = "Error: The game is empty";
+                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                messageToSend.setErrorMessage(message);
+                session.getRemote().sendString(new Gson().toJson(messageToSend));
+                return;
+            }
+        }
+        if(command.getTeamColor().toString().toLowerCase().equals("white"))
+        {
+            if(!gameAccess.existsWhitePlayer(command.getGameID())) {
+                //send error message
+                var message = "Error: The game is empty";
+                Error messageToSend = new Error(ServerMessage.ServerMessageType.ERROR);
+                messageToSend.setErrorMessage(message);
+                session.getRemote().sendString(new Gson().toJson(messageToSend));
+                return;
+            }
+        }
+        //if(sentMessage == null)
+        //{
             //should only send back if there are no errors
              LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
 
@@ -318,7 +327,7 @@ public class WebSocketHandler
             //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
 
-        }
+        //}
 
     }
 
