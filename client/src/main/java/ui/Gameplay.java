@@ -1,19 +1,9 @@
 package ui;
 
 import WebSocket.WebSocketFacade;
-import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import clientShared.ResponseException;
-import model.GameData;
-import requests.GameRequest;
-
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collection;
-
-import static service.Service.gameAccess;
 
 public class Gameplay extends ChessClient{
 

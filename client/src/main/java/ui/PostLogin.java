@@ -3,15 +3,15 @@ package ui;
 import WebSocket.WebSocketFacade;
 import com.google.gson.Gson;
 import clientShared.ResponseException;
-import model.GameData;
+
 import requests.GameRequest;
 import requests.RegistrationRequest;
-import service.GameService;
+
 
 import java.util.Arrays;
-import java.util.Collection;
 
-import static service.Service.gameAccess;
+
+
 
 
 public class PostLogin extends ChessClient
