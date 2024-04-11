@@ -1,5 +1,6 @@
 package dataAccess;
 import chess.ChessGame;
+import com.google.gson.Gson;
 import model.GameData;
 import server.requests.GameRequest;
 
@@ -99,5 +100,17 @@ public class MemoryGameDAO implements GameDAO{
 
     public void updateGame(GameRequest gameReq, String json) throws Exception
     {
+    }
+
+    @Override
+    public void setBlackPlayer(GameRequest req, String playerName) throws ResponseException {
+        return;
+
+    }
+
+    @Override
+    public void setWhitePlayer(GameRequest req, String playerName) throws ResponseException {
+        return;
+
     }
 }

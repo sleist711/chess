@@ -30,6 +30,7 @@ public class Gameplay extends ChessClient{
                 //case "redraw" -> redrawBoard(params);
                 case "move" -> movePiece(params);
                 case "resign" -> resign(params);
+                case "leave" -> leaveGame(params);
 
                 default -> help();
             };
@@ -39,6 +40,19 @@ public class Gameplay extends ChessClient{
         //}
     }
 
+    public String leaveGame(String ... params) throws Exception
+    {
+        String authToken = params[0];
+        Integer gameID = Integer.valueOf(params[1]);
+
+        //websocket
+        ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+        ws.leaveGame(authToken, gameID);
+
+        //transition back to postLogin
+        state = State.SIGNEDIN;
+        return String.format("You left game %d", gameID);
+   }
     public String resign(String ... params) throws Exception
     {
         String authToken = params[0];
@@ -71,7 +85,7 @@ public class Gameplay extends ChessClient{
     {
         return """
                 redraw < BLACK | WHITE | OBSERVER > - the chess board
-                leave - your current game
+                leave <AUTH> <ID> - your current game
                 move <AUTH> <ID> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
                 resign <AUTH> <ID> - your current game
                 highlight - possible moves for a piece

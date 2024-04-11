@@ -68,8 +68,52 @@ public class WebSocketHandler
             case RESIGN:
                 Resign resignCommand = new Gson().fromJson(message, Resign.class);
                 resign(resignCommand, session);
+                break;
+            case LEAVE:
+                LeaveGame leaveGameCommand = new Gson().fromJson(message, LeaveGame.class);
+                leaveGame(leaveGameCommand, session);
 
         }
+    }
+
+    private void leaveGame(LeaveGame leaveGameCommand, Session session) throws Exception
+    {
+        String playerName = authAccess.getUser(leaveGameCommand.getAuthString());
+        Integer gameID = leaveGameCommand.getGameID();
+
+        //if it;s a player, update the game so they arent in the usernames anymore, then close the conenction
+        GameRequest gamereq = new GameRequest();
+        gamereq.authToken = leaveGameCommand.getAuthString();
+        gamereq.gameID = gameID;
+
+
+        //if they're the black player
+        if (gameAccess.getBlackPlayer(gameID).equals(playerName))
+        {
+            gameAccess.setBlackPlayer(gamereq, null);
+            //close connection
+            connections.remove(playerName);
+        }
+        //if they're the white player
+        else if (gameAccess.getWhitePlayer(gameID).equals(playerName))
+        {
+            gameAccess.setWhitePlayer(gamereq, null);
+            //gameAccess.updateGame();
+            //close connection
+            connections.remove(playerName);
+        }
+        //if it's an observer, just close the websocket connection
+        else
+        {
+            connections.remove(playerName);
+        }
+
+        //send notification to everyone in the game
+        Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+        notification.setMessage(String.format("%s left the game.", playerName));
+        connections.sendAll(notification, leaveGameCommand.getGameID());
+
+
     }
 
     private void resign(Resign resignCommand, Session session) throws Exception

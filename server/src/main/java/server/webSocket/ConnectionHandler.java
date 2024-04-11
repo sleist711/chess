@@ -34,7 +34,9 @@ public class ConnectionHandler {
     }
 
     public void remove(String visitorName) {
+        Connection connectionToRemove = connections.get(visitorName);
         connections.remove(visitorName);
+        usersInGames.remove(connectionToRemove);
     }
 
     public void broadcast(String excludeVisitorName, ServerMessage notification, Integer gameID) throws IOException {

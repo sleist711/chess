@@ -238,6 +238,30 @@ public class MySQLGameDAO implements GameDAO {
         return null;
     }
 
+    public void setBlackPlayer(GameRequest req, String playerName) throws ResponseException
+    {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            var statement3 = "UPDATE gamedata SET blackUsername='" + playerName + "' WHERE gameID='" + req.gameID + "';";
+            executeUpdate(statement3);
+        }
+        catch (Exception ex) {
+            throw new ResponseException("Error: Unable to update");
+        }
+    }
+
+    public void setWhitePlayer(GameRequest req, String playerName) throws ResponseException
+    {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            var statement3 = "UPDATE gamedata SET whiteUsername='" + playerName + "' WHERE gameID='" + req.gameID + "';";
+            executeUpdate(statement3);
+        }
+        catch (Exception ex) {
+            throw new ResponseException("Error: Unable to update");
+        }
+    }
+
     private int executeUpdate(String statement, Object... params) throws ResponseException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {

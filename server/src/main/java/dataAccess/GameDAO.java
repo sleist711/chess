@@ -24,6 +24,10 @@ public interface GameDAO {
     public String getWhitePlayer(int gameID);
     public String getBlackPlayer(int gameID);
 
+    public void setWhitePlayer(GameRequest req, String playerName) throws ResponseException;
+    public void setBlackPlayer(GameRequest req, String playerName) throws ResponseException;
+
+
 
     void updateGame(GameRequest req, String json) throws Exception;
 }

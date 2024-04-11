@@ -14,10 +14,7 @@ import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.Resign;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -110,8 +107,19 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void leaveGame(String visitorName) throws ResponseException {
-        return;
+    public void leaveGame(String authToken, Integer gameID) throws ResponseException {
+        try {
+            LeaveGame newCommand = new LeaveGame(authToken, gameID);
+            newCommand.setCommandType(UserGameCommand.CommandType.LEAVE);
+            this.session.getBasicRemote().sendText(new Gson().toJson(newCommand));
+
+            //close the session - not sure if this is right
+            session.close();
+        }
+        catch(IOException ex)
+        {
+            throw new ResponseException(ex.getMessage());
+        }
     }
 
 
