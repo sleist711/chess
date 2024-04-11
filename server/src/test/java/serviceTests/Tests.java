@@ -1,10 +1,11 @@
 package serviceTests;
 
+import clientShared.ResponseException;
 import dataAccess.*;
 import model.GameData;
 import server.requests.AuthRequest;
-import server.requests.GameRequest;
-import server.requests.RegistrationRequest;
+import clientShared.GameRequest;
+import clientShared.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
 

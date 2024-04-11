@@ -3,10 +3,10 @@ package ui;
 
 import com.google.gson.Gson;
 
-import dataAccess.ResponseException;
-import server.requests.GameRequest;
+import clientShared.ResponseException;
+import clientShared.GameRequest;
 import server.requests.GameResult;
-import server.requests.RegistrationRequest;
+import clientShared.RegistrationRequest;
 import server.requests.RegistrationResult;
 
 import java.io.IOException;

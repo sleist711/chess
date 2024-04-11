@@ -1,4 +1,4 @@
-package server.requests;
+package clientShared;
 
 import server.requests.Request;
 

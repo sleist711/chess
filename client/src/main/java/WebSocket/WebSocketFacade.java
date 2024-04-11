@@ -4,7 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import dataAccess.ResponseException;
+import clientShared.ResponseException;
 
 import javax.websocket.Endpoint;
 import com.google.gson.Gson;

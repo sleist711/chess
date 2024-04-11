@@ -1,5 +1,6 @@
 package service;
 
+import clientShared.ResponseException;
 import dataAccess.*;
 
 public class Service {

@@ -1,8 +1,9 @@
 package dataAccess;
 
+import clientShared.ResponseException;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import server.requests.RegistrationRequest;
+import clientShared.RegistrationRequest;
 import java.sql.SQLException;
 
 import static dataAccess.DatabaseManager.databaseName;

@@ -1,7 +1,7 @@
 package ui;
 
-import dataAccess.ResponseException;
-import server.requests.RegistrationRequest;
+import clientShared.ResponseException;
+import clientShared.RegistrationRequest;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package dataAccess;
+package clientShared;
 
 public class ResponseException extends Exception {
     public ResponseException(String message) {

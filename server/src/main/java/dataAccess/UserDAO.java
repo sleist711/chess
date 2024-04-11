@@ -1,7 +1,8 @@
 package dataAccess;
 
+import clientShared.ResponseException;
 import model.UserData;
-import server.requests.RegistrationRequest;
+import clientShared.RegistrationRequest;
 
 import java.util.HashMap;
 

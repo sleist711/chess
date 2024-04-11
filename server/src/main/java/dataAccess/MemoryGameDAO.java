@@ -1,8 +1,8 @@
 package dataAccess;
 import chess.ChessGame;
-import com.google.gson.Gson;
+import clientShared.ResponseException;
 import model.GameData;
-import server.requests.GameRequest;
+import clientShared.GameRequest;
 
 import java.util.Collection;
 

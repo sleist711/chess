@@ -1,10 +1,9 @@
 package server;
 
+import clientShared.ResponseException;
 import dataAccess.*;
 import server.handlers.*;
-import server.requests.RegistrationRequest;
 import server.webSocket.WebSocketHandler;
-import service.RegistrationService;
 import spark.*;
 
 public class Server {

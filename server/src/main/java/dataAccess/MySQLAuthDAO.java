@@ -1,4 +1,5 @@
 package dataAccess;
+import clientShared.ResponseException;
 import model.AuthData;
 import java.sql.SQLException;
 import java.util.UUID;

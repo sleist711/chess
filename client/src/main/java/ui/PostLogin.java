@@ -2,10 +2,10 @@ package ui;
 
 import WebSocket.WebSocketFacade;
 import com.google.gson.Gson;
-import dataAccess.ResponseException;
+import clientShared.ResponseException;
 import model.GameData;
-import server.requests.GameRequest;
-import server.requests.RegistrationRequest;
+import clientShared.GameRequest;
+import clientShared.RegistrationRequest;
 import service.GameService;
 
 import java.util.Arrays;

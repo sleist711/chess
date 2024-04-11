@@ -1,19 +1,13 @@
 package dataAccessTests;
 
-import dataAccess.AuthDAO;
-import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
-import dataAccess.ResponseException;
+import clientShared.ResponseException;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import server.requests.AuthRequest;
-import server.requests.GameRequest;
-import server.requests.RegistrationRequest;
-import service.ClearService;
-import service.GameService;
-import service.RegistrationService;
+import clientShared.GameRequest;
+import clientShared.RegistrationRequest;
 
 import java.util.Collection;
 

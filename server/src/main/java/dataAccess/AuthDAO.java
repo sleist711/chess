@@ -1,7 +1,7 @@
 package dataAccess;
 
+import clientShared.ResponseException;
 import model.AuthData;
-import model.UserData;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package server.requests;
+package clientShared;
 
 public class RegistrationRequest extends Request {
     public String username;

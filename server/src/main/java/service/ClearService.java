@@ -1,6 +1,6 @@
 package service;
 
-import dataAccess.ResponseException;
+import clientShared.ResponseException;
 
 public class ClearService extends Service{
     public static void clear() throws ResponseException
