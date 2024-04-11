@@ -1,14 +1,13 @@
 package ui;
 
-import chess.ChessGame;
+
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
-import model.AuthData;
+
 import server.requests.GameRequest;
 import server.requests.GameResult;
 import server.requests.RegistrationRequest;
 import server.requests.RegistrationResult;
-import spark.Response;
 
 import java.io.IOException;
 import java.io.InputStream;

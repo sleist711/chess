@@ -1,7 +1,6 @@
 package ui;
 
 import WebSocket.WebSocketFacade;
-import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.ResponseException;
 import model.GameData;
@@ -9,13 +8,11 @@ import server.requests.GameRequest;
 import server.requests.RegistrationRequest;
 import service.GameService;
 
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 
 import static service.Service.gameAccess;
-import static ui.EscapeSequences.*;
+
 
 public class PostLogin extends ChessClient{
 
@@ -138,9 +135,6 @@ public class PostLogin extends ChessClient{
 
             //modify this to take in a chess board
             ChessBoard.main(startPosition);
-
-            //update the current chess game
-            //currentGame =
 
             return String.format("\nYou joined the game as %s.", newRequest.playerColor);
         }

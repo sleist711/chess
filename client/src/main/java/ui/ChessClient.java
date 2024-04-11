@@ -3,9 +3,6 @@ package ui;
 import WebSocket.NotificationHandler;
 import WebSocket.WebSocketFacade;
 import chess.ChessGame;
-import dataAccess.ResponseException;
-
-import java.util.Arrays;
 
 public class ChessClient {
     String visitorName = null;
