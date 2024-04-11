@@ -3,7 +3,7 @@ package clientTests;
 import org.junit.jupiter.api.*;
 import server.Server;
 import clientShared.GameRequest;
-import server.requests.GameResult;
+import clientShared.GameResult;
 import clientShared.RegistrationRequest;
 import ui.ServerFacade;
 
