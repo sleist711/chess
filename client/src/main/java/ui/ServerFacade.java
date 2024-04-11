@@ -7,7 +7,7 @@ import clientShared.ResponseException;
 import requests.GameRequest;
 import requests.GameResult;
 import requests.RegistrationRequest;
-import server.RegistrationResult;
+import requests.RegistrationResult;
 
 import java.io.IOException;
 import java.io.InputStream;
