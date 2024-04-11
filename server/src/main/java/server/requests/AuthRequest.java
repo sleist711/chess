@@ -1,5 +1,7 @@
 package server.requests;
 
+import clientShared.Request;
+
 public class AuthRequest extends Request {
     public String authToken;
 
