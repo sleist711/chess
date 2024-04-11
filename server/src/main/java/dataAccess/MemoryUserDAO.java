@@ -1,6 +1,6 @@
 package dataAccess;
 import model.UserData;
-import clientShared.RegistrationRequest;
+import requests.RegistrationRequest;
 
 public class MemoryUserDAO implements UserDAO{
 

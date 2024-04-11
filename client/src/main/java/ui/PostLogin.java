@@ -4,8 +4,8 @@ import WebSocket.WebSocketFacade;
 import com.google.gson.Gson;
 import clientShared.ResponseException;
 import model.GameData;
-import clientShared.GameRequest;
-import clientShared.RegistrationRequest;
+import requests.GameRequest;
+import requests.RegistrationRequest;
 import service.GameService;
 
 import java.util.Arrays;

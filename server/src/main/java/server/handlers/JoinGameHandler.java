@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import dataAccess.AlreadyTakenException;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
-import clientShared.GameRequest;
+import requests.GameRequest;
 import server.Result;
 import service.GameService;
 import spark.Request;

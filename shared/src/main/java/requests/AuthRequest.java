@@ -1,6 +1,4 @@
-package server.requests;
-
-import clientShared.Request;
+package requests;
 
 public class AuthRequest extends Request {
     public String authToken;
@@ -8,10 +6,10 @@ public class AuthRequest extends Request {
     public static AuthRequest convertToRequest(spark.Request req)
     {
         //converts it to a json string
-        String reqString = convertToString(req);
+        String reqString = Request.convertToString(req);
 
         //makes a request object from the json string
-        AuthRequest newRequest = serializer.fromJson(reqString, AuthRequest.class);
+        AuthRequest newRequest = Request.serializer.fromJson(reqString, AuthRequest.class);
 
         if(newRequest == null)
         {

@@ -6,8 +6,8 @@ import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import clientShared.GameRequest;
-import clientShared.RegistrationRequest;
+import requests.GameRequest;
+import requests.RegistrationRequest;
 
 import java.util.Collection;
 

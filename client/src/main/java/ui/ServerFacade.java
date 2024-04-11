@@ -4,9 +4,9 @@ package ui;
 import com.google.gson.Gson;
 
 import clientShared.ResponseException;
-import clientShared.GameRequest;
+import requests.GameRequest;
 import clientShared.GameResult;
-import clientShared.RegistrationRequest;
+import requests.RegistrationRequest;
 import server.requests.RegistrationResult;
 
 import java.io.IOException;

@@ -6,7 +6,7 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import clientShared.ResponseException;
 import model.GameData;
-import clientShared.GameRequest;
+import requests.GameRequest;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;

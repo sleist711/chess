@@ -3,7 +3,7 @@ package dataAccess;
 import clientShared.ResponseException;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import clientShared.RegistrationRequest;
+import requests.RegistrationRequest;
 import java.sql.SQLException;
 
 import static dataAccess.DatabaseManager.databaseName;

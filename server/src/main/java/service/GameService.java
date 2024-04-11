@@ -4,7 +4,7 @@ import dataAccess.BadRequestException;
 import dataAccess.AlreadyTakenException;
 import dataAccess.DataAccessException;
 import model.GameData;
-import clientShared.GameRequest;
+import requests.GameRequest;
 import java.util.Collection;
 public class GameService extends Service{
 

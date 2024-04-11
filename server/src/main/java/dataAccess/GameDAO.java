@@ -2,7 +2,7 @@ package dataAccess;
 
 import clientShared.ResponseException;
 import model.GameData;
-import clientShared.GameRequest;
+import requests.GameRequest;
 
 import java.util.Collection;
 import java.util.HashMap;

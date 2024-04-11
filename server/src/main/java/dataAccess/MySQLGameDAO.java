@@ -3,7 +3,7 @@ import chess.ChessGame;
 import clientShared.ResponseException;
 import com.google.gson.Gson;
 import model.GameData;
-import clientShared.GameRequest;
+import requests.GameRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

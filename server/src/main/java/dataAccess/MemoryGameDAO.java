@@ -2,7 +2,7 @@ package dataAccess;
 import chess.ChessGame;
 import clientShared.ResponseException;
 import model.GameData;
-import clientShared.GameRequest;
+import requests.GameRequest;
 
 import java.util.Collection;
 

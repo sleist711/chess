@@ -1,5 +1,6 @@
-package clientShared;
+package requests;
 
+import requests.Request;
 import server.requests.Request;
 
 public class GameRequest extends Request {

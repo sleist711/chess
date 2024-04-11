@@ -4,8 +4,8 @@ import clientShared.ResponseException;
 import dataAccess.*;
 import model.GameData;
 import server.requests.AuthRequest;
-import clientShared.GameRequest;
-import clientShared.RegistrationRequest;
+import requests.GameRequest;
+import requests.RegistrationRequest;
 import service.*;
 import org.junit.jupiter.api.Test;
 

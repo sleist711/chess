@@ -2,9 +2,9 @@ package clientTests;
 
 import org.junit.jupiter.api.*;
 import server.Server;
-import clientShared.GameRequest;
+import requests.GameRequest;
 import clientShared.GameResult;
-import clientShared.RegistrationRequest;
+import requests.RegistrationRequest;
 import ui.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.*;

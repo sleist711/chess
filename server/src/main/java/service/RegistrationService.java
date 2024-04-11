@@ -3,7 +3,7 @@ package service;
 import dataAccess.*;
 import model.AuthData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import clientShared.RegistrationRequest;
+import requests.RegistrationRequest;
 
 public class RegistrationService extends Service {
 
