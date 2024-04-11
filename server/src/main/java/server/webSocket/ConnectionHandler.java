@@ -18,7 +18,8 @@ public class ConnectionHandler {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
     //this can't be a hash map
-    public final ConcurrentHashMap<ArrayList<Integer>, Connection> usersInGames = new ConcurrentHashMap<>();
+    //still having issues with the map 
+    public final ConcurrentHashMap<Connection, Integer> usersInGames = new ConcurrentHashMap<>();
 
     public void add(String visitorName, Session session, Integer gameID) {
 
@@ -29,7 +30,7 @@ public class ConnectionHandler {
         ArrayList<Integer> gameIDList = new ArrayList<Integer>();
         gameIDList.add(gameID);
 
-        usersInGames.put(gameIDList, connection);
+        usersInGames.put(connection, gameID);
     }
 
     public void remove(String visitorName) {
@@ -37,23 +38,26 @@ public class ConnectionHandler {
     }
 
     public void broadcast(String excludeVisitorName, ServerMessage notification, Integer gameID) throws IOException {
+
+
         var removeList = new ArrayList<Connection>();
+
         for (var c : usersInGames.entrySet()) {
-            if (c.getValue().session.isOpen()) {
-                ArrayList<Integer> gameIDList = c.getKey();
-                Integer idToCheck = gameIDList.getFirst();
-                if (Objects.equals(idToCheck, gameID)) {
-                    if (!c.getValue().visitorName.equals(excludeVisitorName)) {
-                        c.getValue().send(notification.toString());
+            if (c.getKey().session.isOpen()) {
+                if (Objects.equals(c.getValue(), gameID)) {
+                    if (!c.getKey().visitorName.equals(excludeVisitorName)) {
+                        c.getKey().send(notification.toString());
                     }
 
                 }
             } else {
-                removeList.add(c.getValue());
+                removeList.add(c.getKey());
             }
         }
 
-        /*
+
+
+/*
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (!c.visitorName.equals(excludeVisitorName)) {
@@ -67,6 +71,7 @@ public class ConnectionHandler {
         }
         */
 
+
         // Clean up any connections that were left open.
         for (var c : removeList) {
             connections.remove(c.visitorName);
@@ -77,14 +82,16 @@ public class ConnectionHandler {
     public void sendAll(ServerMessage notification, Integer gameID) throws IOException {
         String message = new Gson().toJson(notification);
 
+
         for (var c : usersInGames.entrySet()) {
-            if (c.getValue().session.isOpen()) {
-                ArrayList<Integer> gameIDList = c.getKey();
-                Integer idToCheck = gameIDList.getFirst();
-                if (Objects.equals(idToCheck, gameID)) {
-                    c.getValue().send(notification.toString());
+            if (c.getKey().session.isOpen()) {
+                if (Objects.equals(c.getValue(), gameID)) {
+                    c.getKey().send(notification.toString());
                 }
             }
+
+
+
 
         /*
         for (var c : connections.values()) {
@@ -95,6 +102,8 @@ public class ConnectionHandler {
         }
 
          */
+
+
         }
     }
 }
