@@ -86,8 +86,6 @@ public class PostLogin extends ChessClient{
                 }
             }
 
-
-
             if(params.length == 3)
             {
                 newRequest.playerColor = params[2];
@@ -130,8 +128,6 @@ public class PostLogin extends ChessClient{
             Repl.state = State.INPLAY;
 
             String[] startPosition = new String[]{"0"};
-
-            //make a new board for the game
 
             //modify this to take in a chess board
             ChessBoard.main(startPosition);

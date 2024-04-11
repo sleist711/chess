@@ -1,10 +1,20 @@
 package ui;
 
 import WebSocket.WebSocketFacade;
+import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import dataAccess.ResponseException;
+import model.GameData;
+import server.requests.GameRequest;
 
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collection;
+
+import static service.Service.authAccess;
+import static service.Service.gameAccess;
 
 public class Gameplay extends ChessClient{
 
@@ -19,17 +29,13 @@ public class Gameplay extends ChessClient{
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                //case "redraw" -> redrawBoard(params);
+                case "redraw" -> redrawBoard(params);
                 case "move" -> movePiece(params);
                 case "resign" -> resign(params);
                 case "leave" -> leaveGame(params);
 
                 default -> help();
             };
-       // }
-        //catch (ResponseException ex) {
-           // return ex.getMessage();
-        //}
     }
 
     public String leaveGame(String ... params) throws Exception
@@ -76,7 +82,7 @@ public class Gameplay extends ChessClient{
     public String help()
     {
         return """
-                redraw < BLACK | WHITE | OBSERVER > - the chess board
+                redraw <AUTH> <ID> <BLACK | WHITE | OBSERVER> - the chess board
                 leave <AUTH> <ID> - your current game
                 move <AUTH> <ID> <START POSITION> <END POSITION> <PROMOTION TYPE> - one of your chess pieces
                 resign <AUTH> <ID> - your current game
@@ -85,25 +91,45 @@ public class Gameplay extends ChessClient{
                 """;
     }
 
-    /*public String redrawBoard(String ... params) throws ResponseException
-    {
-        if(params.length == 1)
+    public String redrawBoard(String ... params) throws ResponseException {
+        if(params.length == 2)
         {
-            if (params.equalsIgnoreCase("black"))
+            //String playerName = authAccess.getUser(params[0]);
+            Integer gameID = Integer.valueOf(params[1]);
+
+            GameRequest gamereq = new GameRequest();
+            gamereq.authToken = params[0];
+            gamereq.gameID = gameID;
+
+            ChessGame loadedGame = null;
+            Collection<GameData> games= gameAccess.listGames(gamereq);
+
+            for (GameData game: games)
+            {
+                if (game.gameID() == gameID)
+                {
+                    loadedGame = game.game();
+                }
+            }
+
+            if (params[2].equalsIgnoreCase("black"))
             {
                 var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
                 //draw it flipped with the board
-                ChessBoard.drawSquaresFlipped(out, );
+                ChessBoard.drawSquaresFlipped(out, loadedGame.getBoard());
             }
-            else if(params.equalsIgnoreCase("white") || params.equalsIgnoreCase("observer"))
+            else if(params[2].equalsIgnoreCase("white") || params[2].equalsIgnoreCase("observer"))
             {
                 //draw the board with white on the bottom
+                var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
+                ChessBoard.drawSquares(out, loadedGame.getBoard());
             }
         }
         throw new ResponseException("Expected different input");
     }
-    */
+
 
 
 

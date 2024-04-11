@@ -63,7 +63,6 @@ public class WebSocketHandler
         String playerName = authAccess.getUser(leaveGameCommand.getAuthString());
         Integer gameID = leaveGameCommand.getGameID();
 
-        //if it;s a player, update the game so they arent in the usernames anymore, then close the conenction
         GameRequest gamereq = new GameRequest();
         gamereq.authToken = leaveGameCommand.getAuthString();
         gamereq.gameID = gameID;
@@ -80,7 +79,6 @@ public class WebSocketHandler
         else if (gameAccess.getWhitePlayer(gameID).equals(playerName))
         {
             gameAccess.setWhitePlayer(gamereq, null);
-            //gameAccess.updateGame();
             //close connection
             connections.remove(playerName);
         }
@@ -94,8 +92,6 @@ public class WebSocketHandler
         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
         notification.setMessage(String.format("%s left the game.", playerName));
         connections.sendAll(notification, leaveGameCommand.getGameID());
-
-
     }
 
     private void resign(Resign resignCommand, Session session) throws Exception
@@ -103,7 +99,6 @@ public class WebSocketHandler
         String playerName = authAccess.getUser(resignCommand.getAuthString());
         Integer gameID = resignCommand.getGameID();
 
-        //need to get the list of games and set the attribute to an actual game, so it can be deserialized
         GameRequest gamereq = new GameRequest();
         gamereq.authToken = resignCommand.getAuthString();
         gamereq.gameID = gameID;
@@ -147,13 +142,11 @@ public class WebSocketHandler
         String jsonGame = gson.toJson(loadedGame);
         gameAccess.updateGame(gamereq, jsonGame);
 
-
         //send notification to everyone in the game
         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
         notification.setMessage(String.format("%s resigned from the game.", playerName));
         //serialize the chess game
         connections.sendAll(notification, resignCommand.getGameID());
-
     }
 
     private void joinObserver(JoinObserver command, Session session) throws Exception
@@ -185,7 +178,6 @@ public class WebSocketHandler
             //should only send back if there are no errors
             LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
 
-            //need to get the list of games and set the attribute to an actual game, so it can be deserialized
             GameRequest gamereq = new GameRequest();
             gamereq.authToken = command.getAuthString();
 
@@ -201,7 +193,6 @@ public class WebSocketHandler
 
             messageToSend.setGame(loadedGame);
 
-            //serialize the chess game
             session.getRemote().sendString(new Gson().toJson(messageToSend));
 
             connections.add(playerName, session, command.getGameID());
@@ -215,8 +206,6 @@ public class WebSocketHandler
     private void joinPlayer(JoinPlayer command, Session session) throws Exception {
 
         String playerName = authAccess.getUser(command.getAuthString());
-        ServerMessage sentMessage = null;
-
 
         //game exists
         if(!gameAccess.checkForGame(command.getGameID()))
@@ -268,7 +257,6 @@ public class WebSocketHandler
                     session.getRemote().sendString(new Gson().toJson(messageToSend));
                     return;
                 }
-
             }
         }
         //user actually is in the game
@@ -294,40 +282,35 @@ public class WebSocketHandler
                 return;
             }
         }
-        //if(sentMessage == null)
-        //{
-            //should only send back if there are no errors
-             LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
 
-            //need to get the list of games and set the attribute to an actual game, so it can be deserialized
-            GameRequest gamereq = new GameRequest();
-            gamereq.authToken = command.getAuthString();
+        //should only send back if there are no errors
+         LoadGame messageToSend = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME);
 
-            ChessGame loadedGame = null;
-            Collection<GameData> games= gameAccess.listGames(gamereq);
-            for (GameData game: games)
+        //need to get the list of games and set the attribute to an actual game, so it can be deserialized
+        GameRequest gamereq = new GameRequest();
+        gamereq.authToken = command.getAuthString();
+
+        ChessGame loadedGame = null;
+        Collection<GameData> games= gameAccess.listGames(gamereq);
+        for (GameData game: games)
+        {
+            if (game.gameID() == command.getGameID())
             {
-                if (game.gameID() == command.getGameID())
-                {
-                    loadedGame = game.game();
-                }
+                loadedGame = game.game();
             }
+        }
 
-            messageToSend.setGame(loadedGame);
+        messageToSend.setGame(loadedGame);
+        connections.add(playerName, session, command.getGameID());
+        var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
+        var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
+        notification.setMessage(message);
 
+        //modify the broadcast function to only send the notification to people in that game!!!!
+        connections.broadcast(playerName, notification, command.getGameID());
 
-            connections.add(playerName, session, command.getGameID());
-            var message = String.format("%s has joined the game as the color %s", playerName, command.getTeamColor().toString());
-            var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION);
-            notification.setMessage(message);
-
-            //modify the broadcast function to only send the notification to people in that game!!!!
-            connections.broadcast(playerName, notification, command.getGameID());
-
-            //serialize the chess game
-            session.getRemote().sendString(new Gson().toJson(messageToSend));
-
-        //}
+        //serialize the chess game
+        session.getRemote().sendString(new Gson().toJson(messageToSend));
 
     }
 
@@ -385,8 +368,6 @@ public class WebSocketHandler
             return;
         }
 
-
-
         //makes the move
         assert loadedGame != null;
 
@@ -418,31 +399,7 @@ public class WebSocketHandler
 
         //modify the broadcast function to only send the notification to people in that game!!!!
         connections.broadcast(playerName, notification, makeMoveCommand.getGameID());
-
-
     }
-
-
-    //@OnWebSocketClose
-   // public void onClose(Session session)
-    //{
-     //   return;
-   // }
-
-    //@OnWebSocketConnect
-    //public void onConnect(Session session)
-   // {
-    //    return;
-    //}
-
-    //@OnWebSocketError
-    //public void onError(Throwable throwable)
-    //{
-      //  throw new ResponseException(throwable.getMessage());
-    //}
-
-    //send message
-    //broadcast message
 }
 
 
@@ -450,4 +407,3 @@ public class WebSocketHandler
 
 //TO DO
 //fix observe option
-//only send notifs to people in the game
