@@ -15,9 +15,7 @@ public class ChessClient {
     public WebSocketFacade ws;
 
 
-    ChessGame currentGame = null;
-
-
+    //ChessGame currentGame = null;
 
     //this class tells it what to do between the server and each request for
     //each potential action

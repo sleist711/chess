@@ -28,7 +28,7 @@ public class Gameplay extends ChessClient{
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "redraw" -> redrawBoard(params);
+                //case "redraw" -> redrawBoard(params);
                 case "move" -> movePiece(params);
                 case "resign" -> resign(params);
                 case "leave" -> leaveGame(params);
@@ -134,6 +134,7 @@ public class Gameplay extends ChessClient{
                 """;
     }
 
+    /*
     public String redrawBoard(String ... params) throws ResponseException{
         if(params.length == 3)
         {
@@ -172,6 +173,8 @@ public class Gameplay extends ChessClient{
         }
         return(String.format("Redrew the board as %s", params[2].toLowerCase()));
     }
+    */
+
 
 
 

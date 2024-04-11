@@ -14,7 +14,8 @@ import java.util.Collection;
 import static service.Service.gameAccess;
 
 
-public class PostLogin extends ChessClient{
+public class PostLogin extends ChessClient
+{
 
     public PostLogin(String serverUrl)
     {
@@ -68,14 +69,15 @@ public class PostLogin extends ChessClient{
     }
 
     public String joinGame(String ... params) throws Exception {
-        if(params.length >= 1)
-        {
+        if (params.length >= 1) {
+
             GameRequest newRequest = new GameRequest();
 
             String authToken = params[0];
             newRequest.gameID = Integer.parseInt(params[1]);
             newRequest.authToken = authToken;
 
+            /*
             //set the current game to be the one you just joined
             Collection<GameData> games= gameAccess.listGames(newRequest);
             for (GameData game: games)
@@ -86,14 +88,16 @@ public class PostLogin extends ChessClient{
                 }
             }
 
-            if(params.length == 3)
-            {
+             */
+
+            if (params.length == 3) {
                 newRequest.playerColor = params[2];
             }
             //calls the server facade to join them to the game or verify it exists
             server.joinGame(newRequest);
 
-            try {
+            //try {
+                /*
                 //get the list of current games
                 Collection<GameData> currentGameList = GameService.listGames(newRequest, authToken);
 
@@ -111,41 +115,41 @@ public class PostLogin extends ChessClient{
             }
 
 
-            //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
-            ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+                 */
 
-            //Send either a JOIN_PLAYER or JOIN_OBSERVER WebSocket message to the server.
-            if (newRequest.playerColor == null)
-            {
-                ws.joinObserver(authToken);
+                //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
+                ws = new WebSocketFacade(server.serverUrl, notificationHandler);
+
+                //Send either a JOIN_PLAYER or JOIN_OBSERVER WebSocket message to the server.
+                if (newRequest.playerColor == null) {
+                    ws.joinObserver(authToken);
+                } else {
+                    ws.joinPlayer(authToken, newRequest.playerColor, newRequest.gameID);
+                }
+
+                //transition to gameplay UI
+                Repl.state = State.INPLAY;
+
+                String[] startPosition = new String[]{"0"};
+
+                //modify this to take in a chess board
+                ChessBoard.main(startPosition);
+
+                return String.format("\nYou joined the game as %s.", newRequest.playerColor);
             }
-            else
-            {
-                ws.joinPlayer(authToken, newRequest.playerColor, newRequest.gameID);
-            }
-
-            //transition to gameplay UI
-            Repl.state = State.INPLAY;
-
-            String[] startPosition = new String[]{"0"};
-
-            //modify this to take in a chess board
-            ChessBoard.main(startPosition);
-
-            return String.format("\nYou joined the game as %s.", newRequest.playerColor);
+            throw new ResponseException("Expected more registration information.");
         }
-        throw new ResponseException("Expected more registration information.");
-    }
 
-    public String observeGame(String... params) throws Exception {
-        if(params.length == 2)
-        {
-            GameRequest newRequest = new GameRequest();
 
-            String authToken = params[0];
-            newRequest.gameID = Integer.parseInt(params[1]);
-            newRequest.authToken = authToken;
+        public String observeGame (String...params) throws Exception {
+            if (params.length == 2) {
+                GameRequest newRequest = new GameRequest();
 
+                String authToken = params[0];
+                newRequest.gameID = Integer.parseInt(params[1]);
+                newRequest.authToken = authToken;
+
+            /*
             //set the current game to be the one you just joined
             Collection<GameData> games= gameAccess.listGames(newRequest);
             for (GameData game: games)
@@ -156,15 +160,18 @@ public class PostLogin extends ChessClient{
                 }
             }
 
-            server.joinGame(newRequest);
-            Repl.state = State.INPLAY;
-            String[] startPosition = new String[]{"0"};
-            ChessBoard.main(startPosition);
+             */
 
-            return ("You joined the game as an observer");
+                server.joinGame(newRequest);
+                Repl.state = State.INPLAY;
+                String[] startPosition = new String[]{"0"};
+                ChessBoard.main(startPosition);
+
+                return ("You joined the game as an observer");
+            }
+            throw new ResponseException("You cannot include a color as an observer.");
         }
-        throw new ResponseException("You cannot include a color as an observer.");
-    }
+
 
     public String logout(String ... params) throws ResponseException{
         RegistrationRequest newRequest = new RegistrationRequest();
