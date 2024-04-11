@@ -1,7 +1,7 @@
 package server.webSocket;
 
 import com.google.gson.Gson;
-import org.apache.commons.collections4.MultiValuedMap;
+
 import org.eclipse.jetty.util.MultiMap;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.collections4.map.MultiValueMap;
+
 public class ConnectionHandler {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
