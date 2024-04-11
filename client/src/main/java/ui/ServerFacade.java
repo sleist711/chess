@@ -2,8 +2,8 @@ package ui;
 
 
 import com.google.gson.Gson;
-import dataAccess.ResponseException;
 
+import dataAccess.ResponseException;
 import server.requests.GameRequest;
 import server.requests.GameResult;
 import server.requests.RegistrationRequest;
