@@ -1,8 +1,10 @@
-package server;
+package requests;
 
 import spark.Response;
 
-public class GameResult extends Response {
+public class GameResult //
+// extends Response
+{
 
     public Integer gameID;
     public String blackUsername;

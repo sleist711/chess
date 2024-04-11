@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 
 import clientShared.ResponseException;
 import requests.GameRequest;
-import server.GameResult;
+import requests.GameResult;
 import requests.RegistrationRequest;
 import server.RegistrationResult;
 
