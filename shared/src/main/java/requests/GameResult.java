@@ -1,6 +1,5 @@
 package requests;
 
-import spark.Response;
 
 public class GameResult //
 // extends Response
