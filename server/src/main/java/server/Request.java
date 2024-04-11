@@ -1,3 +1,5 @@
+package server;
+
 import com.google.gson.Gson;
 
 
