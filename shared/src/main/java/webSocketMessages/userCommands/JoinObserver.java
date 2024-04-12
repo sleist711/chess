@@ -8,11 +8,6 @@ public class JoinObserver extends UserGameCommand{
         super(authToken);
     }
 
-    public void setGameID(Integer id)
-    {
-        this.gameID = id;
-    }
-
     public Integer getGameID()
     {
         return this.gameID;

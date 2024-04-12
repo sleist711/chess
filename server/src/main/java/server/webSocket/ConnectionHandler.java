@@ -11,9 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionHandler {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
-
-    //this can't be a hash map
-    //still having issues with the map 
     public final ConcurrentHashMap<Connection, Integer> usersInGames = new ConcurrentHashMap<>();
 
     public void add(String visitorName, Session session, Integer gameID) {
@@ -55,23 +52,6 @@ public class ConnectionHandler {
             }
         }
 
-
-
-/*
-        for (var c : connections.values()) {
-            if (c.session.isOpen()) {
-                if (!c.visitorName.equals(excludeVisitorName)) {
-                    c.send(notification.toString());
-                }
-            }
-
-        else {
-                removeList.add(c);
-            }
-        }
-        */
-
-
         // Clean up any connections that were left open.
         for (var c : removeList) {
             usersInGames.remove(c);
@@ -90,19 +70,6 @@ public class ConnectionHandler {
                     c.getKey().send(message);
                 }
             }
-
-
-
-
-        /*
-        for (var c : connections.values()) {
-            if (c.session.isOpen()) {
-                c.send(message);
-
-            }
-        }
-
-         */
 
 
         }

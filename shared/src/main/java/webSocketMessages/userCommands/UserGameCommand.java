@@ -28,30 +28,6 @@ public class UserGameCommand {
 
     private final String authToken;
 
-
-   // public void setGame(ChessGame game) {
-       // this.currentGame = game;
-    //}
-    //public void setGame(Integer game)
-    //{
-       // this.gameID = game;
-    //}
-
-    /*public String getPlayerColor()
-    {
-        return this.playerColor;
-    }
-    */
-
-    /*
-
-    public void setPlayerColor(String color)
-    {
-        this.playerColor = color;
-    }
-
-
-     */
     public String getAuthString() {
         return authToken;
     }

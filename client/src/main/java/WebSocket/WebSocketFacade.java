@@ -119,10 +119,6 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-
-    public void onError()
-    {}
-
     public void movePiece(String authToken, Integer gameID, ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionType) throws ResponseException {
         try
         {

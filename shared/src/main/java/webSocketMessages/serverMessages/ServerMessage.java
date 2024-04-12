@@ -40,11 +40,6 @@ public class ServerMessage {
         return getServerMessageType() == that.getServerMessageType();
     }
 
-    public void setMessageContents(String message)
-    {
-        this.messageContents = message;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(getServerMessageType());

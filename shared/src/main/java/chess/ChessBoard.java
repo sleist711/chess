@@ -116,12 +116,6 @@ public class ChessBoard {
         addPiece(blackKingPosition, newBlackKing);
     }
 
-    //making my own function to remove a piece
-    public void removePiece(ChessPosition position)
-    {
-        myChessBoard[position.getColumn()][position.getRow()] = null;
-    }
-
     @Override
     public String toString() {
         String returnString = "initialPositions =";
