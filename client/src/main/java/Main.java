@@ -11,29 +11,6 @@ public class Main {
             serverUrl = args[0];
         }
 
-        //trying this to make multiple instances work
-
-        //Server chessServer = new Server();
-        //chessServer.run(8080);
-
-
-//        try{
-//            MySQLAuthDAO authDAO = new MySQLAuthDAO();
-//          // authDAO.clear();
-//            MySQLGameDAO gameDAO = new MySQLGameDAO();
-//            //gameDAO.clear();
-//            MySQLUserDAO userDAO = new MySQLUserDAO();
-//            //userDAO.clear();
-//        }
-//        catch(Exception ex)
-//        {
-//            System.exit(0);
-//        }
-
-
-
         new Repl(serverUrl).run();
     }
 }
-
-//transition back to postlogin\
